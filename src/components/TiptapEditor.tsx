@@ -35,7 +35,14 @@ export function TiptapEditor({ content, onChange, editable = true }: TiptapEdito
     return null
   }
 
-  const ToolbarButton = ({ onClick, isActive, children, title }: any) => (
+  interface ToolbarButtonProps {
+    onClick: () => void
+    isActive: boolean
+    children: React.ReactNode
+    title: string
+  }
+
+  const ToolbarButton = ({ onClick, isActive, children, title }: ToolbarButtonProps) => (
     <button
       onClick={onClick}
       title={title}
@@ -115,7 +122,7 @@ export function TiptapEditor({ content, onChange, editable = true }: TiptapEdito
             isActive={editor.isActive('blockquote')}
             title="引用"
           >
-            ""
+            &quot;&quot;
           </ToolbarButton>
           <ToolbarButton
             onClick={() => editor.chain().focus().setHorizontalRule().run()}

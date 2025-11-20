@@ -34,9 +34,9 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user, trigger, session }) {
       if (user) {
-        token.role = (user as any).role ?? 'MEMBER'
-        token.status = (user as any).status ?? 'ACTIVE'
-        token.avatar = (user as any).avatar
+        token.role = (user as { role: Role }).role ?? 'MEMBER'
+        token.status = (user as { status: MemberStatus }).status ?? 'ACTIVE'
+        token.avatar = (user as { avatar?: string | null }).avatar
       }
       if (trigger === 'update' && session?.avatar) {
         token.avatar = session.avatar
