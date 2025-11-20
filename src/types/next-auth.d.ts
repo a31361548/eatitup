@@ -1,23 +1,27 @@
-import type { MemberStatus, Role } from '@prisma/client'
-import type { DefaultSession, DefaultUser } from 'next-auth'
+import { DefaultSession, DefaultUser } from "next-auth"
+import { Role, MemberStatus } from "@prisma/client"
 
-declare module 'next-auth' {
+declare module "next-auth" {
   interface Session {
-    user?: DefaultSession['user'] & {
-      role?: Role
-      status?: MemberStatus
-    }
+    user: {
+      id: string
+      role: Role
+      status: MemberStatus
+      avatar?: string | null
+    } & DefaultSession["user"]
   }
 
   interface User extends DefaultUser {
-    role?: Role
-    status?: MemberStatus
+    role: Role
+    status: MemberStatus
+    avatar?: string | null
   }
 }
 
-declare module 'next-auth/jwt' {
+declare module "next-auth/jwt" {
   interface JWT {
-    role?: Role
-    status?: MemberStatus
+    role: Role
+    status: MemberStatus
+    avatar?: string | null
   }
 }

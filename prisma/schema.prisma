@@ -25,9 +25,32 @@ model User {
   role      Role     @default(MEMBER)
   status    MemberStatus @default(ACTIVE)
   note      String?
+  avatar    String?  // URL or path to avatar image
   lists     List[]
+  notes     Note[]
+  checkIns  CheckIn[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Note {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  title     String
+  content   String   // HTML content from Tiptap
+  userId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CheckIn {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+  date      String   // Format: YYYY-MM-DD
+  createdAt DateTime @default(now())
+
+  @@unique([userId, date])
 }
 
 model List {

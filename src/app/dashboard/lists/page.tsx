@@ -5,6 +5,7 @@ import { authOptions } from '@/lib/authOptions'
 import { prisma } from '@/lib/prisma'
 import { PageShell } from '@/components/ui/PageShell'
 import { GlowCard } from '@/components/ui/GlowCard'
+import { DeleteListButton } from '@/components/DeleteListButton'
 
 export default async function ListsPage(): Promise<React.ReactElement> {
   const session = await getServerSession(authOptions)
@@ -25,9 +26,14 @@ export default async function ListsPage(): Promise<React.ReactElement> {
             <h1 className="text-3xl font-semibold">我的餐點清單</h1>
             <p className="text-white/60">建立多個情境，將常用選項與權重一次管理。</p>
           </div>
-          <Link className="rounded-full bg-white px-5 py-3 text-sm font-semibold text-slate-900 shadow-lg shadow-white/30" href="/lists/new">
-            新增清單
-          </Link>
+          <div className="flex gap-3">
+            <Link className="rounded-full border border-white/20 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10" href="/dashboard">
+              返回會員中心
+            </Link>
+            <Link className="rounded-full bg-white px-5 py-3 text-sm font-semibold text-slate-900 shadow-lg shadow-white/30" href="/dashboard/lists/new">
+              新增清單
+            </Link>
+          </div>
         </div>
       </header>
       {lists.length === 0 ? (
@@ -46,12 +52,13 @@ export default async function ListsPage(): Promise<React.ReactElement> {
                 description={`共 ${list.items.length} 個項目`}
                 actions={
                   <>
-                    <Link className="rounded-full bg-white px-4 py-1.5 text-sm font-semibold text-slate-900" href={`/lists/${list.id}`}>
+                    <Link className="rounded-full bg-white px-4 py-1.5 text-sm font-semibold text-slate-900" href={`/dashboard/lists/${list.id}`}>
                       管理
                     </Link>
                     <Link className="rounded-full border border-white/40 px-4 py-1.5 text-sm text-white/80" href={`/modes/wheel?items=${qs}`}>
                       直接轉盤
                     </Link>
+                    <DeleteListButton listId={list.id} />
                   </>
                 }
               >

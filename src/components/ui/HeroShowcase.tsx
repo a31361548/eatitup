@@ -12,9 +12,9 @@ const wheelParts = heroItems.map((item, index) => {
 
 export function HeroShowcase(): React.ReactElement {
   return (
-    <div className="relative isolate grid gap-6 rounded-[32px] border border-white/10 bg-white/5 p-8 backdrop-blur">
+    <div className="relative isolate grid gap-6 rounded-[32px] border border-white/10 bg-white/5 p-6 backdrop-blur sm:p-8 md:grid-cols-2">
       <motion.div
-        className="relative mx-auto flex h-64 w-64 items-center justify-center rounded-full border border-white/20 bg-slate-900/40 p-6 shadow-[0_0_60px_rgba(15,23,42,0.5)]"
+        className="relative mx-auto flex aspect-square w-full max-w-[260px] items-center justify-center rounded-full border border-white/20 bg-slate-900/40 p-6 shadow-[0_0_60px_rgba(15,23,42,0.5)] sm:max-w-[320px] md:max-w-[360px]"
         animate={{ rotate: [0, 360] }}
         transition={{ duration: 16, ease: 'linear', repeat: Infinity }}
       >
@@ -22,7 +22,7 @@ export function HeroShowcase(): React.ReactElement {
           className="h-full w-full rounded-full border-8 border-slate-900 shadow-inner"
           style={{ background: `conic-gradient(${wheelParts.map(p => `${p.color} ${p.start}deg ${p.end}deg`).join(',')})` }}
         />
-        <span className="absolute top-2 left-1/2 block -translate-x-1/2 text-lg">⬇</span>
+        <span className="absolute top-2 left-1/2 block -translate-x-1/2 text-base sm:text-lg">⬇</span>
       </motion.div>
       <motion.div
         className="rounded-2xl border border-white/10 bg-slate-900/40 p-4"

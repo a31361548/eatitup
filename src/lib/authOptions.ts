@@ -5,7 +5,7 @@ import Credentials from 'next-auth/providers/credentials'
 import type { MemberStatus, Role } from '@prisma/client'
 
 export const authOptions: NextAuthOptions = {
-  session: { strategy: 'jwt' },
+  session: { strategy: 'jwt', maxAge: 7 * 24 * 60 * 60 },
   providers: [
     Credentials({
       name: 'credentials',
@@ -20,15 +20,26 @@ export const authOptions: NextAuthOptions = {
         if (user.status !== 'ACTIVE') return null
         const ok = verifyPassword(credentials.password, user.password)
         if (!ok) return null
-        return { id: user.id, email: user.email, name: user.name ?? undefined, role: user.role, status: user.status }
+        return { 
+          id: user.id, 
+          email: user.email, 
+          name: user.name ?? undefined, 
+          role: user.role, 
+          status: user.status,
+          avatar: user.avatar 
+        }
       }
     })
   ],
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
       if (user) {
-        token.role = (user as { role?: Role }).role ?? 'MEMBER'
-        token.status = (user as { status?: MemberStatus }).status ?? 'ACTIVE'
+        token.role = (user as { role: Role }).role ?? 'MEMBER'
+        token.status = (user as { status: MemberStatus }).status ?? 'ACTIVE'
+        token.avatar = (user as { avatar?: string | null }).avatar
+      }
+      if (trigger === 'update' && session?.avatar) {
+        token.avatar = session.avatar
       }
       return token
     },
@@ -36,6 +47,7 @@ export const authOptions: NextAuthOptions = {
       if (session.user) {
         session.user.role = (token.role as Role | undefined) ?? 'MEMBER'
         session.user.status = (token.status as MemberStatus | undefined) ?? 'ACTIVE'
+        session.user.avatar = (token.avatar as string | null | undefined)
       }
       return session
     }
