@@ -170,51 +170,53 @@ export default function MembersClient(): React.ReactElement {
           新增成員
         </button>
       </div>
-      <div className="overflow-hidden rounded-3xl border border-white/10 bg-white/5">
-        <table className="w-full text-left text-sm text-white/80">
-          <thead>
-            <tr className="text-white/70">
-              <th className="px-4 py-3 font-medium">姓名 / Email</th>
-              <th className="px-4 py-3 font-medium">狀態</th>
-              <th className="px-4 py-3 font-medium">備註</th>
-              <th className="px-4 py-3 font-medium">建立時間</th>
-              <th className="px-4 py-3 font-medium text-right">操作</th>
-            </tr>
-          </thead>
-          <tbody>
-            {loading ? (
-              <tr><td className="px-4 py-6 text-center text-white/60" colSpan={5}>讀取中…</td></tr>
-            ) : members.length === 0 ? (
-              <tr><td className="px-4 py-6 text-center text-white/60" colSpan={5}>目前沒有符合條件的成員</td></tr>
-            ) : (
-              members.map((member) => (
-                <tr key={member.id} className="border-t border-white/5">
-                  <td className="px-4 py-4">
-                    <div className="font-semibold text-white">{member.name ?? '—'}</div>
-                    <div className="text-xs text-white/60">{member.email}</div>
-                  </td>
-                  <td className="px-4 py-4">
-                    <span className={`rounded-full px-3 py-1 text-xs font-semibold ${member.status === 'ACTIVE' ? 'bg-emerald-500/20 text-emerald-200' : 'bg-rose-500/20 text-rose-200'}`}>
-                      {STATUS_LABEL[member.status]}
-                    </span>
-                  </td>
-                  <td className="px-4 py-4">{member.note ?? '—'}</td>
-                  <td className="px-4 py-4 text-white/60">{new Intl.DateTimeFormat('zh-TW', { dateStyle: 'medium' }).format(new Date(member.createdAt))}</td>
-                  <td className="px-4 py-4 text-right">
-                    <div className="flex justify-end gap-2">
-                      <button className="rounded-full border border-white/20 px-3 py-1 text-xs text-white/80 hover:bg-white/10" onClick={() => openEdit(member)}>
-                        編輯
-                      </button>
-                      <button className="rounded-full border border-white/20 px-3 py-1 text-xs text-white/80 hover:bg-white/10" onClick={() => openReset(member)}>
-                        重設密碼
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+      <div className="rounded-3xl border border-white/10 bg-white/5">
+        <div className="overflow-x-auto">
+          <table className="min-w-[720px] w-full text-left text-sm text-white/80">
+            <thead>
+              <tr className="text-white/70">
+                <th className="px-4 py-3 font-medium">姓名 / Email</th>
+                <th className="px-4 py-3 font-medium">狀態</th>
+                <th className="px-4 py-3 font-medium">備註</th>
+                <th className="px-4 py-3 font-medium">建立時間</th>
+                <th className="px-4 py-3 font-medium text-right">操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              {loading ? (
+                <tr><td className="px-4 py-6 text-center text-white/60" colSpan={5}>讀取中…</td></tr>
+              ) : members.length === 0 ? (
+                <tr><td className="px-4 py-6 text-center text-white/60" colSpan={5}>目前沒有符合條件的成員</td></tr>
+              ) : (
+                members.map((member) => (
+                  <tr key={member.id} className="border-t border-white/5">
+                    <td className="px-4 py-4">
+                      <div className="font-semibold text-white">{member.name ?? '—'}</div>
+                      <div className="text-xs text-white/60">{member.email}</div>
+                    </td>
+                    <td className="px-4 py-4">
+                      <span className={`rounded-full px-3 py-1 text-xs font-semibold ${member.status === 'ACTIVE' ? 'bg-emerald-500/20 text-emerald-200' : 'bg-rose-500/20 text-rose-200'}`}>
+                        {STATUS_LABEL[member.status]}
+                      </span>
+                    </td>
+                    <td className="px-4 py-4">{member.note ?? '—'}</td>
+                    <td className="px-4 py-4 text-white/60">{new Intl.DateTimeFormat('zh-TW', { dateStyle: 'medium' }).format(new Date(member.createdAt))}</td>
+                    <td className="px-4 py-4 text-right">
+                      <div className="flex justify-end gap-2">
+                        <button className="rounded-full border border-white/20 px-3 py-1 text-xs text-white/80 hover:bg-white/10" onClick={() => openEdit(member)}>
+                          編輯
+                        </button>
+                        <button className="rounded-full border border-white/20 px-3 py-1 text-xs text-white/80 hover:bg-white/10" onClick={() => openReset(member)}>
+                          重設密碼
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
         {error && <p className="p-4 text-sm text-rose-300">{error}</p>}
       </div>
       <div className="flex items-center justify-between text-sm text-white/70">

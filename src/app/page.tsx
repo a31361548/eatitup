@@ -44,23 +44,22 @@ export default async function Home(): Promise<React.ReactElement> {
           </div>
           <div className="flex flex-wrap items-center gap-4">
             {session ? (
-              <Link className="rounded-full bg-gradient-to-r from-emerald-400 via-cyan-300 to-sky-400 px-6 py-3 text-base font-semibold text-slate-900 shadow-lg shadow-emerald-500/30" href="/dashboard">
-                前往儀表板
-              </Link>
-            ) : (
               <>
-                <Link className="rounded-full bg-gradient-to-r from-emerald-400 via-cyan-300 to-sky-400 px-6 py-3 text-base font-semibold text-slate-900 shadow-lg shadow-emerald-500/30" href="/login">
-                  由管理員登入
+                <Link className="rounded-full bg-gradient-to-r from-emerald-400 via-cyan-300 to-sky-400 px-6 py-3 text-base font-semibold text-slate-900 shadow-lg shadow-emerald-500/30" href="/modes/wheel">
+                  開始轉盤
                 </Link>
-                <span className="rounded-full border border-white/20 px-6 py-3 text-base font-semibold text-white/70">
-                  請聯絡管理員開通帳號
-                </span>
+                <Link className="rounded-full border border-white/20 bg-white/5 px-6 py-3 text-base font-semibold text-white hover:bg-white/10" href="/modes/draw">
+                  開始抽籤
+                </Link>
+                <Link className="rounded-full border border-white/20 px-6 py-3 text-base font-semibold text-white/70 hover:text-white" href="/dashboard">
+                  儀表板
+                </Link>
               </>
+            ) : (
+              <Link className="rounded-full bg-gradient-to-r from-emerald-400 via-cyan-300 to-sky-400 px-6 py-3 text-base font-semibold text-slate-900 shadow-lg shadow-emerald-500/30" href="/login">
+                由管理員登入
+              </Link>
             )}
-            <Link className="inline-flex items-center gap-2 text-white/70 hover:text-white" href="/modes/wheel">
-              先試玩轉盤
-              <span aria-hidden>→</span>
-            </Link>
           </div>
         </div>
         <HeroShowcase />
