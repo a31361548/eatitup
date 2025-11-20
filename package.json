@@ -13,8 +13,8 @@
   },
   "dependencies": {
     "@prisma/client": "^5.18.0",
-    "@react-three/drei": "^10.7.7",
-    "@react-three/fiber": "^9.4.0",
+    "@react-three/drei": "^9.122.0",
+    "@react-three/fiber": "^8.18.0",
     "@tiptap/extension-placeholder": "^3.11.0",
     "@tiptap/react": "^3.11.0",
     "@tiptap/starter-kit": "^3.11.0",
