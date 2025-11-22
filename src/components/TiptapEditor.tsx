@@ -8,9 +8,10 @@ interface TiptapEditorProps {
   content: string
   onChange: (content: string) => void
   editable?: boolean
+  darkControls?: boolean
 }
 
-export function TiptapEditor({ content, onChange, editable = true }: TiptapEditorProps) {
+export function TiptapEditor({ content, onChange, editable = true, darkControls = false }: TiptapEditorProps) {
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -47,7 +48,9 @@ export function TiptapEditor({ content, onChange, editable = true }: TiptapEdito
       onClick={onClick}
       title={title}
       className={`rounded p-2 text-sm transition-colors ${
-        isActive ? 'bg-emerald-500/20 text-emerald-400' : 'text-white/60 hover:bg-white/10 hover:text-white'
+        isActive 
+          ? (darkControls ? 'bg-black/10 text-black font-bold' : 'bg-emerald-500/20 text-emerald-400') 
+          : (darkControls ? 'text-gray-700 hover:bg-black/5 hover:text-black' : 'text-white/60 hover:bg-white/10 hover:text-white')
       }`}
     >
       {children}
@@ -55,9 +58,9 @@ export function TiptapEditor({ content, onChange, editable = true }: TiptapEdito
   )
 
   return (
-    <div className="rounded-xl border border-white/10 bg-white/5 overflow-hidden">
+    <div className={`rounded-xl border overflow-hidden ${darkControls ? 'border-[#d7c69c] bg-transparent' : 'border-white/10 bg-white/5'}`}>
       {editable && (
-        <div className="flex flex-wrap gap-1 border-b border-white/10 bg-white/5 p-2">
+        <div className={`flex flex-wrap gap-1 border-b p-2 ${darkControls ? 'border-[#d7c69c] bg-[#e8d5a8]/50' : 'border-white/10 bg-white/5'}`}>
           <ToolbarButton
             onClick={() => editor.chain().focus().toggleBold().run()}
             isActive={editor.isActive('bold')}
@@ -79,7 +82,7 @@ export function TiptapEditor({ content, onChange, editable = true }: TiptapEdito
           >
             <s>S</s>
           </ToolbarButton>
-          <div className="mx-1 w-px bg-white/10" />
+          <div className={`mx-1 w-px ${darkControls ? 'bg-[#d7c69c]' : 'bg-white/10'}`} />
           <ToolbarButton
             onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
             isActive={editor.isActive('heading', { level: 1 })}
@@ -101,7 +104,7 @@ export function TiptapEditor({ content, onChange, editable = true }: TiptapEdito
           >
             H3
           </ToolbarButton>
-          <div className="mx-1 w-px bg-white/10" />
+          <div className={`mx-1 w-px ${darkControls ? 'bg-[#d7c69c]' : 'bg-white/10'}`} />
           <ToolbarButton
             onClick={() => editor.chain().focus().toggleBulletList().run()}
             isActive={editor.isActive('bulletList')}
@@ -116,7 +119,7 @@ export function TiptapEditor({ content, onChange, editable = true }: TiptapEdito
           >
             1. List
           </ToolbarButton>
-          <div className="mx-1 w-px bg-white/10" />
+          <div className={`mx-1 w-px ${darkControls ? 'bg-[#d7c69c]' : 'bg-white/10'}`} />
           <ToolbarButton
             onClick={() => editor.chain().focus().toggleBlockquote().run()}
             isActive={editor.isActive('blockquote')}
@@ -131,7 +134,7 @@ export function TiptapEditor({ content, onChange, editable = true }: TiptapEdito
           >
             —
           </ToolbarButton>
-          <div className="mx-1 w-px bg-white/10" />
+          <div className={`mx-1 w-px ${darkControls ? 'bg-[#d7c69c]' : 'bg-white/10'}`} />
           <ToolbarButton
             onClick={() => editor.chain().focus().undo().run()}
             isActive={false}
