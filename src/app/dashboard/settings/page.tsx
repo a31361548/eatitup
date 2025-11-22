@@ -4,6 +4,8 @@ import { useState, useEffect, useRef } from 'react'
 import { useSession } from 'next-auth/react'
 import { gsap } from 'gsap'
 import Swal from 'sweetalert2'
+import Cropper, { Area } from 'react-easy-crop'
+import getCroppedImg from '@/lib/cropImage'
 
 export default function SettingsPage() {
   const { update } = useSession()
@@ -11,7 +13,9 @@ export default function SettingsPage() {
   const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null)
   const [uploading, setUploading] = useState(false)
   const [previewImage, setPreviewImage] = useState<string | null>(null)
-  const [previewFile, setPreviewFile] = useState<File | null>(null)
+  const [crop, setCrop] = useState({ x: 0, y: 0 })
+  const [zoom, setZoom] = useState(1)
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null)
   const avatarRefs = useRef<(HTMLButtonElement | null)[]>([])
   const modalRef = useRef<HTMLDivElement>(null)
   const modalContentRef = useRef<HTMLDivElement>(null)
@@ -88,7 +92,6 @@ export default function SettingsPage() {
     const reader = new FileReader()
     reader.onload = (event) => {
       setPreviewImage(event.target?.result as string)
-      setPreviewFile(file)
     }
     reader.readAsDataURL(file)
     
@@ -96,14 +99,22 @@ export default function SettingsPage() {
     e.target.value = ''
   }
 
+  const onCropComplete = (_: Area, croppedAreaPixels: Area) => {
+    setCroppedAreaPixels(croppedAreaPixels)
+  }
+
   const handleConfirmUpload = async () => {
-    if (!previewFile) return
+    if (!previewImage || !croppedAreaPixels) return
 
     setUploading(true)
-    const formData = new FormData()
-    formData.append('file', previewFile)
-
+    
     try {
+      const croppedBlob = await getCroppedImg(previewImage, croppedAreaPixels)
+      if (!croppedBlob) throw new Error('Crop failed')
+
+      const formData = new FormData()
+      formData.append('file', croppedBlob, 'avatar.jpg')
+
       const res = await fetch('/api/upload', {
         method: 'POST',
         body: formData,
@@ -149,12 +160,10 @@ export default function SettingsPage() {
         delay: 0.1,
         onComplete: () => {
           setPreviewImage(null)
-          setPreviewFile(null)
         }
       })
     } else {
       setPreviewImage(null)
-      setPreviewFile(null)
     }
   }
 
@@ -198,7 +207,7 @@ export default function SettingsPage() {
             選擇圖片
             <input
               type="file"
-              accept="image/*"
+              accept="image/png, image/jpeg, image/svg+xml, image/webp"
               onChange={handleFileChange}
               disabled={uploading}
               className="hidden"
@@ -216,11 +225,31 @@ export default function SettingsPage() {
               ref={modalContentRef}
               className="w-full max-w-sm rounded-3xl border border-white/10 bg-[#0f172a] p-8 shadow-2xl"
             >
-              <h3 className="mb-6 text-center text-xl font-semibold text-white">預覽頭貼</h3>
-              <div className="mb-8 flex justify-center">
-                <div className="relative h-40 w-40 overflow-hidden rounded-full border-4 border-emerald-500 shadow-lg shadow-emerald-500/20">
-                  <img src={previewImage} alt="Preview" className="h-full w-full object-cover" />
-                </div>
+              <h3 className="mb-6 text-center text-xl font-semibold text-white">裁切頭貼</h3>
+              <div className="relative mb-6 h-64 w-full overflow-hidden rounded-xl bg-black">
+                <Cropper
+                  image={previewImage}
+                  crop={crop}
+                  zoom={zoom}
+                  aspect={1}
+                  onCropChange={setCrop}
+                  onCropComplete={onCropComplete}
+                  onZoomChange={setZoom}
+                  cropShape="round"
+                  showGrid={false}
+                />
+              </div>
+              <div className="mb-6 px-4">
+                <input
+                  type="range"
+                  value={zoom}
+                  min={1}
+                  max={3}
+                  step={0.1}
+                  aria-labelledby="Zoom"
+                  onChange={(e) => setZoom(Number(e.target.value))}
+                  className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-white/20 accent-emerald-500"
+                />
               </div>
               <div className="flex gap-3">
                 <button
