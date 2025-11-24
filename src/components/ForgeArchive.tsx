@@ -1,18 +1,42 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, type Dispatch, type SetStateAction } from 'react';
+import Swal from 'sweetalert2';
 
 interface ForgeArchiveProps {
   input: string;
-  setInput: (value: string) => void;
+  setInput: Dispatch<SetStateAction<string>>;
   isSpinning: boolean;
   onSpin: () => void;
   optionsCount: number;
 }
 
+interface ListItem {
+  id: string;
+  label: string;
+  weight: number;
+}
+
 interface List {
   id: string;
   title: string;
-  items: { label: string; weight: number }[];
+  items: ListItem[];
 }
+
+type ListsResponse = {
+  lists?: List[];
+};
+
+const parseLines = (value: string): string[] =>
+  value
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+const buildCounts = (items: string[]): Record<string, number> => {
+  return items.reduce<Record<string, number>>((acc, item) => {
+    acc[item] = (acc[item] || 0) + 1;
+    return acc;
+  }, {});
+};
 
 export const ForgeArchive: React.FC<ForgeArchiveProps> = ({ 
   input, 
@@ -25,6 +49,7 @@ export const ForgeArchive: React.FC<ForgeArchiveProps> = ({
   const [currentListId, setCurrentListId] = useState<string | null>(null);
   const [listName, setListName] = useState('');
   const [saving, setSaving] = useState(false);
+  const [newOption, setNewOption] = useState('');
 
   // Fetch lists on mount
   useEffect(() => {
@@ -34,10 +59,9 @@ export const ForgeArchive: React.FC<ForgeArchiveProps> = ({
   const fetchLists = async () => {
     try {
       const res = await fetch('/api/lists');
-      if (res.ok) {
-        const data = await res.json();
-        setLists(data.lists || []);
-      }
+      if (!res.ok) throw new Error('Failed to fetch lists');
+      const data: ListsResponse = await res.json();
+      setLists(data.lists ?? []);
     } catch (e) {
       console.error('Failed to fetch lists', e);
     }
@@ -54,23 +78,69 @@ export const ForgeArchive: React.FC<ForgeArchiveProps> = ({
     }
   };
 
-  const saveList = async () => {
-    if (!listName.trim()) {
-      alert('Please inscribe a name for this destiny.');
+  const handleAddOption = () => {
+    const trimmed = newOption.trim();
+    if (!trimmed) {
+      void Swal.fire({
+        icon: 'warning',
+        title: '請輸入選項內容',
+        confirmButtonText: '好的',
+      });
       return;
     }
-    
+    setInput((prev) => (prev ? `${prev}\n${trimmed}` : trimmed));
+    setNewOption('');
+    void Swal.fire({
+      icon: 'success',
+      title: '已加入新選項',
+      timer: 1600,
+      showConfirmButton: false,
+    });
+  };
+
+  const deleteAllItems = async (list: List) => {
+    await Promise.all(
+      list.items.map(async (item) => {
+        const form = new FormData();
+        form.append('_method', 'DELETE');
+        const res = await fetch(`/api/items/${item.id}`, {
+          method: 'POST',
+          body: form,
+        });
+        if (!res.ok) {
+          throw new Error('Failed to delete item');
+        }
+      })
+    );
+  };
+
+  const saveList = async () => {
+    const trimmedName = listName.trim();
+    if (!trimmedName) {
+      void Swal.fire({
+        icon: 'warning',
+        title: '請輸入卷軸名稱',
+      });
+      return;
+    }
+
+    const items = parseLines(input);
+    if (items.length === 0) {
+      void Swal.fire({
+        icon: 'warning',
+        title: '至少需要一個選項',
+      });
+      return;
+    }
+    const counts = buildCounts(items);
+
     setSaving(true);
     try {
-      const items = input.split('\n').map(s => s.trim()).filter(Boolean);
-      const counts: Record<string, number> = {};
-      items.forEach(i => { counts[i] = (counts[i] || 0) + 1 });
-
       let targetListId = currentListId;
 
       // Auto-detect: if list name matches existing list, update it
       if (!currentListId) {
-        const existingList = lists.find(l => l.title === listName.trim());
+        const existingList = lists.find(l => l.title === trimmedName);
         if (existingList) {
           targetListId = existingList.id;
         }
@@ -78,34 +148,39 @@ export const ForgeArchive: React.FC<ForgeArchiveProps> = ({
 
       if (targetListId) {
         // Update existing list
-        // 1. Delete all items
         const list = lists.find(l => l.id === targetListId);
         if (list) {
-          await Promise.all(list.items.map(item =>
-            fetch(`/api/items/${encodeURIComponent(item.label)}?listId=${targetListId}`, { method: 'DELETE' })
-          ));
+          await deleteAllItems(list);
         }
 
         // 2. Update list name
         await fetch(`/api/lists/${targetListId}`, {
           method: 'PATCH',
-          body: JSON.stringify({ title: listName.trim() })
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title: trimmedName })
         });
 
         // 3. Add new items
         await Promise.all(Object.entries(counts).map(([label, weight]) =>
           fetch('/api/items', {
             method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ listId: targetListId, label, weight })
           })
         ));
 
-        alert('Destiny rewritten!');
+        void Swal.fire({
+          icon: 'success',
+          title: '卷軸已更新',
+          timer: 1800,
+          showConfirmButton: false,
+        });
       } else {
         // Create new list
         const resList = await fetch('/api/lists', {
           method: 'POST',
-          body: JSON.stringify({ title: listName.trim() }),
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title: trimmedName }),
         });
         if (!resList.ok) throw new Error('Failed to create list');
         const { id } = await resList.json();
@@ -113,20 +188,32 @@ export const ForgeArchive: React.FC<ForgeArchiveProps> = ({
         await Promise.all(Object.entries(counts).map(([label, weight]) =>
           fetch('/api/items', {
             method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ listId: id, label, weight })
           })
         ));
 
         setCurrentListId(id);
-        alert('New destiny forged!');
+        void Swal.fire({
+          icon: 'success',
+          title: '已建立新的命運卷軸',
+          timer: 1800,
+          showConfirmButton: false,
+        });
       }
+
+      setListName(trimmedName);
 
       // Refresh lists
       await fetchLists();
 
     } catch (e) {
       console.error(e);
-      alert('The forge is cold. Save failed.');
+      void Swal.fire({
+        icon: 'error',
+        title: '鍛造失敗',
+        text: '請稍後再試',
+      });
     } finally {
       setSaving(false);
     }
@@ -140,7 +227,7 @@ export const ForgeArchive: React.FC<ForgeArchiveProps> = ({
        {/* Header */}
        <div className="text-center mb-6 mt-2">
          <h1 className="text-3xl md:text-5xl font-rune text-forge-gold font-bold drop-shadow-md tracking-wide">
-           Archive
+           命運典藏
          </h1>
          <div className="flex items-center justify-center gap-4 mt-3 opacity-60">
             <div className="h-[1px] w-8 md:w-12 bg-forge-bronze"></div>
@@ -157,7 +244,7 @@ export const ForgeArchive: React.FC<ForgeArchiveProps> = ({
             value={currentListId || ''}
             disabled={isSpinning}
           >
-             <option value="" disabled>Select a scroll...</option>
+             <option value="" disabled>選擇卷軸...</option>
              {lists.map(l => (
                <option key={l.id} value={l.id}>{l.title}</option>
              ))}
@@ -175,8 +262,28 @@ export const ForgeArchive: React.FC<ForgeArchiveProps> = ({
             onChange={(e) => setInput(e.target.value)}
             disabled={isSpinning}
             className="w-full h-48 md:h-64 bg-transparent p-6 font-scroll text-xl md:text-2xl text-forge-light focus:outline-none focus:bg-[#1a120f] transition-all resize-none forge-scroll leading-loose tracking-wide placeholder-white/20"
-            placeholder="Inscribe destinies here..."
+            placeholder="在此刻寫命運..."
           />
+       </div>
+
+       {/* Quick Add Option */}
+       <div className="mb-6 flex flex-col gap-3 md:flex-row">
+         <input
+           type="text"
+           value={newOption}
+           onChange={(e) => setNewOption(e.target.value)}
+           placeholder="輸入新的命運碎片..."
+           disabled={isSpinning}
+           className="flex-1 bg-[#0f0500] border border-forge-bronze/80 text-forge-light font-scroll p-3 rounded-lg focus:outline-none focus:border-forge-gold placeholder-white/20 disabled:opacity-50"
+         />
+         <button
+           type="button"
+           onClick={handleAddOption}
+           disabled={isSpinning}
+           className="px-6 bg-forge-gold/20 border border-forge-gold text-forge-light font-rune tracking-[0.3em] uppercase rounded-lg hover:bg-forge-gold/30 transition disabled:opacity-40 disabled:cursor-not-allowed"
+         >
+           刻入
+         </button>
        </div>
 
        {/* Save Controls */}
@@ -185,7 +292,7 @@ export const ForgeArchive: React.FC<ForgeArchiveProps> = ({
              type="text" 
              value={listName}
              onChange={(e) => setListName(e.target.value)}
-             placeholder="Scroll Name"
+             placeholder="卷軸名稱"
              className="flex-1 bg-[#0f0500] border border-forge-bronze text-forge-light font-scroll p-3 rounded-lg focus:outline-none focus:border-forge-gold placeholder-white/20"
              disabled={isSpinning}
           />
@@ -194,7 +301,7 @@ export const ForgeArchive: React.FC<ForgeArchiveProps> = ({
              disabled={saving || isSpinning}
              className="px-6 bg-forge-metal border border-forge-bronze text-forge-gold font-rune hover:bg-forge-brown hover:border-forge-gold transition-colors rounded-lg disabled:opacity-50"
           >
-             {saving ? '...' : 'Save'}
+             {saving ? '鍛造中...' : '儲存卷軸'}
           </button>
        </div>
 
@@ -211,14 +318,14 @@ export const ForgeArchive: React.FC<ForgeArchiveProps> = ({
           
           <div className="relative z-10 flex items-center justify-center gap-3">
               <span className="font-rune text-forge-light text-xl md:text-2xl tracking-[0.2em] uppercase group-hover/btn:text-white group-hover/btn:drop-shadow-[0_0_8px_#ffb300] transition-all">
-                {isSpinning ? 'Forging...' : 'Strike Fate'}
+                {isSpinning ? '鍛造進行中...' : '啟動命運'}
               </span>
           </div>
        </button>
        
        {optionsCount < 2 && (
          <p className="text-center text-forge-ember font-scroll mt-4 text-sm italic animate-pulse">
-           * Requires at least 2 materials to forge
+           ※ 需要至少兩種素材才能鍛造
          </p>
        )}
     </div>

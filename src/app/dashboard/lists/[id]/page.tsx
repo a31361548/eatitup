@@ -1,9 +1,9 @@
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { getServerSession } from 'next-auth'
 import { prisma } from '@/lib/prisma'
 import { authOptions } from '@/lib/authOptions'
 import { PageShell } from '@/components/ui/PageShell'
-import { GlowCard } from '@/components/ui/GlowCard'
 import ItemForm from './ui/ItemForm'
 import ItemRow from './ui/ItemRow'
 import ListTitleEditor from './ui/ListTitleEditor'
@@ -18,48 +18,52 @@ export default async function ListDetail({ params }: { params: { id: string } })
   const qs = hasItems ? encodeURIComponent(expanded.join(',')) : ''
 
   return (
-    <PageShell className="space-y-10">
-      <section className="grid gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
-        <div className="space-y-6">
+    <PageShell className="relative space-y-8 overflow-hidden">
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-cyan-500/10 via-transparent to-gold-500/10" />
+      <div className="pointer-events-none absolute inset-0 bg-tech-grid-overlay opacity-10" />
+      <section className="relative z-10 flex flex-col gap-6">
+        <div className="rounded-[32px] border border-cyan-500/30 bg-void-900/70 p-6 shadow-glow-blue">
           <ListTitleEditor listId={list.id} initialTitle={list.title} />
-          <GlowCard
-            title="快速抽選"
-            description="直接帶入動畫轉盤或抽籤畫面。"
-            actions={
-              <>
-                <a
-                  className="rounded-full bg-white px-4 py-1.5 text-sm font-semibold text-slate-900 aria-disabled:cursor-not-allowed aria-disabled:opacity-60"
-                  href={hasItems ? `/modes/wheel?items=${qs}` : '#'}
-                  aria-disabled={!hasItems}
-                >
-                  轉盤模式
-                </a>
-                <a
-                  className="rounded-full border border-white/40 px-4 py-1.5 text-sm text-white/80 aria-disabled:cursor-not-allowed aria-disabled:opacity-60"
-                  href={hasItems ? `/modes/draw?items=${qs}` : '#'}
-                  aria-disabled={!hasItems}
-                >
-                  抽籤模式
-                </a>
-              </>
-            }
-          >
-            <p className="text-sm text-white/60">
-              {list.items.length > 0 ? `目前共有 ${list.items.length} 個項目，權重會影響抽選機率。` : '尚未新增候選項目，請先建立內容後再抽選。'}
-            </p>
-          </GlowCard>
-          <ItemForm listId={list.id} />
-          <ul className="space-y-3">
-            {list.items.map((item) => (
-              <ItemRow key={item.id} item={{ id: item.id, label: item.label, weight: item.weight }} />
-            ))}
-          </ul>
+          <div className="mt-6 grid gap-4 md:grid-cols-2">
+            <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+              <p className="font-tech text-xs uppercase tracking-[0.4em] text-cyan-400/70">卷軸資訊</p>
+              <p className="mt-2 text-sm text-white/60">項目數：{list.items.length}</p>
+              <p className="text-xs text-white/40">更新：{new Intl.DateTimeFormat('zh-TW', { dateStyle: 'medium', timeStyle: 'short' }).format(list.updatedAt)}</p>
+            </div>
+            <div className="flex flex-col gap-4 rounded-2xl border border-gold-500/30 bg-black/20 p-4">
+              <div>
+                <p className="font-tech text-xs uppercase tracking-[0.4em] text-gold-400/70">命運觸發</p>
+                <p className="mt-2 text-sm text-white/70">
+                  {hasItems ? '準備就緒，立刻送入命運之輪。' : '目前尚無素材，請先新增選項。'}
+                </p>
+              </div>
+              <Link
+                className="clip-path-slant bg-gradient-to-r from-cyan-500/40 to-gold-400/40 px-4 py-2 text-center font-tech text-xs uppercase tracking-[0.3em] text-white transition hover:shadow-glow-gold aria-disabled:opacity-40 aria-disabled:cursor-not-allowed"
+                href={hasItems ? `/modes/wheel?items=${qs}` : '#'}
+                aria-disabled={!hasItems}
+              >
+                投入命運之輪
+              </Link>
+            </div>
+          </div>
         </div>
-        <div className="space-y-4 rounded-3xl border border-white/10 bg-white/5 p-6 text-white/80">
-          <h3 className="text-lg font-semibold text-white">使用建議</h3>
-          <p>・將清單依照場景拆分，可快速切換情境。</p>
-          <p>・可利用權重為熱門選項多加幾票，提高抽中機率。</p>
-          <p>・變更會立即更新，轉盤與抽籤頁面不需重新整理。</p>
+        <div className="rounded-[32px] border border-white/15 bg-void-900/60 p-6 shadow-[0_0_25px_rgba(0,0,0,0.45)]">
+          <h2 className="text-2xl font-heading text-white mb-4">刻寫素材</h2>
+          <ItemForm listId={list.id} />
+        </div>
+        <div className="rounded-[32px] border border-white/10 bg-black/30 p-6 shadow-inner">
+          <h2 className="text-2xl font-heading text-white mb-4">卷軸內容</h2>
+          {list.items.length === 0 ? (
+            <div className="rounded-2xl border border-dashed border-white/20 p-10 text-center text-white/70">
+              尚無項目，使用上方表單刻入第一個選項吧！
+            </div>
+          ) : (
+            <ul className="space-y-3">
+              {list.items.map((item) => (
+                <ItemRow key={item.id} item={{ id: item.id, label: item.label, weight: item.weight }} />
+              ))}
+            </ul>
+          )}
         </div>
       </section>
     </PageShell>

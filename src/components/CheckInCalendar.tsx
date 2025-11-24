@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { PixelButton } from '@/components/PixelComponents'
 
 const CHECK_IN_REWARD = 5
@@ -16,6 +17,7 @@ export function CheckInCalendar() {
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
   const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null)
+  const router = useRouter()
 
   useEffect(() => {
     const init = async () => {
@@ -58,6 +60,7 @@ export function CheckInCalendar() {
         const reward = typeof data.reward === 'number' ? data.reward : CHECK_IN_REWARD
         setCheckedDates((prev) => new Set(prev).add(data.date))
         setFeedback({ type: 'success', message: `簽到成功！以太幣 +${reward}` })
+        router.refresh()
       } else {
         setFeedback({ type: 'error', message: data.message ?? '今天已簽到' })
       }

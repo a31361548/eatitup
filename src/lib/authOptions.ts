@@ -39,6 +39,17 @@ export const authOptions: NextAuthOptions = {
         token.status = (user as { status: MemberStatus }).status ?? 'ACTIVE'
         token.avatar = (user as { avatar?: string | null }).avatar
         token.coins = (user as { coins: number }).coins ?? 0
+      } else if (token.sub) {
+        const dbUser = await prisma.user.findUnique({
+          where: { id: token.sub },
+          select: { role: true, status: true, avatar: true, coins: true }
+        })
+        if (dbUser) {
+          token.role = dbUser.role
+          token.status = dbUser.status
+          token.avatar = dbUser.avatar
+          token.coins = dbUser.coins
+        }
       }
       if (trigger === 'update' && session?.avatar) {
         token.avatar = session.avatar

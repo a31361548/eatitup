@@ -8,12 +8,12 @@ import { ForgeArchive } from '@/components/ForgeArchive';
 import { Embers } from '@/components/Embers';
 
 const DEFAULT_OPTIONS = [
-  "Dragon's Hoard",
-  "Kingslayer",
-  "Phoenix Fire",
-  "Void Walker",
-  "Divine Smite",
-  "Iron Will"
+  '龍息寶庫',
+  '弒君審判',
+  '鳳凰之焰',
+  '虛空旅者',
+  '聖耀裁決',
+  '鋼鐵意志',
 ];
 
 export default function WheelPage() {
@@ -81,13 +81,13 @@ export default function WheelPage() {
                    {/* Light streaks */}
                    <div className="absolute top-0 left-[-100%] w-[50%] h-full bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-12 animate-[ember-rise_3s_infinite]"></div>
                    
-                   <div className="text-forge-glow font-rune text-lg md:text-xl tracking-[0.5em] mb-4 uppercase">Destiny Forged</div>
+                  <div className="text-forge-glow font-rune text-lg md:text-xl tracking-[0.5em] mb-4 uppercase">命運鑄成</div>
                    <h2 className="text-4xl md:text-6xl lg:text-7xl font-scroll font-bold text-white mb-6 drop-shadow-[0_4px_8px_rgba(0,0,0,1)] bg-clip-text text-transparent bg-gradient-to-b from-white via-forge-light to-forge-gold">
                      {winner}
                    </h2>
-                   <div className="text-xs text-forge-bronze font-rune tracking-widest border-t border-forge-brown pt-4 mt-2 hover:text-forge-gold transition-colors">
-                     Click to accept fate
-                   </div>
+                  <div className="text-xs text-forge-bronze font-rune tracking-widest border-t border-forge-brown pt-4 mt-2 hover:text-forge-gold transition-colors">
+                    點擊接受命運
+                  </div>
                 </div>
              </div>
            )}
