@@ -26,7 +26,8 @@ export const authOptions: NextAuthOptions = {
           name: user.name ?? undefined, 
           role: user.role, 
           status: user.status,
-          avatar: user.avatar 
+          avatar: user.avatar,
+          coins: (user as any).coins ?? 0
         }
       }
     })
@@ -37,6 +38,18 @@ export const authOptions: NextAuthOptions = {
         token.role = (user as { role: Role }).role ?? 'MEMBER'
         token.status = (user as { status: MemberStatus }).status ?? 'ACTIVE'
         token.avatar = (user as { avatar?: string | null }).avatar
+        token.coins = (user as { coins: number }).coins ?? 0
+      } else if (token.sub) {
+        const dbUser = await prisma.user.findUnique({
+          where: { id: token.sub },
+          select: { role: true, status: true, avatar: true, coins: true }
+        })
+        if (dbUser) {
+          token.role = dbUser.role
+          token.status = dbUser.status
+          token.avatar = dbUser.avatar
+          token.coins = dbUser.coins
+        }
       }
       if (trigger === 'update' && session?.avatar) {
         token.avatar = session.avatar
@@ -48,6 +61,7 @@ export const authOptions: NextAuthOptions = {
         session.user.role = (token.role as Role | undefined) ?? 'MEMBER'
         session.user.status = (token.status as MemberStatus | undefined) ?? 'ACTIVE'
         session.user.avatar = (token.avatar as string | null | undefined)
+        session.user.coins = (token.coins as number | undefined) ?? 0
       }
       return session
     }

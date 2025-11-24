@@ -1,0 +1,128 @@
+
+> eatwhat@0.1.0 build
+> prisma generate && next build
+
+Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+
+✔ Generated Prisma Client (v5.22.0) to .\node_modules\@prisma\client in 56ms
+
+Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
+
+Tip: Interested in query caching in just a few lines of code? Try Accelerate today! https://pris.ly/tip-3-accelerate
+
+  ▲ Next.js 14.2.33
+  - Environments: .env
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully
+   Linting and checking validity of types ...
+
+./src/app/api/avatars/route.ts
+5:8  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
+
+./src/app/api/checkin/route.ts
+5:8  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
+17:8  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
+
+./src/app/api/lists/[id]/route.ts
+20:8  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
+
+./src/app/api/notes/route.ts
+11:8  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
+25:8  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
+
+./src/app/api/notes/[id]/route.ts
+11:8  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
+21:8  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
+40:8  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
+
+./src/app/api/upload/route.ts
+6:8  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
+
+./src/app/api/user/avatar/route.ts
+10:8  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
+
+./src/app/dashboard/layout.tsx
+3:16  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
+
+./src/app/dashboard/notes/page.tsx
+13:16  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
+23:25  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
+32:67  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
+63:67  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
+91:37  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
+126:26  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
+131:33  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
+
+./src/app/dashboard/notes/[id]/page.tsx
+7:16  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
+30:31  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
+43:33  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
+
+./src/app/dashboard/page.tsx
+5:16  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
+14:13  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/app/dashboard/settings/page.tsx
+10:16  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
+47:53  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
+87:69  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
+102:61  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
+106:40  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
+149:31  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
+170:66  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
+199:15  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/app/modes/wheel/page.tsx
+61:30  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
+
+./src/components/CheckInCalendar.tsx
+5:8  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
+10:27  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
+
+./src/components/DeleteListButton.tsx
+6:8  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
+10:33  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
+
+./src/components/LogoutButton.tsx
+5:8  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
+6:33  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
+
+./src/components/MedievalBook.tsx
+3:31  Warning: 'useRef' is defined but never used.  @typescript-eslint/no-unused-vars
+6:8  Warning: 'Swal' is defined but never used.  @typescript-eslint/no-unused-vars
+17:8  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
+55:6  Warning: React Hook useEffect has a missing dependency: 'fetchNoteContent'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+57:37  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
+74:31  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
+90:26  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
+
+./src/components/Providers.tsx
+6:8  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
+
+./src/components/SessionSync.tsx
+6:8  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
+
+./src/components/TiptapEditor.tsx
+13:8  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
+45:86  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
+
+./src/lib/cropImage.ts
+10:8  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
+17:8  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/basic-features/eslint#disabling-rules
+Failed to compile.
+
+./src/components/MedievalBook.tsx:3:31
+Type error: 'useRef' is declared but its value is never read.
+
+  1 | 'use client'
+  2 |
+> 3 | import { useState, useEffect, useRef } from 'react'
+    |                               ^
+  4 | import { motion, AnimatePresence } from 'framer-motion'
+  5 | import { TiptapEditor } from './TiptapEditor'
+  6 | import Swal from 'sweetalert2'
+Next.js build worker exited with code: 1 and signal: null

@@ -1,11 +1,252 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+
+@theme {
+  --font-heading: "Cinzel", "Noto Serif TC", serif;
+  --font-tech: "Rajdhani", "Noto Sans TC", sans-serif;
+  --font-rune: "Cinzel Decorative", serif;
+  --font-scroll: "Cormorant Garamond", serif;
+
+  --color-primary: #16a34a;
+  --color-primary-600: #15803d;
+  --color-primary-700: #166534;
+
+  --color-danger: #ef4444;
+  --color-danger-600: #dc2626;
+  --color-danger-700: #b91c1c;
+
+  --color-void-700: #16161a;
+  --color-void-800: #0a0a0c;
+  --color-void-900: #050505;
+
+  --color-gold-100: #fef3c7;
+  --color-gold-200: #fde68a;
+  --color-gold-300: #fcd34d;
+  --color-gold-400: #fbbf24;
+  --color-gold-500: #d97706;
+  --color-gold-600: #b45309;
+  --color-gold-900: #78350f;
+  --color-gold-glow: #ffae00;
+
+  --color-cyan-300: #67e8f9;
+  --color-cyan-400: #22d3ee;
+  --color-cyan-500: #06b6d4;
+  --color-cyan-600: #0891b2;
+  --color-cyan-900: #0f172a;
+  --color-cyan-glow: #00f0ff;
+
+  --color-mythril-100: #f1f5f9;
+  --color-mythril-200: #e2e8f0;
+  --color-mythril-300: #cbd5e1;
+
+  --color-forge-dark: #0f0500;
+  --color-forge-brown: #2a1a15;
+  --color-forge-bronze: #5d4037;
+  --color-forge-metal: #3e2723;
+  --color-forge-gold: #ffb300;
+  --color-forge-light: #ffe082;
+  --color-forge-glow: #ff6f00;
+  --color-forge-ember: #ff3d00;
+
+  --shadow-glow-gold: 0 0 15px rgba(217, 119, 6, 0.3);
+  --shadow-glow-blue: 0 0 10px rgba(34, 211, 238, 0.4);
+
+  --background-image-tech-grid: radial-gradient(circle at center, rgba(217, 119, 6, 0.05) 0%, transparent 70%);
+  --background-image-forge-gradient: radial-gradient(circle at 30% 50%, #2a1a15 0%, #0f0500 100%);
+  --background-image-magma-border: linear-gradient(45deg, #5d4037, #ffb300, #5d4037);
+}
 
 @layer base {
   * { box-sizing: border-box }
   html, body { height: 100% }
   body {
-    background-color: #020617;
-    font-family: 'Inter', 'Noto Sans TC', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background-color: #050505;
+    background-image:
+      radial-gradient(circle at 20% 20%, rgba(251, 191, 36, 0.08), transparent 55%),
+      radial-gradient(circle at 80% 0%, rgba(34, 211, 238, 0.15), transparent 45%),
+      radial-gradient(circle at center, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 1));
+    font-family: 'Rajdhani', 'Noto Sans TC', sans-serif;
     color: #e2e8f0;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
   }
+}
+
+@layer utilities {
+  .bg-tech-grid-overlay {
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+    background-size: 80px 80px;
+    mask-image: radial-gradient(circle at center, rgba(255, 255, 255, 1), transparent 75%);
+  }
+
+  .clip-path-slant {
+    clip-path: polygon(8% 0, 100% 0, 100% 70%, 92% 100%, 0 100%, 0 30%);
+  }
+
+  .shadow-glow-gold {
+    box-shadow: 0 0 15px rgba(217, 119, 6, 0.3);
+  }
+
+  .shadow-glow-blue {
+    box-shadow: 0 0 10px rgba(34, 211, 238, 0.4);
+  }
+
+  .bg-forge-gradient {
+    background-image: radial-gradient(circle at 30% 50%, #2a1a15 0%, #0f0500 100%);
+  }
+
+  .bg-magma-border {
+    background-image: linear-gradient(45deg, #5d4037, #ffb300, #5d4037);
+  }
+
+  .animate-spin-slow {
+    animation: spin 20s linear infinite;
+  }
+
+  .perspective-2000 {
+    perspective: 2000px;
+  }
+  .preserve-3d {
+    transform-style: preserve-3d;
+  }
+  .backface-hidden {
+    backface-visibility: hidden;
+  }
+  .rotate-y-180 {
+    transform: rotateY(180deg);
+  }
+  .rotate-y-0 {
+    transform: rotateY(0deg);
+  }
+  .rotate-y-minus-180 {
+    transform: rotateY(-180deg);
+  }
+  
+  /* Texture classes */
+  .bg-parchment {
+    background-color: #f3e9d2;
+    background-image: 
+      radial-gradient(#dbcabb 15%, transparent 16%),
+      radial-gradient(#dbcabb 15%, transparent 16%);
+    background-size: 60px 60px;
+    background-position: 0 0, 30px 30px;
+  }
+  
+  .bg-leather {
+    background-color: #3e2723;
+    background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.4'/%3E%3C/svg%3E");
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .no-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+
+  /* Sleek Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #0a0a0c; 
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #333; 
+    border-radius: 4px;
+    border: 1px solid #d97706;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #d97706; 
+  }
+  
+  .bg-login-hero {
+    background-image: url('/assets/login-bg.jpg');
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+  @keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+  }
+
+  /* Embers Particles */
+  .ember {
+    position: fixed;
+    bottom: -10px;
+    width: 4px;
+    height: 4px;
+    background: radial-gradient(circle, #ffb300 0%, #ff3d00 100%);
+    border-radius: 50%;
+    box-shadow: 0 0 10px #ff6f00, 0 0 20px #ff3d00;
+    pointer-events: none;
+    z-index: 0;
+    animation: rise linear infinite;
+  }
+
+  /* Vignette */
+  .vignette {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    box-shadow: inset 0 0 150px rgba(0,0,0,0.9);
+    pointer-events: none;
+    z-index: 5;
+  }
+
+  /* Custom Scrollbar */
+  .forge-scroll::-webkit-scrollbar {
+    width: 8px;
+  }
+  .forge-scroll::-webkit-scrollbar-track {
+    background: #1a0f0a;
+  }
+  .forge-scroll::-webkit-scrollbar-thumb {
+    background: linear-gradient(#5d4037, #ffb300, #5d4037);
+    border-radius: 4px;
+    border: 1px solid #000;
+  }
+
+  /* Rune wheel helpers */
+  .fill-forge-gold {
+    fill: #ffb300;
+  }
+
+  .animate-spin-reverse {
+    animation: rune-spin 25s linear infinite reverse;
+  }
+
+  @keyframes rune-spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+}
+
+button,
+[role="button"],
+a,
+label,
+select,
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+input[type="checkbox"],
+input[type="radio"] {
+  cursor: pointer;
+}
+
+button:disabled,
+input:disabled,
+select:disabled,
+[aria-disabled="true"] {
+  cursor: not-allowed;
 }

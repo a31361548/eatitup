@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { Prisma } from '@prisma/client'
 import { prisma } from '@/lib/prisma'
 import { getAuthenticatedUser } from '@/lib/currentUser'
+
+const CHECK_IN_REWARD = 5
 
 export async function GET(_req: NextRequest) {
   const user = await getAuthenticatedUser()
@@ -21,15 +24,26 @@ export async function POST(_req: NextRequest) {
   const today = new Date().toISOString().split('T')[0]
 
   try {
-    await prisma.checkIn.create({
-      data: {
-        userId: user.id,
-        date: today,
-      },
+    const updatedCoins = await prisma.$transaction(async (tx) => {
+      await tx.checkIn.create({
+        data: {
+          userId: user.id,
+          date: today,
+        },
+      })
+      const updatedUser = await tx.user.update({
+        where: { id: user.id },
+        data: { coins: { increment: CHECK_IN_REWARD } },
+        select: { coins: true },
+      })
+      return updatedUser.coins
     })
-    return NextResponse.json({ success: true, date: today })
+    return NextResponse.json({ success: true, date: today, reward: CHECK_IN_REWARD, coins: updatedCoins })
   } catch (error) {
-    // Unique constraint violation means already checked in
-    return NextResponse.json({ success: false, message: 'Already checked in' })
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+      return NextResponse.json({ success: false, message: '今天已簽到' })
+    }
+    console.error('Check-in failed', error)
+    return NextResponse.json({ success: false, message: '簽到失敗' }, { status: 500 })
   }
 }

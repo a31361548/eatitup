@@ -3,20 +3,25 @@
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Placeholder from '@tiptap/extension-placeholder'
+import { Color } from '@tiptap/extension-color'
+import { TextStyle } from '@tiptap/extension-text-style'
 
 interface TiptapEditorProps {
   content: string
   onChange: (content: string) => void
   editable?: boolean
+  darkControls?: boolean
 }
 
-export function TiptapEditor({ content, onChange, editable = true }: TiptapEditorProps) {
+export function TiptapEditor({ content, onChange, editable = true, darkControls = false }: TiptapEditorProps) {
   const editor = useEditor({
     extensions: [
       StarterKit,
       Placeholder.configure({
         placeholder: '開始寫作...',
       }),
+      TextStyle,
+      Color,
     ],
     content,
     editable,
@@ -25,7 +30,7 @@ export function TiptapEditor({ content, onChange, editable = true }: TiptapEdito
     },
     editorProps: {
       attributes: {
-        class: 'prose prose-invert max-w-none focus:outline-none min-h-[400px] p-4',
+        class: `prose ${darkControls ? 'text-black' : 'prose-invert'} max-w-none focus:outline-none min-h-[400px] p-4`,
       },
     },
     immediatelyRender: false,
@@ -47,7 +52,9 @@ export function TiptapEditor({ content, onChange, editable = true }: TiptapEdito
       onClick={onClick}
       title={title}
       className={`rounded p-2 text-sm transition-colors ${
-        isActive ? 'bg-emerald-500/20 text-emerald-400' : 'text-white/60 hover:bg-white/10 hover:text-white'
+        isActive 
+          ? (darkControls ? 'bg-black/10 text-black font-bold' : 'bg-emerald-500/20 text-emerald-400') 
+          : (darkControls ? 'text-gray-700 hover:bg-black/5 hover:text-black' : 'text-white/60 hover:bg-white/10 hover:text-white')
       }`}
     >
       {children}
@@ -55,9 +62,9 @@ export function TiptapEditor({ content, onChange, editable = true }: TiptapEdito
   )
 
   return (
-    <div className="rounded-xl border border-white/10 bg-white/5 overflow-hidden">
+    <div className={`rounded-xl border overflow-hidden ${darkControls ? 'border-[#d7c69c] bg-transparent' : 'border-white/10 bg-white/5'}`}>
       {editable && (
-        <div className="flex flex-wrap gap-1 border-b border-white/10 bg-white/5 p-2">
+        <div className={`flex flex-wrap gap-1 border-b p-2 ${darkControls ? 'border-[#d7c69c] bg-[#e8d5a8]/50' : 'border-white/10 bg-white/5'}`}>
           <ToolbarButton
             onClick={() => editor.chain().focus().toggleBold().run()}
             isActive={editor.isActive('bold')}
@@ -79,7 +86,17 @@ export function TiptapEditor({ content, onChange, editable = true }: TiptapEdito
           >
             <s>S</s>
           </ToolbarButton>
-          <div className="mx-1 w-px bg-white/10" />
+          <div className={`mx-1 w-px ${darkControls ? 'bg-[#d7c69c]' : 'bg-white/10'}`} />
+          <div className="flex items-center gap-1">
+             <input
+                type="color"
+                onInput={(event) => editor.chain().focus().setColor((event.target as HTMLInputElement).value).run()}
+                value={editor.getAttributes('textStyle').color || '#000000'}
+                className="w-8 h-8 p-0 border-0 rounded cursor-pointer bg-transparent"
+                title="文字顏色"
+             />
+          </div>
+          <div className={`mx-1 w-px ${darkControls ? 'bg-[#d7c69c]' : 'bg-white/10'}`} />
           <ToolbarButton
             onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
             isActive={editor.isActive('heading', { level: 1 })}
@@ -101,7 +118,7 @@ export function TiptapEditor({ content, onChange, editable = true }: TiptapEdito
           >
             H3
           </ToolbarButton>
-          <div className="mx-1 w-px bg-white/10" />
+          <div className={`mx-1 w-px ${darkControls ? 'bg-[#d7c69c]' : 'bg-white/10'}`} />
           <ToolbarButton
             onClick={() => editor.chain().focus().toggleBulletList().run()}
             isActive={editor.isActive('bulletList')}
@@ -116,7 +133,7 @@ export function TiptapEditor({ content, onChange, editable = true }: TiptapEdito
           >
             1. List
           </ToolbarButton>
-          <div className="mx-1 w-px bg-white/10" />
+          <div className={`mx-1 w-px ${darkControls ? 'bg-[#d7c69c]' : 'bg-white/10'}`} />
           <ToolbarButton
             onClick={() => editor.chain().focus().toggleBlockquote().run()}
             isActive={editor.isActive('blockquote')}
@@ -131,20 +148,20 @@ export function TiptapEditor({ content, onChange, editable = true }: TiptapEdito
           >
             —
           </ToolbarButton>
-          <div className="mx-1 w-px bg-white/10" />
+          <div className={`mx-1 w-px ${darkControls ? 'bg-[#d7c69c]' : 'bg-white/10'}`} />
           <ToolbarButton
             onClick={() => editor.chain().focus().undo().run()}
             isActive={false}
             title="復原"
           >
-            ↩
+            ↪
           </ToolbarButton>
           <ToolbarButton
             onClick={() => editor.chain().focus().redo().run()}
             isActive={false}
             title="重做"
           >
-            ↪
+            ↩
           </ToolbarButton>
         </div>
       )}
