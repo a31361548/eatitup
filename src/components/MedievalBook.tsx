@@ -251,9 +251,10 @@ export function MedievalBook({
             {/* Close Button (Top Right) */}
             <button 
                 onClick={handleCloseRequest}
-                className="fixed top-8 right-8 z-[60] group flex items-center gap-2 bg-black/40 hover:bg-black/60 text-white px-4 py-2 rounded-full transition-all shadow-lg border border-white/10"
+                disabled={saving}
+                className={`fixed top-8 right-8 z-[60] group flex items-center gap-2 bg-black/40 hover:bg-black/60 text-white px-4 py-2 rounded-full transition-all shadow-lg border border-white/10 ${saving ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
-                <span className="text-sm font-serif">{isDirty ? '儲存並關閉' : '關閉'}</span>
+                <span className="text-sm font-serif">{saving ? '儲存中...' : (isDirty ? '儲存並關閉' : '關閉')}</span>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>

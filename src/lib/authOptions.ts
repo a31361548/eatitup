@@ -27,7 +27,7 @@ export const authOptions: NextAuthOptions = {
           role: user.role, 
           status: user.status,
           avatar: user.avatar,
-          coins: (user as any).coins ?? 0
+          coins: user.coins ?? 0
         }
       }
     })
