@@ -1,21 +1,22 @@
-'use client'
+'use client';
 
-import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { TiptapEditor } from './TiptapEditor'
+import React, { useState, useEffect } from 'react';
+import { BookPage } from './BookPage';
+import { TiptapEditor } from './TiptapEditor';
+import { AnimatePresence } from 'framer-motion';
+import Swal from 'sweetalert2';
 
 interface MedievalBookProps {
-  isOpen: boolean
-  onClose: () => void
-  noteId: string | null
-  initialTitle?: string
-  onSave: (title: string, content: string) => Promise<void>
-  onDelete?: () => Promise<void>
+  isOpen: boolean;
+  onClose: () => void;
+  noteId: string | null;
+  initialTitle?: string;
+  onSave: (title: string, content: string) => Promise<void>;
+  onDelete?: () => Promise<void>;
 }
 
-type PagesContent = Record<number, string>
-
-const MAX_PAGES = 5
+type PagesContent = Record<number, string>;
+const MAX_CONTENT_PAGES = 6; // Support up to 6 pages for double-sided demo (P1-P6)
 
 export function MedievalBook({
   isOpen,
@@ -25,298 +26,342 @@ export function MedievalBook({
   onSave,
   onDelete
 }: MedievalBookProps) {
-  const [pageState, setPageState] = useState<'cover' | 'content'>('cover')
-  const [title, setTitle] = useState(initialTitle)
-  const [pages, setPages] = useState<PagesContent>({ 1: '' })
-  const [currentPage, setCurrentPage] = useState(1)
-  const [loading, setLoading] = useState(false)
-  const [saving, setSaving] = useState(false)
+  const [title, setTitle] = useState(initialTitle);
+  const [pages, setPages] = useState<PagesContent>({ 1: '' });
+  const [flippedIndex, setFlippedIndex] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [isDirty, setIsDirty] = useState(false);
+
+  // Dimensions
+  const width = 450;
+  const height = 600;
 
   // Reset state when opening
   useEffect(() => {
     if (isOpen) {
+      setIsDirty(false);
       if (noteId) {
-        setPageState('content')
-        fetchNoteContent()
+        setFlippedIndex(1); // Open to first spread (P1/P2)
+        fetchNoteContent();
       } else {
-        setPageState('cover')
-        setTitle('')
-        setPages({ 1: '' })
-        setCurrentPage(1)
+        setFlippedIndex(1); // Open to first spread
+        setTitle('');
+        setPages({ 1: '' });
       }
+    } else {
+      const timer = setTimeout(() => setFlippedIndex(0), 500);
+      return () => clearTimeout(timer);
     }
-  }, [isOpen, noteId])
+  }, [isOpen, noteId]);
 
   const fetchNoteContent = async () => {
-    if (!noteId) return
-    setLoading(true)
+    if (!noteId) return;
+    setLoading(true);
     try {
-      const res = await fetch(`/api/notes/${noteId}`)
+      const res = await fetch(`/api/notes/${noteId}`);
       if (res.ok) {
-        const data = await res.json()
-        setTitle(data.note.title)
-        
-        // Try to parse as JSON for multi-page, fallback to single string
+        const data = await res.json();
+        setTitle(data.note.title);
         try {
-          const parsedContent = JSON.parse(data.note.content)
+          const parsedContent = JSON.parse(data.note.content);
           if (typeof parsedContent === 'object' && parsedContent !== null) {
-            setPages(parsedContent)
+            setPages(parsedContent);
           } else {
-            setPages({ 1: data.note.content })
+            setPages({ 1: data.note.content });
           }
         } catch {
-          // Not JSON, assume old format (single page)
-          setPages({ 1: data.note.content })
+          setPages({ 1: data.note.content });
         }
-        setCurrentPage(1)
       }
     } catch (error) {
-      console.error('Failed to load note', error)
+      console.error('Failed to load note', error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
-  const handleSave = async () => {
-    if (!title.trim()) return
-    setSaving(true)
+  const handleSave = async (shouldClose = false) => {
+    if (!title.trim()) {
+        Swal.fire({
+            icon: 'warning',
+            title: '請輸入標題',
+            background: '#3e2723',
+            color: '#f4e4bc'
+        });
+        return;
+    }
+    setSaving(true);
     try {
-      // Serialize pages to JSON
-      const contentToSave = JSON.stringify(pages)
-      await onSave(title, contentToSave)
-      
-      if (pageState === 'cover') {
-        setPageState('content')
+      const contentToSave = JSON.stringify(pages);
+      await onSave(title, contentToSave);
+      setIsDirty(false);
+      if (shouldClose) {
+        onClose();
+      } else {
+        Swal.fire({
+            icon: 'success',
+            title: '已儲存',
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 1500,
+            background: '#3e2723',
+            color: '#f4e4bc'
+        });
       }
     } catch (error) {
-      console.error(error)
+      console.error(error);
+      Swal.fire({
+        icon: 'error',
+        title: '儲存失敗',
+        background: '#3e2723',
+        color: '#f4e4bc'
+      });
     } finally {
-      setSaving(false)
+      setSaving(false);
     }
-  }
+  };
 
-  const handleClose = () => {
-    onClose()
-    setTimeout(() => {
-      setPageState('cover')
-      setCurrentPage(1)
-    }, 500)
-  }
-
-  const handleCancelCreate = () => {
-    handleClose()
-  }
-
-  const updateCurrentPageContent = (content: string) => {
-    setPages(prev => ({
-      ...prev,
-      [currentPage]: content
-    }))
-  }
-
-  const changePage = (delta: number) => {
-    const newPage = currentPage + delta
-    if (newPage >= 1 && newPage <= MAX_PAGES) {
-      setCurrentPage(newPage)
+  const handleCloseRequest = () => {
+    if (isDirty) {
+      Swal.fire({
+        title: '尚未儲存',
+        text: "您的修改尚未儲存，是否要儲存？",
+        icon: 'warning',
+        showCancelButton: true,
+        showDenyButton: true,
+        confirmButtonText: '儲存並關閉',
+        denyButtonText: '直接關閉',
+        cancelButtonText: '取消',
+        background: '#3e2723',
+        color: '#f4e4bc',
+        confirmButtonColor: '#5d4037',
+        denyButtonColor: '#d33'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          handleSave(true);
+        } else if (result.isDenied) {
+          onClose();
+        }
+      });
+    } else {
+      onClose();
     }
-  }
+  };
 
-  const bookVariants = {
-    closed: { rotateY: 0, rotateX: 0, scale: 0.8, opacity: 0 },
-    open: { rotateY: 0, rotateX: 0, scale: 1, opacity: 1, transition: { duration: 0.5 } },
-    exit: { scale: 0.8, opacity: 0, transition: { duration: 0.3 } }
-  }
+  const handlePageChange = (pageNum: number, content: string) => {
+    setPages(prev => ({ ...prev, [pageNum]: content }));
+    setIsDirty(true);
+  };
 
-  const coverVariants = {
-    closed: { rotateY: 0 },
-    open: { rotateY: -180, transition: { duration: 0.8, ease: "easeInOut" } }
-  }
+  // Calculate total sheets needed
+  // Sheet 0: Front=Cover, Back=Page 1
+  // Sheet 1: Front=Page 2, Back=Page 3
+  // Sheet 2: Front=Page 4, Back=Page 5
+  // ...
+  // We need enough sheets to cover MAX_CONTENT_PAGES.
+  // P1 is on Sheet 0 Back.
+  // P2, P3 on Sheet 1.
+  // P4, P5 on Sheet 2.
+  // P6, P7 on Sheet 3.
+  // Formula: Page N is on:
+  // If N=1: Sheet 0 Back.
+  // If N>1: Sheet ceil((N-1)/2).
+  // Total sheets = 1 (Cover) + ceil((MAX_CONTENT_PAGES - 1) / 2).
+  // For 6 pages: 1 + ceil(5/2) = 1 + 3 = 4 sheets (Indices 0, 1, 2, 3).
+  const contentSheetsCount = Math.ceil((MAX_CONTENT_PAGES - 1) / 2);
+  const totalSheets = 1 + contentSheetsCount; 
+  
+  const isBookClosed = flippedIndex === 0;
+  const isBookFinished = flippedIndex === totalSheets;
 
-  if (!isOpen) return null
+  const handleNext = () => {
+    if (flippedIndex < totalSheets) {
+      setFlippedIndex(p => p + 1);
+    }
+  };
+
+  const handlePrev = () => {
+    if (flippedIndex > 0) {
+      setFlippedIndex(p => p - 1);
+    }
+  };
+
+  const getZIndex = (index: number) => {
+    if (index >= flippedIndex) {
+      return totalSheets - index;
+    } else {
+      return index;
+    }
+  };
+
+  const renderPageContent = (pageNum: number) => {
+    if (pageNum > MAX_CONTENT_PAGES) return null;
+    
+    return (
+      <div className="h-full flex flex-col">
+          <div className="flex justify-between items-center mb-4 border-b border-amber-900/20 pb-2">
+              <span className="font-serif text-amber-900/60 text-sm">Page {pageNum}</span>
+              {pageNum === 1 && (
+                  <div className="flex gap-2">
+                      {noteId && onDelete && (
+                          <button 
+                            onClick={(e) => { e.stopPropagation(); onDelete(); }}
+                            className="text-xs border border-amber-900 text-amber-900 px-2 py-1 rounded hover:bg-amber-100"
+                          >
+                              Delete
+                          </button>
+                      )}
+                  </div>
+              )}
+          </div>
+          
+
+
+          <div className="flex-1 overflow-y-auto custom-scrollbar no-scrollbar" onClick={(e) => e.stopPropagation()}>
+              {loading ? (
+                  <div className="flex items-center justify-center h-full text-amber-900/50 font-serif animate-pulse">
+                      Reading ancient texts...
+                  </div>
+              ) : (
+                  <TiptapEditor
+                      content={pages[pageNum] || ''}
+                      onChange={(content) => handlePageChange(pageNum, content)}
+                      editable={true}
+                      darkControls={true}
+                  />
+              )}
+          </div>
+      </div>
+    );
+  };
+
+  if (!isOpen) return null;
 
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 perspective-1000">
-          <motion.div
-            initial="closed"
-            animate="open"
-            exit="exit"
-            variants={bookVariants}
-            className="relative h-[85vh] w-full max-w-4xl perspective-1000"
-          >
-            {/* Book Container */}
-            <div className={`relative h-full w-full transition-all duration-700 transform-style-3d ${pageState === 'content' ? 'rotate-y-0' : ''}`}>
-              
-              {/* Back Cover (Static base) */}
-              <div className="absolute inset-0 rounded-r-2xl bg-[#3e2723] shadow-2xl border-l-4 border-[#2d1b16]">
-                {/* Metal Corners (Back) */}
-                <div className="absolute -top-2 -right-2 w-16 h-16 border-t-4 border-r-4 border-[#d4af37] rounded-tr-lg bg-gradient-to-br from-[#ffd700] to-[#b8860b] clip-corner shadow-lg"></div>
-                <div className="absolute -bottom-2 -right-2 w-16 h-16 border-b-4 border-r-4 border-[#d4af37] rounded-br-lg bg-gradient-to-br from-[#ffd700] to-[#b8860b] clip-corner shadow-lg"></div>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm overflow-hidden">
+            {/* Close Button (Top Right) */}
+            <button 
+                onClick={handleCloseRequest}
+                className="fixed top-8 right-8 z-[100] group flex items-center gap-2 bg-black/40 hover:bg-black/60 text-white px-4 py-2 rounded-full transition-all shadow-lg border border-white/10"
+            >
+                <span className="text-sm font-serif">{isDirty ? '儲存並關閉' : '關閉'}</span>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+
+            <div className="relative flex flex-col items-center justify-center h-full w-full p-4">
+              {/* Controls / Hints */}
+              <div className="absolute top-8 text-amber-100/50 font-serif tracking-widest text-sm z-50 animate-pulse pointer-events-none select-none">
+                {isBookClosed ? "Click to Open" : "Click pages to flip"}
               </div>
 
-              {/* Pages (Content) */}
-              <div className="absolute inset-y-2 right-2 left-4 rounded-r-xl bg-[#f4e4bc] shadow-inner overflow-hidden flex flex-col"
-                   style={{ 
-                     backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.1'/%3E%3C/svg%3E")`,
-                     backgroundBlendMode: 'multiply'
-                   }}>
-                
-                {/* Header / Toolbar */}
-                <div className="flex items-center justify-between border-b border-[#d7c69c] bg-[#e8d5a8]/80 px-6 py-3 backdrop-blur-sm">
-                  <input
-                    type="text"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    placeholder="手札標題..."
-                    className="bg-transparent text-2xl font-serif font-bold text-[#2d1b16] placeholder-[#2d1b16]/40 focus:outline-none w-full"
-                  />
-                  <div className="flex gap-2">
-                    <button
-                      onClick={handleSave}
-                      disabled={saving}
-                      className="rounded-full bg-[#2d1b16] px-4 py-1 text-sm font-semibold text-[#f4e4bc] hover:bg-[#4e342e] disabled:opacity-50 shadow-md"
-                    >
-                      {saving ? '紀錄中...' : '紀錄'}
-                    </button>
-                    {noteId && onDelete && (
-                      <button
-                        onClick={onDelete}
-                        className="rounded-full border border-[#5d4037] px-4 py-1 text-sm font-semibold text-[#5d4037] hover:bg-[#d7ccc8]"
-                      >
-                        撕毀
-                      </button>
-                    )}
-                    <button
-                      onClick={handleClose}
-                      className="rounded-full p-1 text-[#5d4037] hover:bg-[#d7ccc8]"
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-
-                {/* Editor Area */}
-                <div className="flex-1 overflow-y-auto p-6 font-serif text-[#2d1b16] custom-scrollbar relative">
-                  {loading ? (
-                    <div className="flex h-full items-center justify-center text-[#8d6e63]">
-                      翻閱中...
-                    </div>
-                  ) : (
-                    // Key by currentPage to force re-render when page changes, ensuring content updates
-                    <div className="prose prose-p:text-[#2d1b16] prose-headings:text-[#2d1b16] max-w-none">
-                       <TiptapEditor 
-                        key={currentPage}
-                        content={pages[currentPage] || ''} 
-                        onChange={updateCurrentPageContent} 
-                        editable={true}
-                        darkControls={true} // We'll need to add this prop to TiptapEditor
-                      />
-                    </div>
-                  )}
-                </div>
-                
-                {/* Footer / Pagination */}
-                <div className="border-t border-[#d7c69c] bg-[#e8d5a8]/80 px-6 py-3 flex items-center justify-between text-[#5d4037] font-serif backdrop-blur-sm">
-                  <button 
-                    onClick={() => changePage(-1)}
-                    disabled={currentPage <= 1}
-                    className="flex items-center gap-1 px-3 py-1 rounded hover:bg-[#d7ccc8] disabled:opacity-30 disabled:hover:bg-transparent transition-colors"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-                    </svg>
-                    上一頁
-                  </button>
-                  
-                  <span className="font-bold tracking-widest">
-                    - 第 {currentPage} 頁 / 共 {MAX_PAGES} 頁 -
-                  </span>
-
-                  <button 
-                    onClick={() => changePage(1)}
-                    disabled={currentPage >= MAX_PAGES}
-                    className="flex items-center gap-1 px-3 py-1 rounded hover:bg-[#d7ccc8] disabled:opacity-30 disabled:hover:bg-transparent transition-colors"
-                  >
-                    下一頁
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-                    </svg>
-                  </button>
-                </div>
-              </div>
-
-              {/* Front Cover (Animated) */}
-              <motion.div
-                initial={false}
-                animate={pageState === 'content' ? 'open' : 'closed'}
-                variants={coverVariants}
-                className="absolute inset-y-0 left-0 w-full origin-left rounded-r-2xl bg-[#4e342e] shadow-2xl backface-hidden flex items-center justify-center border-l-4 border-[#3e2723]"
-                style={{ transformStyle: 'preserve-3d' }}
+              {/* Book Container */}
+              <div 
+                className="relative perspective-2000 transition-transform duration-700 ease-in-out"
+                style={{ 
+                  width: width * 2,
+                  height: height,
+                  transform: isBookClosed 
+                    ? `translateX(-${width / 2}px)` 
+                    : isBookFinished 
+                      ? `translateX(${width / 2}px)` 
+                      : 'translateX(0)',
+                }}
               >
-                {/* Metal Corners (Front) */}
-                <div className="absolute top-0 right-0 w-20 h-20 border-t-4 border-r-4 border-[#d4af37] rounded-tr-xl bg-gradient-to-br from-[#ffd700] via-[#b8860b] to-[#8b4513] shadow-lg" style={{ clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 0)' }}>
-                   <div className="absolute top-2 right-2 w-4 h-4 rounded-full bg-[#8b4513] shadow-inner border border-[#d4af37]"></div>
-                </div>
-                <div className="absolute bottom-0 right-0 w-20 h-20 border-b-4 border-r-4 border-[#d4af37] rounded-br-xl bg-gradient-to-tr from-[#ffd700] via-[#b8860b] to-[#8b4513] shadow-lg" style={{ clipPath: 'polygon(0 100%, 100% 100%, 100% 0, 0 100%)' }}>
-                   <div className="absolute bottom-2 right-2 w-4 h-4 rounded-full bg-[#8b4513] shadow-inner border border-[#d4af37]"></div>
-                </div>
+                <div className="absolute inset-0 preserve-3d">
+                  {/* Static Back Cover - Left Side */}
+                  <div 
+                    className={`absolute right-1/2 top-0 bg-leather rounded-l-md shadow-2xl origin-right transition-all duration-500 ease-in-out ${
+                      isBookClosed ? 'opacity-0 rotate-y-12' : 'opacity-100 rotate-y-0'
+                    }`}
+                    style={{
+                      width: width,
+                      height: height,
+                      transform: isBookClosed ? 'translateZ(-2px) rotateY(15deg)' : 'translateZ(-2px) rotateY(0deg)',
+                      boxShadow: 'inset -10px 0 20px rgba(0,0,0,0.3), 0 20px 50px rgba(0,0,0,0.5)'
+                    }}
+                  />
 
-                {/* Cover Design */}
-                <div className="absolute inset-6 rounded border-2 border-[#8d6e63] flex flex-col items-center justify-center p-8 text-center bg-[#3e2723]/50">
-                  <div className="mb-8 text-[#d7ccc8] opacity-80 drop-shadow-md">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-32 w-32" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={0.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                    </svg>
-                  </div>
-                  
-                  {noteId ? (
-                    <h2 className="text-4xl font-serif font-bold text-[#f4e4bc] tracking-wider mb-4 drop-shadow-lg">{title || '無題'}</h2>
-                  ) : (
-                    <div className="w-full max-w-md space-y-8">
-                      <h2 className="text-3xl font-serif font-bold text-[#f4e4bc] tracking-wider drop-shadow-lg">新篇章</h2>
-                      <input
-                        type="text"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                        placeholder="為此篇章命名..."
-                        className="w-full bg-transparent border-b-2 border-[#8d6e63] text-center text-2xl text-[#f4e4bc] placeholder-[#8d6e63] focus:outline-none focus:border-[#f4e4bc] transition-colors py-2 font-serif"
-                        autoFocus
-                      />
-                      <div className="flex gap-4 justify-center">
-                        <button
-                          onClick={handleCancelCreate}
-                          className="px-6 py-2 rounded-full border border-[#8d6e63] text-[#d7ccc8] font-serif hover:bg-[#4e342e] transition-colors"
-                        >
-                          取消
-                        </button>
-                        <button
-                          onClick={() => {
-                            if (title.trim()) setPageState('content')
-                          }}
-                          disabled={!title.trim()}
-                          className="px-8 py-2 rounded-full bg-[#5d4037] text-[#f4e4bc] font-serif tracking-widest hover:bg-[#4e342e] disabled:opacity-50 transition-all transform hover:scale-105 shadow-lg border border-[#8d6e63]"
-                        >
-                          開啟手札
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                  
-                  {!noteId && (
-                     <div className="mt-12 text-[#8d6e63] text-sm font-serif">
-                       EatItUp 冒險者日誌
-                     </div>
-                  )}
-                </div>
-              </motion.div>
+                  {/* Static Back Cover - Right Side */}
+                  <div 
+                    className={`absolute left-1/2 top-0 bg-leather rounded-r-md shadow-2xl origin-left transition-all duration-500 ease-in-out ${
+                      isBookFinished ? 'opacity-0 rotate-y-minus-12' : 'opacity-100 rotate-y-0'
+                    }`}
+                    style={{
+                      width: width,
+                      height: height,
+                      transform: isBookFinished ? 'translateZ(-2px) rotateY(-15deg)' : 'translateZ(-2px) rotateY(0deg)',
+                      boxShadow: 'inset 10px 0 20px rgba(0,0,0,0.3), 0 20px 50px rgba(0,0,0,0.5)'
+                    }}
+                  />
 
+                  {/* Spine */}
+                  <div 
+                     className="absolute left-1/2 top-0 bottom-0 w-12 bg-amber-900 rounded-sm"
+                     style={{
+                       transform: 'translateX(-50%) translateZ(-5px)',
+                       background: 'linear-gradient(to right, #2d1b16, #5d4037 40%, #5d4037 60%, #2d1b16)',
+                       boxShadow: '0 0 10px rgba(0,0,0,0.5)'
+                     }}
+                  />
+
+                  {/* Render Pages */}
+                  
+                  {/* Sheet 0: Front=Cover, Back=Page 1 */}
+                  <BookPage
+                    index={0}
+                    isFlipped={0 < flippedIndex}
+                    zIndex={getZIndex(0)}
+                    onFlip={() => {
+                        if (0 < flippedIndex) handlePrev();
+                        else handleNext();
+                    }}
+                    width={width}
+                    height={height}
+                    type="cover"
+                    title={title || "New Grimoire"}
+                    subtitle="Chronicles of the Realm"
+                    backChildren={renderPageContent(1)}
+                  />
+
+                  {/* Content Sheets */}
+                  {Array.from({ length: contentSheetsCount }).map((_, i) => {
+                     const sheetIndex = i + 1; // 1, 2, 3...
+                     // Sheet 1: Front=P2, Back=P3
+                     // Sheet 2: Front=P4, Back=P5
+                     const frontPageNum = sheetIndex * 2;
+                     const backPageNum = sheetIndex * 2 + 1;
+                     
+                     const isFlipped = sheetIndex < flippedIndex;
+                     
+                     return (
+                       <BookPage
+                         key={sheetIndex}
+                         index={sheetIndex}
+                         isFlipped={isFlipped}
+                         zIndex={getZIndex(sheetIndex)}
+                         onFlip={() => {
+                           if (isFlipped) handlePrev();
+                           else handleNext();
+                         }}
+                         width={width}
+                         height={height}
+                         type="content"
+                         frontChildren={renderPageContent(frontPageNum)}
+                         backChildren={renderPageContent(backPageNum)}
+                       />
+                     );
+                  })}
+                </div>
+              </div>
             </div>
-          </motion.div>
         </div>
       )}
     </AnimatePresence>
-  )
+  );
 }
