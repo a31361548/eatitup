@@ -15,6 +15,8 @@ interface BookPageProps {
   type?: 'cover' | 'back-cover' | 'content';
   title?: string;
   subtitle?: string;
+  isEditable?: boolean;
+  onTitleChange?: (title: string) => void;
 }
 
 export const BookPage: React.FC<BookPageProps> = ({
@@ -27,7 +29,9 @@ export const BookPage: React.FC<BookPageProps> = ({
   backChildren,
   type = 'content',
   title,
-  subtitle
+  subtitle,
+  isEditable,
+  onTitleChange
 }) => {
   // Rotate -180 when flipped (left side), 0 when not flipped (right side)
   const rotation = isFlipped ? 'rotate-y-minus-180' : 'rotate-y-0';
@@ -62,9 +66,20 @@ export const BookPage: React.FC<BookPageProps> = ({
            <div className="h-full w-full flex flex-col items-center justify-center p-8 bg-leather relative overflow-hidden border-4 border-amber-600/30 rounded-r-md">
              <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/aged-paper.png')] mix-blend-overlay"></div>
              <div className="border-4 border-double border-amber-500/50 p-8 w-full h-full flex flex-col items-center justify-center bg-black/20 backdrop-blur-sm">
-               <h1 className="font-serif font-black text-4xl md:text-5xl text-amber-500 text-center mb-4 tracking-widest drop-shadow-md uppercase">
-                 {title || 'Grimoire'}
-               </h1>
+               {isEditable ? (
+                 <input
+                   type="text"
+                   value={title}
+                   onChange={(e) => onTitleChange?.(e.target.value)}
+                   onClick={(e) => e.stopPropagation()}
+                   placeholder="Enter Title..."
+                   className="font-serif font-black text-2xl md:text-3xl text-amber-500 text-center mb-4 tracking-widest drop-shadow-md uppercase bg-transparent border-b border-amber-500/50 focus:outline-none w-full placeholder-amber-500/30"
+                 />
+               ) : (
+                 <h1 className="font-serif font-black text-2xl md:text-3xl text-amber-500 text-center mb-4 tracking-widest drop-shadow-md uppercase">
+                   {title || 'Grimoire'}
+                 </h1>
+               )}
                <div className="w-16 h-1 bg-amber-500/50 mb-4 rounded-full"></div>
                <p className="font-serif text-amber-200/80 text-xl tracking-wide uppercase">{subtitle || 'The Book of Shadows'}</p>
              </div>

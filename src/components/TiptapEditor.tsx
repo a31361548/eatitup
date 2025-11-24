@@ -3,6 +3,8 @@
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Placeholder from '@tiptap/extension-placeholder'
+import { Color } from '@tiptap/extension-color'
+import { TextStyle } from '@tiptap/extension-text-style'
 
 interface TiptapEditorProps {
   content: string
@@ -18,6 +20,8 @@ export function TiptapEditor({ content, onChange, editable = true, darkControls 
       Placeholder.configure({
         placeholder: '開始寫作...',
       }),
+      TextStyle,
+      Color,
     ],
     content,
     editable,
@@ -26,7 +30,7 @@ export function TiptapEditor({ content, onChange, editable = true, darkControls 
     },
     editorProps: {
       attributes: {
-        class: 'prose prose-invert max-w-none focus:outline-none min-h-[400px] p-4',
+        class: `prose ${darkControls ? 'text-black' : 'prose-invert'} max-w-none focus:outline-none min-h-[400px] p-4`,
       },
     },
     immediatelyRender: false,
@@ -82,6 +86,16 @@ export function TiptapEditor({ content, onChange, editable = true, darkControls 
           >
             <s>S</s>
           </ToolbarButton>
+          <div className={`mx-1 w-px ${darkControls ? 'bg-[#d7c69c]' : 'bg-white/10'}`} />
+          <div className="flex items-center gap-1">
+             <input
+                type="color"
+                onInput={(event) => editor.chain().focus().setColor((event.target as HTMLInputElement).value).run()}
+                value={editor.getAttributes('textStyle').color || '#000000'}
+                className="w-8 h-8 p-0 border-0 rounded cursor-pointer bg-transparent"
+                title="文字顏色"
+             />
+          </div>
           <div className={`mx-1 w-px ${darkControls ? 'bg-[#d7c69c]' : 'bg-white/10'}`} />
           <ToolbarButton
             onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
@@ -140,14 +154,14 @@ export function TiptapEditor({ content, onChange, editable = true, darkControls 
             isActive={false}
             title="復原"
           >
-            ↩
+            ↪
           </ToolbarButton>
           <ToolbarButton
             onClick={() => editor.chain().focus().redo().run()}
             isActive={false}
             title="重做"
           >
-            ↪
+            ↩
           </ToolbarButton>
         </div>
       )}

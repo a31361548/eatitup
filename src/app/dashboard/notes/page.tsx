@@ -116,16 +116,16 @@ export default function NotesPage() {
   if (loading) return <div className="text-white p-8">整理書架中...</div>
 
   return (
-    <div className="h-[calc(100vh-100px)] flex flex-col p-8 overflow-hidden">
+    <div className=" flex flex-col  overflow-hidden">
       <div className="flex items-center justify-between mb-8 shrink-0">
         <h1 className="text-4xl font-serif font-bold text-[#f4e4bc] drop-shadow-lg">
-          冒險者書架
+          記事本
         </h1>
         <button
           onClick={openNewNote}
           className="group relative overflow-hidden rounded-full bg-[#5d4037] px-8 py-3 font-serif font-bold text-[#f4e4bc] shadow-lg transition-all hover:bg-[#4e342e] hover:scale-105 hover:shadow-emerald-500/20"
         >
-          <span className="relative z-10">+ 撰寫新篇章</span>
+          <span className="relative z-10">+ 撰寫新篇</span>
           <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/10 to-transparent transition-transform duration-500 group-hover:translate-x-full" />
         </button>
       </div>
@@ -151,7 +151,7 @@ export default function NotesPage() {
                         <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-[#d4af37] rounded-br-md"></div>
 
                         {/* Title Box */}
-                        <div className="absolute top-1/4 left-4 right-4 border border-[#8d6e63] p-4 flex items-center justify-center bg-black/20">
+                        <div className="absolute top-1/4 left-4 right-4 border border-[#8d6e63] p-2 flex items-center justify-center bg-black/20">
                             <h3 className="text-[#f4e4bc] font-serif text-center font-bold line-clamp-3 drop-shadow-md">
                                 {note.title}
                             </h3>

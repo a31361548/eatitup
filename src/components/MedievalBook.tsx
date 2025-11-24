@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { BookPage } from './BookPage';
 import { TiptapEditor } from './TiptapEditor';
 import { AnimatePresence } from 'framer-motion';
@@ -32,6 +33,12 @@ export function MedievalBook({
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [isDirty, setIsDirty] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    return () => setMounted(false);
+  }, []);
 
   // Dimensions
   const width = 450;
@@ -45,7 +52,7 @@ export function MedievalBook({
         setFlippedIndex(1); // Open to first spread (P1/P2)
         fetchNoteContent();
       } else {
-        setFlippedIndex(1); // Open to first spread
+        setFlippedIndex(0); // Start at cover for new notes
         setTitle('');
         setPages({ 1: '' });
       }
@@ -217,8 +224,6 @@ export function MedievalBook({
               )}
           </div>
           
-
-
           <div className="flex-1 overflow-y-auto custom-scrollbar no-scrollbar" onClick={(e) => e.stopPropagation()}>
               {loading ? (
                   <div className="flex items-center justify-center h-full text-amber-900/50 font-serif animate-pulse">
@@ -237,16 +242,16 @@ export function MedievalBook({
     );
   };
 
-  if (!isOpen) return null;
+  if (!isOpen || !mounted) return null;
 
-  return (
+  return createPortal(
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm overflow-hidden">
+        <div className="fixed inset-0 z-[50] flex items-center justify-center bg-black/50 backdrop-blur-sm overflow-hidden">
             {/* Close Button (Top Right) */}
             <button 
                 onClick={handleCloseRequest}
-                className="fixed top-8 right-8 z-[100] group flex items-center gap-2 bg-black/40 hover:bg-black/60 text-white px-4 py-2 rounded-full transition-all shadow-lg border border-white/10"
+                className="fixed top-8 right-8 z-[60] group flex items-center gap-2 bg-black/40 hover:bg-black/60 text-white px-4 py-2 rounded-full transition-all shadow-lg border border-white/10"
             >
                 <span className="text-sm font-serif">{isDirty ? '儲存並關閉' : '關閉'}</span>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
@@ -324,9 +329,14 @@ export function MedievalBook({
                     width={width}
                     height={height}
                     type="cover"
-                    title={title || "New Grimoire"}
+                    title={title || ""}
                     subtitle="Chronicles of the Realm"
                     backChildren={renderPageContent(1)}
+                    isEditable={true}
+                    onTitleChange={(newTitle) => {
+                        setTitle(newTitle);
+                        setIsDirty(true);
+                    }}
                   />
 
                   {/* Content Sheets */}
@@ -362,6 +372,7 @@ export function MedievalBook({
             </div>
         </div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 }
