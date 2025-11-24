@@ -6,6 +6,7 @@ import { gsap } from 'gsap'
 import Swal from 'sweetalert2'
 import Cropper, { Area } from 'react-easy-crop'
 import getCroppedImg from '@/lib/cropImage'
+import { PixelCard, PixelButton } from '@/components/PixelComponents'
 
 export default function SettingsPage() {
   const { update } = useSession()
@@ -60,16 +61,22 @@ export default function SettingsPage() {
           text: '頭貼已更新',
           timer: 1500,
           showConfirmButton: false,
-          background: '#1e293b',
-          color: '#fff'
+          background: '#0a0a0c',
+          color: '#e2e8f0',
+          customClass: {
+            popup: 'border border-gold-500/30 shadow-glow-gold'
+          }
         })
       } else {
         Swal.fire({
           icon: 'error',
           title: '更新失敗',
           text: '請稍後再試',
-          background: '#1e293b',
-          color: '#fff'
+          background: '#0a0a0c',
+          color: '#e2e8f0',
+          customClass: {
+            popup: 'border border-red-500/30'
+          }
         })
       }
     } catch (error) {
@@ -78,8 +85,11 @@ export default function SettingsPage() {
         icon: 'error',
         title: '發生錯誤',
         text: '請檢查網路連線',
-        background: '#1e293b',
-        color: '#fff'
+        background: '#0a0a0c',
+        color: '#e2e8f0',
+        customClass: {
+          popup: 'border border-red-500/30'
+        }
       })
     }
   }
@@ -128,8 +138,11 @@ export default function SettingsPage() {
           icon: 'error',
           title: '上傳失敗',
           text: '請確認檔案格式是否正確',
-          background: '#1e293b',
-          color: '#fff'
+          background: '#0a0a0c',
+          color: '#e2e8f0',
+          customClass: {
+            popup: 'border border-red-500/30'
+          }
         })
       }
     } catch (error) {
@@ -138,8 +151,11 @@ export default function SettingsPage() {
         icon: 'error',
         title: '發生錯誤',
         text: '上傳過程中發生錯誤',
-        background: '#1e293b',
-        color: '#fff'
+        background: '#0a0a0c',
+        color: '#e2e8f0',
+        customClass: {
+          popup: 'border border-red-500/30'
+        }
       })
     } finally {
       setUploading(false)
@@ -179,98 +195,124 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="space-y-8 text-white">
-      <h1 className="text-3xl font-semibold">個人設定</h1>
+    <div className="space-y-8 text-mythril-100">
+      <div className="flex items-center gap-4">
+        <h1 className="text-3xl font-heading font-bold text-transparent bg-clip-text bg-gradient-to-r from-gold-300 to-gold-600">
+          個人設定
+        </h1>
+        <div className="h-[1px] flex-1 bg-gradient-to-r from-gold-500/50 to-transparent"></div>
+      </div>
       
-      <section className="space-y-4 rounded-3xl border border-white/10 bg-white/5 p-8">
-        <h2 className="text-xl font-semibold">選擇頭像</h2>
-        <div className="grid grid-cols-3 gap-4 md:grid-cols-6">
-          {avatars.map((avatar, index) => (
-            <button
-              key={avatar}
-              ref={el => { avatarRefs.current[index] = el }}
-              onClick={() => handleAvatarSelect(avatar)}
-              onMouseEnter={() => handleAvatarHover(index, true)}
-              onMouseLeave={() => handleAvatarHover(index, false)}
-              className={`relative aspect-square overflow-hidden rounded-full border-2 transition-all ${
-                selectedAvatar === avatar ? 'border-emerald-400' : 'border-transparent hover:border-white/30'
-              }`}
-            >
-              <img src={avatar} alt="Avatar" className="h-full w-full object-cover" />
-            </button>
-          ))}
-        </div>
-        
-        <div className="mt-6">
-          <p className="mb-2 text-sm text-white/70">或上傳自訂圖片</p>
-          <label className="inline-block cursor-pointer rounded-full bg-white/10 px-6 py-2 text-sm font-semibold text-white transition hover:bg-white/20">
-            選擇圖片
-            <input
-              type="file"
-              accept="image/png, image/jpeg, image/svg+xml, image/webp"
-              onChange={handleFileChange}
-              disabled={uploading}
-              className="hidden"
-            />
-          </label>
-        </div>
-
-        {/* Preview Modal */}
-        {previewImage && (
-          <div 
-            ref={modalRef}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
-          >
-            <div 
-              ref={modalContentRef}
-              className="w-full max-w-sm rounded-3xl border border-white/10 bg-[#0f172a] p-8 shadow-2xl"
-            >
-              <h3 className="mb-6 text-center text-xl font-semibold text-white">裁切頭貼</h3>
-              <div className="relative mb-6 h-64 w-full overflow-hidden rounded-xl bg-black">
-                <Cropper
-                  image={previewImage}
-                  crop={crop}
-                  zoom={zoom}
-                  aspect={1}
-                  onCropChange={setCrop}
-                  onCropComplete={onCropComplete}
-                  onZoomChange={setZoom}
-                  cropShape="round"
-                  showGrid={false}
-                />
-              </div>
-              <div className="mb-6 px-4">
-                <input
-                  type="range"
-                  value={zoom}
-                  min={1}
-                  max={3}
-                  step={0.1}
-                  aria-labelledby="Zoom"
-                  onChange={(e) => setZoom(Number(e.target.value))}
-                  className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-white/20 accent-emerald-500"
-                />
-              </div>
-              <div className="flex gap-3">
+      <PixelCard title="外觀自訂" glow="gold">
+        <div className="space-y-6">
+            <h2 className="text-lg font-tech text-cyan-400 uppercase tracking-widest flex items-center gap-2">
+                <span className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></span>
+                選擇頭像
+            </h2>
+            
+            <div className="grid grid-cols-3 gap-6 md:grid-cols-6 p-4 bg-void-900/50 rounded-lg border border-white/5">
+            {avatars.map((avatar, index) => (
                 <button
-                  onClick={handleCloseModal}
-                  disabled={uploading}
-                  className="flex-1 rounded-full border border-white/20 py-3 text-sm font-semibold text-white transition hover:bg-white/10 disabled:opacity-50"
+                key={avatar}
+                ref={el => { avatarRefs.current[index] = el }}
+                onClick={() => handleAvatarSelect(avatar)}
+                onMouseEnter={() => handleAvatarHover(index, true)}
+                onMouseLeave={() => handleAvatarHover(index, false)}
+                className={`relative aspect-square overflow-hidden rounded-full border-2 transition-all group ${
+                    selectedAvatar === avatar 
+                    ? 'border-gold-400 shadow-[0_0_15px_rgba(251,191,36,0.5)]' 
+                    : 'border-white/10 hover:border-cyan-400/50'
+                }`}
                 >
-                  取消
+                <img src={avatar} alt="Avatar" className="h-full w-full object-cover transition-transform group-hover:scale-110" />
+                {selectedAvatar === avatar && (
+                    <div className="absolute inset-0 bg-gold-400/20 flex items-center justify-center">
+                        <div className="w-2 h-2 bg-gold-400 rounded-full shadow-[0_0_5px_#fbbf24]"></div>
+                    </div>
+                )}
                 </button>
-                <button
-                  onClick={handleConfirmUpload}
-                  disabled={uploading}
-                  className="flex-1 rounded-full bg-emerald-500 py-3 text-sm font-semibold text-white transition hover:bg-emerald-600 disabled:opacity-50"
-                >
-                  {uploading ? '上傳中...' : '確定更換'}
-                </button>
-              </div>
+            ))}
             </div>
+            
+            <div className="mt-8 flex flex-col items-center gap-4 border-t border-white/5 pt-6">
+            <p className="text-sm text-mythril-300 font-tech tracking-wider">或上傳自訂圖片</p>
+            <label className="relative group cursor-pointer">
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg blur opacity-30 group-hover:opacity-75 transition duration-200"></div>
+                <div className="relative flex items-center gap-2 bg-void-800 border border-cyan-500/30 px-6 py-2 rounded-lg text-cyan-400 font-tech uppercase tracking-widest hover:text-cyan-300 transition-colors">
+                    <span>UPLOAD IMAGE</span>
+                    <input
+                        type="file"
+                        accept="image/png, image/jpeg, image/svg+xml, image/webp"
+                        onChange={handleFileChange}
+                        disabled={uploading}
+                        className="hidden"
+                    />
+                </div>
+            </label>
+            </div>
+        </div>
+      </PixelCard>
+
+      {/* Preview Modal */}
+      {previewImage && (
+        <div 
+          ref={modalRef}
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-void-900/80 backdrop-blur-sm p-4"
+        >
+          <div 
+            ref={modalContentRef}
+            className="w-full max-w-sm"
+          >
+            <PixelCard title="裁切頭貼" glow="blue">
+                <div className="relative mb-6 h-64 w-full overflow-hidden rounded-xl border border-white/10 bg-void-900">
+                    <Cropper
+                    image={previewImage}
+                    crop={crop}
+                    zoom={zoom}
+                    aspect={1}
+                    onCropChange={setCrop}
+                    onCropComplete={onCropComplete}
+                    onZoomChange={setZoom}
+                    cropShape="round"
+                    showGrid={false}
+                    />
+                </div>
+                
+                <div className="mb-6 px-4">
+                    <input
+                    type="range"
+                    value={zoom}
+                    min={1}
+                    max={3}
+                    step={0.1}
+                    aria-labelledby="Zoom"
+                    onChange={(e) => setZoom(Number(e.target.value))}
+                    className="h-1 w-full cursor-pointer appearance-none rounded-lg bg-void-700 accent-cyan-400"
+                    />
+                </div>
+
+                <div className="flex gap-4">
+                    <PixelButton
+                        onClick={handleCloseModal}
+                        disabled={uploading}
+                        variant="danger"
+                        className="flex-1"
+                    >
+                    取消
+                    </PixelButton>
+                    <PixelButton
+                        onClick={handleConfirmUpload}
+                        disabled={uploading}
+                        variant="success"
+                        className="flex-1"
+                    >
+                    {uploading ? '上傳中...' : '確定更換'}
+                    </PixelButton>
+                </div>
+            </PixelCard>
           </div>
-        )}
-      </section>
+        </div>
+      )}
     </div>
   )
 }

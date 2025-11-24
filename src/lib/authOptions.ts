@@ -26,7 +26,8 @@ export const authOptions: NextAuthOptions = {
           name: user.name ?? undefined, 
           role: user.role, 
           status: user.status,
-          avatar: user.avatar 
+          avatar: user.avatar,
+          coins: (user as any).coins ?? 0
         }
       }
     })
@@ -37,6 +38,7 @@ export const authOptions: NextAuthOptions = {
         token.role = (user as { role: Role }).role ?? 'MEMBER'
         token.status = (user as { status: MemberStatus }).status ?? 'ACTIVE'
         token.avatar = (user as { avatar?: string | null }).avatar
+        token.coins = (user as { coins: number }).coins ?? 0
       }
       if (trigger === 'update' && session?.avatar) {
         token.avatar = session.avatar
@@ -48,6 +50,7 @@ export const authOptions: NextAuthOptions = {
         session.user.role = (token.role as Role | undefined) ?? 'MEMBER'
         session.user.status = (token.status as MemberStatus | undefined) ?? 'ACTIVE'
         session.user.avatar = (token.avatar as string | null | undefined)
+        session.user.coins = (token.coins as number | undefined) ?? 0
       }
       return session
     }

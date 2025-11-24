@@ -8,6 +8,7 @@ declare module "next-auth" {
       role: Role
       status: MemberStatus
       avatar?: string | null
+      coins: number
     } & DefaultSession["user"]
   }
 
@@ -15,6 +16,7 @@ declare module "next-auth" {
     role: Role
     status: MemberStatus
     avatar?: string | null
+    coins: number
   }
 }
 
@@ -23,5 +25,6 @@ declare module "next-auth/jwt" {
     role: Role
     status: MemberStatus
     avatar?: string | null
+    coins: number
   }
 }
