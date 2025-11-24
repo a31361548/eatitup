@@ -48,9 +48,9 @@ export const ElvenWheel: React.FC<Props> = ({ options, isSpinning, onSpinEnd }) 
       {/* 2. Rotating Rune Ring (Counter-Spin) */}
       <div className="absolute inset-[-20px] md:inset-[-40px] rounded-full border border-forge-gold/20 flex items-center justify-center animate-spin-reverse opacity-60 pointer-events-none select-none">
           <svg viewBox="0 0 100 100" className="w-full h-full p-2">
-            <path id="curve" d="M 50, 50 m -45, 0 a 45,45 0 1,1 90,0 a 45,45 0 1,1 -90,0" fill="transparent" />
+            <path id="rune-curve" d="M 50, 50 m -45, 0 a 45,45 0 1,1 90,0 a 45,45 0 1,1 -90,0" fill="transparent" />
             <text width="500">
-              <textPath xlinkHref="#curve" className="text-[4px] fill-forge-gold font-rune tracking-[2px]">
+              <textPath xlinkHref="#rune-curve" className="text-[4px] fill-forge-gold font-rune tracking-[2px]">
                 ᚠ ᚢ ᚦ ᚨ ᚱ ᚲ ᚷ ᚹ ᚺ ᚾ ᛁ ᛃ ᛇ ᛈ ᛉ ᛊ ᛏ ᛒ ᛖ ᛗ ᛚ ᛜ ᛞ ᛟ ᚠ ᚢ ᚦ ᚨ ᚱ ᚲ ᚷ ᚹ ᚺ ᚾ ᛁ ᛃ ᛇ ᛈ ᛉ ᛊ ᛏ ᛒ ᛖ ᛗ ᛚ ᛜ ᛞ ᛟ
               </textPath>
             </text>
@@ -125,3 +125,4 @@ export const ElvenWheel: React.FC<Props> = ({ options, isSpinning, onSpinEnd }) 
     </div>
   );
 };
+ 
