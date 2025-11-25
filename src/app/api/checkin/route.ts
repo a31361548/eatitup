@@ -31,9 +31,16 @@ export async function POST(_req: NextRequest) {
           date: today,
         },
       })
+      const dbUser = await tx.user.findUnique({
+        where: { id: user.id },
+        select: { coins: true },
+      })
+      const currentCoins = dbUser?.coins ?? 0
+      const newCoins = currentCoins + CHECK_IN_REWARD
+
       const updatedUser = await tx.user.update({
         where: { id: user.id },
-        data: { coins: { increment: CHECK_IN_REWARD } },
+        data: { coins: newCoins },
         select: { coins: true },
       })
       return updatedUser.coins
