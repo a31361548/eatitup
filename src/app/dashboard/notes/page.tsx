@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { MedievalBook } from '../../../components/MedievalBook'
+import { HolographicPad } from '@/components/HolographicPad'
 import Swal from 'sweetalert2'
 
 interface Note {
@@ -14,7 +14,7 @@ export default function NotesPage() {
   const [notes, setNotes] = useState<Note[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedNoteId, setSelectedNoteId] = useState<string | null>(null)
-  const [isBookOpen, setIsBookOpen] = useState(false)
+  const [isPadOpen, setIsPadOpen] = useState(false)
 
   useEffect(() => {
     fetchNotes()
@@ -24,7 +24,6 @@ export default function NotesPage() {
     fetch('/api/notes')
       .then((res) => res.json())
       .then((data) => {
-        console.log('Fetched notes:', data.notes)
         setNotes(data.notes)
         setLoading(false)
       })
@@ -40,11 +39,6 @@ export default function NotesPage() {
       })
       if (res.ok) {
         await fetchNotes()
-        // Don't close book here, let MedievalBook handle it or user close it
-        // Actually, if it's a new note, we might want to keep it open or close it?
-        // The MedievalBook handleSave calls onSave.
-        // If we want to close after save, we can. But usually we keep editing.
-        // Let's just refresh the list.
       }
     } catch (error) {
       console.error('Failed to create note', error)
@@ -72,30 +66,30 @@ export default function NotesPage() {
     if (!selectedNoteId) return
 
     const result = await Swal.fire({
-      title: '確定要撕毀這頁手札嗎？',
-      text: "此動作無法復原",
+      title: '刪除資料日誌？',
+      text: "此動作無法復原，確定要執行刪除程序嗎？",
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: '是的，撕毀它',
+      confirmButtonColor: '#FF0055',
+      cancelButtonColor: '#114242',
+      confirmButtonText: '確認刪除',
       cancelButtonText: '取消',
-      background: '#3e2723',
-      color: '#f4e4bc'
+      background: '#041C1C',
+      color: '#67E8F9'
     })
 
     if (result.isConfirmed) {
       try {
         await fetch(`/api/notes/${selectedNoteId}`, { method: 'DELETE' })
-        setIsBookOpen(false)
+        setIsPadOpen(false)
         fetchNotes()
         Swal.fire({
-          title: '已撕毀',
+          title: '已刪除',
           icon: 'success',
           timer: 1500,
           showConfirmButton: false,
-          background: '#3e2723',
-          color: '#f4e4bc'
+          background: '#041C1C',
+          color: '#67E8F9'
         })
       } catch (error) {
         console.error('Failed to delete note', error)
@@ -105,79 +99,89 @@ export default function NotesPage() {
 
   const openNewNote = () => {
     setSelectedNoteId(null)
-    setIsBookOpen(true)
+    setIsPadOpen(true)
   }
 
   const openNote = (id: string) => {
     setSelectedNoteId(id)
-    setIsBookOpen(true)
+    setIsPadOpen(true)
   }
 
-  if (loading) return <div className="text-white p-8">整理書架中...</div>
+  if (loading) return <div className="text-aether-cyan p-8 font-tech animate-pulse">資料庫初始化中...</div>
 
   return (
-    <div className=" flex flex-col  overflow-hidden">
-      <div className="flex items-center justify-between mb-8 shrink-0">
-        <h1 className="text-4xl font-serif font-bold text-[#f4e4bc] drop-shadow-lg">
-          記事本
-        </h1>
+    <div className="flex flex-col h-full overflow-hidden relative">
+      {/* Background Grid */}
+      <div className="absolute inset-0 pointer-events-none bg-tech-grid-overlay opacity-20" />
+      
+      <div className="flex items-center justify-between mb-8 shrink-0 relative z-10">
+        <div>
+            <h1 className="text-4xl font-header text-white drop-shadow-[0_0_10px_rgba(103,232,249,0.5)]">
+            資料日誌
+            </h1>
+            <p className="font-tech text-aether-cyan/60 tracking-widest text-sm mt-2">SECURE STORAGE // ENCRYPTED</p>
+        </div>
+        
         <button
           onClick={openNewNote}
-          className="group relative overflow-hidden rounded-full bg-[#5d4037] px-8 py-3 font-serif font-bold text-[#f4e4bc] shadow-lg transition-all hover:bg-[#4e342e] hover:scale-105 hover:shadow-emerald-500/20"
+          className="group relative overflow-hidden bg-aether-dim/50 border border-aether-cyan/50 px-8 py-3 font-tech font-bold text-aether-cyan shadow-[0_0_15px_rgba(103,232,249,0.2)] transition-all hover:bg-aether-cyan/20 hover:shadow-[0_0_25px_rgba(103,232,249,0.4)] clip-path-slant"
         >
-          <span className="relative z-10">+ 撰寫新篇</span>
-          <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/10 to-transparent transition-transform duration-500 group-hover:translate-x-full" />
+          <span className="relative z-10 tracking-widest">+ 新增日誌</span>
+          <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-aether-cyan/20 to-transparent transition-transform duration-500 group-hover:translate-x-full" />
         </button>
       </div>
 
       {/* Grid Container */}
-      <div className="flex-1 overflow-y-auto custom-scrollbar no-scrollbar p-4">
-        <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8">
-            {/* New Note Placeholder (Optional, or just use button above) */}
-            
+      <div className="flex-1 overflow-y-auto custom-scrollbar p-4 relative z-10">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
             {notes.map((note) => (
                 <div 
                     key={note.id} 
                     onClick={() => openNote(note.id)}
-                    className="group relative aspect-[3/4] cursor-pointer perspective-1000"
+                    className="group relative aspect-[4/3] cursor-pointer transition-all duration-300 hover:-translate-y-1"
                 >
-                    {/* Book Cover */}
-                    <div className="absolute inset-0 bg-[#3e2723] rounded-r-lg shadow-xl transform transition-transform duration-300 group-hover:-translate-y-2 group-hover:rotate-y-[-15deg] group-hover:shadow-2xl border-l-4 border-[#2d1b16]">
-                        {/* Leather Texture */}
-                        <div className="absolute inset-0 opacity-50 bg-[url('https://www.transparenttextures.com/patterns/aged-paper.png')] mix-blend-overlay rounded-r-lg"></div>
+                    {/* Holographic Card */}
+                    <div className="absolute inset-0 bg-[#041C1C]/80 border border-aether-cyan/30 shadow-[0_0_10px_rgba(103,232,249,0.1)] group-hover:border-aether-cyan group-hover:shadow-[0_0_20px_rgba(103,232,249,0.3)] backdrop-blur-sm overflow-hidden flex flex-col">
+                        {/* Header Bar */}
+                        <div className="h-1 w-full bg-aether-cyan/20 group-hover:bg-aether-cyan transition-colors" />
                         
-                        {/* Decorative Corners */}
-                        <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-[#d4af37] rounded-tr-md"></div>
-                        <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-[#d4af37] rounded-br-md"></div>
-
-                        {/* Title Box */}
-                        <div className="absolute top-1/4 left-4 right-4 border border-[#8d6e63] p-2 flex items-center justify-center bg-black/20">
-                            <h3 className="text-[#f4e4bc] font-serif text-center font-bold line-clamp-3 drop-shadow-md">
+                        {/* Content Preview */}
+                        <div className="flex-1 p-4 flex flex-col justify-between relative">
+                            {/* Scanline Effect */}
+                            <div className="absolute inset-0 bg-[linear-gradient(transparent_50%,rgba(103,232,249,0.05)_50%)] bg-[length:100%_4px] pointer-events-none" />
+                            
+                            <h3 className="text-white font-tech text-lg font-bold line-clamp-2 tracking-wide group-hover:text-aether-cyan transition-colors">
                                 {note.title}
                             </h3>
+                            
+                            <div className="flex justify-between items-end mt-2">
+                                <span className="text-[10px] font-pixel text-aether-cyan/40 uppercase tracking-widest">
+                                    ID: {note.id.slice(0, 6)}
+                                </span>
+                                <div className="w-2 h-2 bg-aether-cyan/50 rounded-full animate-pulse" />
+                            </div>
                         </div>
-
-                        {/* Spine Hint */}
-                        <div className="absolute left-2 top-0 bottom-0 w-1 bg-[#2d1b16]/50"></div>
+                        
+                        {/* Corner Accents */}
+                        <div className="absolute top-0 right-0 w-4 h-4 border-t border-r border-aether-cyan/50" />
+                        <div className="absolute bottom-0 left-0 w-4 h-4 border-b border-l border-aether-cyan/50" />
                     </div>
-                    
-                    {/* Pages Hint (Side View) */}
-                    <div className="absolute right-0 top-1 bottom-1 w-2 bg-[#f3e9d2] rounded-r-sm transform translate-z-[-2px] translate-x-[2px] shadow-sm group-hover:translate-x-[4px] transition-transform duration-300"></div>
                 </div>
             ))}
         </div>
         
         {notes.length === 0 && (
-            <div className="w-full h-full flex flex-col items-center justify-center text-[#8d6e63] opacity-50">
-                <p className="text-2xl font-serif mb-4">書架空空如也...</p>
-                <p>點擊右上角開始撰寫您的第一篇冒險日誌</p>
+            <div className="w-full h-full flex flex-col items-center justify-center text-aether-cyan/30">
+                <div className="w-16 h-16 border-2 border-dashed border-aether-cyan/30 rounded-full animate-spin-slow mb-4" />
+                <p className="text-xl font-tech tracking-widest">無資料</p>
+                <p className="text-sm mt-2 font-pixel">請建立新日誌以開始</p>
             </div>
         )}
       </div>
 
-      <MedievalBook
-        isOpen={isBookOpen}
-        onClose={() => setIsBookOpen(false)}
+      <HolographicPad
+        isOpen={isPadOpen}
+        onClose={() => setIsPadOpen(false)}
         noteId={selectedNoteId}
         onSave={handleUpdateNote}
         onDelete={handleDeleteNote}

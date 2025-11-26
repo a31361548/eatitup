@@ -204,8 +204,8 @@ export default function SettingsPage() {
       </div>
       
       <PixelCard title="外觀自訂" glow="gold">
-        <div className="space-y-6">
-            <h2 className="text-lg font-tech text-cyan-400 uppercase tracking-widest flex items-center gap-2">
+        <div className="space-y-8">
+            <h2 className="text-pixel-lg font-tech text-cyan-400 uppercase tracking-widest flex items-center gap-2">
                 <span className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></span>
                 選擇頭像
             </h2>
@@ -234,8 +234,8 @@ export default function SettingsPage() {
             ))}
             </div>
             
-            <div className="mt-8 flex flex-col items-center gap-4 border-t border-white/5 pt-6">
-            <p className="text-sm text-mythril-300 font-tech tracking-wider">或上傳自訂圖片</p>
+            <div className="mt-8 flex flex-col items-center gap-5 border-t border-white/5 pt-8">
+            <p className="text-pixel-sm text-mythril-300 font-tech tracking-wider">或上傳自訂圖片</p>
             <label className="relative group cursor-pointer">
                 <div className="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg blur opacity-30 group-hover:opacity-75 transition duration-200"></div>
                 <div className="relative flex items-center gap-2 bg-void-800 border border-cyan-500/30 px-6 py-2 rounded-lg text-cyan-400 font-tech uppercase tracking-widest hover:text-cyan-300 transition-colors">

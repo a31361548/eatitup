@@ -18,91 +18,102 @@ export default async function ListsPage(): Promise<React.ReactElement> {
   })
   return (
     <PageShell className="relative space-y-12 overflow-hidden">
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-cyan-500/5 via-transparent to-gold-500/5 opacity-80" />
+      {/* Background Effects */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-aether-cyan/5 via-transparent to-aether-cyan/5 opacity-50" />
       <div className="pointer-events-none absolute inset-0 bg-tech-grid-overlay opacity-20" />
-      <header className="relative z-10 rounded-3xl border border-cyan-500/30 bg-void-900/70 p-8 shadow-glow-blue">
+      
+      <header className="relative z-10 rounded-lg border border-aether-cyan/30 bg-[#041C1C]/80 p-8 shadow-[0_0_30px_rgba(103,232,249,0.15)] backdrop-blur-md">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
           <div className="space-y-3">
-            <p className="font-tech text-sm uppercase tracking-[0.5em] text-cyan-300/80">
-              List Archives
+            <p className="font-tech text-sm uppercase tracking-[0.5em] text-aether-cyan/80 animate-pulse">
+              System Database
             </p>
-            <h1 className="text-4xl font-heading text-white drop-shadow">
-              命運料理卷軸
+            <h1 className="text-4xl font-header text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]">
+              命運演算法
             </h1>
-            <p className="max-w-2xl text-white/70">
-              {user.name ?? session.user.email}，在這裡集中管理你的日常選項。每份卷軸都可以設定權重，隨時呼叫命運之輪進行挑選。
+            <p className="max-w-3xl text-aether-mint/80 font-tech tracking-wide">
+              {user.name ?? session.user.email}，這些是您的決策協定模組。每個模組都包含加權參數，可隨時載入至主核心進行隨機運算。
             </p>
           </div>
           <div className="flex flex-wrap gap-3">
             <Link
-              className="clip-path-slant border border-white/20 px-6 py-3 font-tech text-sm uppercase tracking-widest text-white transition hover:border-cyan-400/50"
+              className="clip-path-slant border border-aether-cyan/30 px-6 py-3 font-tech text-sm uppercase tracking-widest text-aether-cyan transition hover:bg-aether-cyan/10 hover:border-aether-cyan hover:shadow-[0_0_15px_rgba(103,232,249,0.3)]"
               href="/dashboard"
             >
-              返回主控室
+              返回控制台
             </Link>
             <Link
-              className="clip-path-slant bg-gradient-to-r from-gold-400 to-gold-600 px-6 py-3 font-tech text-sm uppercase tracking-widest text-void-900 shadow-glow-gold transition hover:shadow-[0_0_25px_rgba(251,191,36,0.5)]"
+              className="clip-path-slant bg-aether-cyan px-6 py-3 font-tech text-sm uppercase tracking-widest text-aether-dark font-bold shadow-[0_0_15px_rgba(103,232,249,0.4)] transition hover:bg-white hover:shadow-[0_0_25px_rgba(103,232,249,0.6)]"
               href="/dashboard/lists/new"
             >
-              新增卷軸
+              編譯新模組
             </Link>
           </div>
         </div>
       </header>
+
       <section className="relative z-10">
         {lists.length === 0 ? (
-          <div className="rounded-3xl border border-dashed border-white/20 bg-void-900/60 p-12 text-center text-white/70 shadow-inner">
-            <p className="text-2xl font-heading text-gold-400">尚無卷軸</p>
-            <p className="mt-3 text-white/60">點擊右上角「新增卷軸」建立你的第一份命運清單。</p>
+          <div className="rounded-lg border border-dashed border-aether-cyan/30 bg-[#041C1C]/60 p-12 text-center text-aether-cyan/50 shadow-inner">
+            <div className="w-16 h-16 mx-auto border-2 border-dashed border-aether-cyan/30 rounded-full animate-spin-slow mb-4" />
+            <p className="text-2xl font-tech tracking-widest text-aether-cyan">NO ALGORITHMS FOUND</p>
+            <p className="mt-3 text-aether-mint/60 font-pixel">請點擊右上角「編譯新模組」以建立您的第一個決策協定。</p>
           </div>
         ) : (
-          <div className="grid gap-8 lg:grid-cols-2">
+          <div className="grid gap-8 lg:grid-cols-2 2xl:grid-cols-3">
             {lists.map((list) => {
               const expanded = list.items.flatMap((item) => Array.from({ length: item.weight }, () => item.label))
               const qs = encodeURIComponent(expanded.join(','))
               return (
                 <article
                   key={list.id}
-                  className="group relative overflow-hidden rounded-[32px] border border-gold-500/20 bg-void-900/60 p-6 shadow-glow-gold"
+                  className="group relative overflow-hidden rounded-lg border border-aether-cyan/20 bg-[#041C1C]/80 p-6 shadow-[0_0_15px_rgba(0,0,0,0.5)] transition-all duration-300 hover:border-aether-cyan/60 hover:shadow-[0_0_25px_rgba(103,232,249,0.15)] hover:-translate-y-1"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-br from-gold-500/10 via-transparent to-cyan-500/10 opacity-0 transition group-hover:opacity-100" />
+                  {/* Holographic Scanline */}
+                  <div className="absolute inset-0 bg-[linear-gradient(transparent_50%,rgba(103,232,249,0.02)_50%)] bg-[length:100%_4px] pointer-events-none" />
+                  <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-aether-cyan/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                  
                   <div className="relative z-10 flex flex-col gap-5">
                     <div className="flex items-start justify-between gap-4">
                       <div>
-                        <p className="font-tech text-xs uppercase tracking-[0.4em] text-cyan-400/70">命運卷軸</p>
-                        <h2 className="text-2xl font-heading text-white">{list.title}</h2>
-                        <p className="text-sm text-white/60">共 {list.items.length} 個項目</p>
+                        <p className="font-tech text-xs uppercase tracking-[0.4em] text-aether-cyan/60 group-hover:text-aether-cyan transition-colors">ALGORITHM_ID: {list.id.slice(0,4)}</p>
+                        <h2 className="text-2xl font-header text-white mt-1 group-hover:text-aether-cyan transition-colors">{list.title}</h2>
+                        <p className="text-sm text-aether-mint/60 font-tech tracking-wide mt-1">NODES: {list.items.length}</p>
                       </div>
-                      <span className="rounded-full border border-cyan-500/40 px-3 py-1 text-xs font-tech uppercase tracking-[0.3em] text-cyan-200">
-                        更新於 {new Intl.DateTimeFormat('zh-TW', { month: 'short', day: 'numeric' }).format(list.updatedAt)}
+                      <span className="rounded border border-aether-cyan/20 px-2 py-1 text-[10px] font-tech uppercase tracking-widest text-aether-cyan/70 bg-aether-cyan/5">
+                        UPDATED: {new Intl.DateTimeFormat('zh-TW', { month: '2-digit', day: '2-digit' }).format(list.updatedAt)}
                       </span>
                     </div>
+                    
                     {list.items.length > 0 ? (
-                      <div className="flex flex-wrap gap-2 text-xs text-white/60">
+                      <div className="flex flex-wrap gap-2 text-xs text-white/80">
                         {list.items.slice(0, 6).map((item) => (
-                          <span key={item.id} className="rounded-full border border-white/10 px-3 py-1">
-                            {item.label} × {item.weight}
+                          <span key={item.id} className="rounded border border-aether-cyan/10 bg-aether-cyan/5 px-3 py-1 font-sans">
+                            {item.label} <span className="text-aether-cyan/60 text-[10px]">x{item.weight}</span>
                           </span>
                         ))}
-                        {list.items.length > 6 && <span className="text-white/40">…</span>}
+                        {list.items.length > 6 && <span className="text-aether-cyan/40 self-center">...</span>}
                       </div>
                     ) : (
-                      <p className="text-sm text-white/50">尚未加入項目，建議先前往管理區新增。</p>
+                      <p className="text-sm text-aether-mint/40 italic">空模組 - 等待參數輸入</p>
                     )}
-                    <div className="flex flex-wrap gap-3">
+                    
+                    <div className="flex flex-wrap gap-3 pt-2 border-t border-aether-cyan/10">
                       <Link
-                        className="clip-path-slant border border-white/20 px-4 py-2 font-tech text-xs uppercase tracking-[0.3em] text-white transition hover:border-gold-400"
+                        className="flex-1 text-center border border-aether-cyan/30 px-4 py-2 font-tech text-xs uppercase tracking-[0.2em] text-aether-cyan transition hover:bg-aether-cyan/10 hover:border-aether-cyan"
                         href={`/dashboard/lists/${list.id}`}
                       >
-                        管理卷軸
+                        編輯參數
                       </Link>
                       <Link
-                        className="clip-path-slant bg-cyan-500/20 px-4 py-2 font-tech text-xs uppercase tracking-[0.3em] text-cyan-300 transition hover:bg-cyan-500/40"
+                        className="flex-1 text-center bg-aether-cyan/10 border border-aether-cyan/30 px-4 py-2 font-tech text-xs uppercase tracking-[0.2em] text-aether-cyan transition hover:bg-aether-cyan hover:text-aether-dark hover:font-bold hover:shadow-[0_0_15px_rgba(103,232,249,0.4)]"
                         href={`/modes/wheel?items=${qs}`}
                       >
-                        投入命運之輪
+                        執行運算
                       </Link>
-                      <DeleteListButton listId={list.id} />
+                      <div className="flex-none">
+                         <DeleteListButton listId={list.id} />
+                      </div>
                     </div>
                   </div>
                 </article>

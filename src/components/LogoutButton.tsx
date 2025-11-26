@@ -11,7 +11,7 @@ export function LogoutButton() {
   return (
     <button
       onClick={handleLogout}
-      className="text-red-400 hover:text-red-300 text-sm font-tech uppercase tracking-widest border border-red-900/30 px-3 py-1 hover:bg-red-900/20 transition-all"
+      className="font-pixel text-pixel-xs uppercase tracking-pixel-wider border-2 border-aether-alert px-4 py-2 text-aether-alert transition hover:bg-aether-alert hover:text-aether-dark"
     >
       斷開連結
     </button>

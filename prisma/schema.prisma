@@ -12,6 +12,13 @@ enum MemberStatus {
   INACTIVE
 }
 
+enum TodoStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+  FAILED
+}
+
 datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
@@ -30,6 +37,7 @@ model User {
   lists     List[]
   notes     Note[]
   checkIns  CheckIn[]
+  todos     Todo[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -70,4 +78,17 @@ model Item {
   weight    Int      @default(1)
   listId    String   @db.ObjectId
   list      List     @relation(fields: [listId], references: [id])
+}
+
+model Todo {
+  id          String      @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String?
+  status      TodoStatus  @default(NOT_STARTED)
+  startAt     DateTime    @default(now())
+  endAt       DateTime
+  userId      String      @db.ObjectId
+  user        User        @relation(fields: [userId], references: [id])
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
 }

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import { PixelButton } from '@/components/PixelComponents'
@@ -39,7 +39,11 @@ export function CheckInCalendar() {
   const todayIso = toIsoDate(today)
   const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate()
   const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay()
-  const hasCheckedInToday = checkedDates.has(todayIso)
+  
+  // 使用 useMemo 確保 hasCheckedInToday 會隨著 checkedDates 更新
+  const hasCheckedInToday = useMemo(() => {
+    return checkedDates.has(todayIso)
+  }, [checkedDates, todayIso])
 
   const days = Array.from({ length: daysInMonth }, (_, i) => {
     const date = toIsoDate(new Date(currentYear, currentMonth, i + 1))
@@ -49,6 +53,14 @@ export function CheckInCalendar() {
       checked: checkedDates.has(date),
     }
   })
+
+  const refreshCheckIns = async () => {
+    const res = await fetch('/api/checkin')
+    if (res.ok) {
+      const data = await res.json()
+      setCheckedDates(new Set(data.dates))
+    }
+  }
 
   const handleCheckIn = async () => {
     if (hasCheckedInToday || submitting) return
@@ -60,8 +72,9 @@ export function CheckInCalendar() {
       const data = await res.json()
       if (data.success) {
         const reward = typeof data.reward === 'number' ? data.reward : CHECK_IN_REWARD
-        setCheckedDates((prev) => new Set(prev).add(data.date))
         setFeedback({ type: 'success', message: `簽到成功！以太幣 +${reward}` })
+        // 重新從 API 獲取最新的簽到日期列表
+        await refreshCheckIns()
         await update()
         router.refresh()
       } else {
@@ -74,21 +87,21 @@ export function CheckInCalendar() {
     }
   }
 
-  if (loading) return <div className="animate-pulse h-64 rounded-3xl border border-cyan-500/30 bg-void-900/40"></div>
+  if (loading) return <div className="h-64 border-4 border-aether-teal bg-[#031f1f]/60 animate-pulse" />
 
   return (
-    <div className="relative overflow-hidden rounded-3xl border border-cyan-500/30 bg-void-900/60 p-6 shadow-glow-blue">
-      <div className="pointer-events-none absolute inset-0 bg-tech-grid-overlay opacity-40"></div>
+    <div className="relative overflow-hidden border-4 border-aether-teal bg-[#031f1f]/95 p-5 text-aether-mint shadow-pixel-card">
+      <div className="pointer-events-none absolute inset-0 pixel-grid opacity-20" />
       <div className="relative z-10 space-y-4">
-        <div>
-          <p className="text-xs font-tech uppercase tracking-[0.4em] text-cyan-400/70">Chrono Sync</p>
-          <h2 className="text-2xl font-heading text-white drop-shadow">
-            {currentYear}年 {currentMonth + 1}月 簽到紀錄
-          </h2>
+        <div className="font-pixel text-pixel-xs uppercase tracking-pixel-wider text-aether-cyan">
+          Chrono Sync
         </div>
-        <div className="grid grid-cols-7 gap-2 text-center text-sm font-tech">
+        <h2 className="font-header text-2xl text-aether-cyan">
+          {currentYear}年 {currentMonth + 1}月 簽到紀錄
+        </h2>
+        <div className="grid grid-cols-7 gap-2 text-center text-xs font-pixel uppercase text-aether-mint/60">
           {['日', '一', '二', '三', '四', '五', '六'].map((d) => (
-            <div key={d} className="py-2 text-white/40">{d}</div>
+            <div key={d} className="py-2">{d}</div>
           ))}
           {Array.from({ length: firstDayOfMonth }).map((_, i) => (
             <div key={`empty-${i}`} />
@@ -96,33 +109,33 @@ export function CheckInCalendar() {
           {days.map((d) => (
             <div
               key={d.date}
-              className={`aspect-square flex items-center justify-center rounded-full border transition-all text-xs md:text-sm ${
+              className={`flex aspect-square items-center justify-center border-2 text-sm transition ${
                 d.checked
-                  ? 'border-cyan-400 bg-cyan-500/20 text-white shadow-[0_0_12px_rgba(34,211,238,0.35)]'
-                  : 'border-white/10 text-white/60 hover:border-cyan-400/40 hover:text-white'
-              } ${d.date === todayIso ? 'ring-1 ring-gold-400/80 ring-offset-2 ring-offset-void-900' : ''}`}
+                  ? 'border-aether-cyan bg-aether-cyan/20 text-white'
+                  : 'border-aether-dim text-aether-mint/60 hover:border-aether-cyan/50 hover:text-aether-cyan'
+              } ${d.date === todayIso ? 'outline outline-2 outline-aether-gold' : ''}`}
             >
               {d.day}
             </div>
           ))}
         </div>
-        <div className="text-sm text-white/70 text-center">
-          本月已簽到 <span className="text-cyan-400 font-bold">{days.filter(d => d.checked).length}</span> 天
+        <div className="text-center font-pixel text-pixel-sm uppercase tracking-pixel-wider text-aether-mint/80">
+          本月簽到 <span className="text-aether-cyan">{days.filter((d) => d.checked).length}</span> 天
         </div>
         <div className="space-y-2">
           <PixelButton
-            variant={hasCheckedInToday ? 'secondary' : 'success'}
-            className="w-full py-4 text-base"
+            variant={hasCheckedInToday ? 'secondary' : 'primary'}
+            fullWidth
             onClick={handleCheckIn}
             disabled={hasCheckedInToday || submitting}
           >
-            {hasCheckedInToday ? '今日已簽到' : submitting ? '同步時間線中...' : `手動簽到 +${CHECK_IN_REWARD} 以太幣`}
+            {hasCheckedInToday ? '今日已簽到' : submitting ? '同步時間線中...' : `手動簽到 +${CHECK_IN_REWARD}`}
           </PixelButton>
-          <p className="text-center text-xs font-tech uppercase tracking-[0.3em] text-gold-300">
+          <p className="text-center font-pixel text-pixel-xs uppercase tracking-pixel-wider text-aether-mint/50">
             每日首次簽到獎勵：+{CHECK_IN_REWARD}
           </p>
           {feedback && (
-            <div className={`text-center text-sm font-tech ${feedback.type === 'success' ? 'text-emerald-300' : 'text-red-400'}`}>
+            <div className={`text-center font-pixel text-pixel-sm ${feedback.type === 'success' ? 'text-aether-cyan' : 'text-aether-alert'}`}>
               {feedback.message}
             </div>
           )}

@@ -9,68 +9,62 @@ interface NavbarClientProps {
   user: Session['user'] | undefined
 }
 
-export function NavbarClient({ user }: NavbarClientProps) {
+export function NavbarClient({ user }: NavbarClientProps): React.ReactElement | null {
   const pathname = usePathname()
-
-  // Hide Navbar on Login Page (root path)
-  if (pathname === '/') {
-    return null
-  }
+  if (pathname === '/') return null
 
   return (
-    <header className="border-b border-gold-500/20 bg-void-900/80 backdrop-blur-md sticky top-0 z-50">
-      <div className="max-w-6xl mx-auto flex justify-between items-center p-4">
-        {/* Logo */}
-        <Link 
-            href={user ? "/dashboard" : "/"}
-            className="text-transparent bg-clip-text bg-gradient-to-r from-gold-300 to-gold-600 text-2xl font-heading font-bold cursor-pointer hover:opacity-80 transition-opacity"
-        >
-            AETHER<span className="text-white font-light">OS</span>
+    <header className="sticky top-0 z-50 border-b-4 border-aether-teal bg-[#031f1f]/95 shadow-hud relative">
+      {/* 像素裝飾角 */}
+      <div className="absolute bottom-0 left-0 w-3 h-3 bg-aether-teal" />
+      <div className="absolute bottom-0 right-0 w-3 h-3 bg-aether-teal" />
+      
+      <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-3 font-pixel text-pixel-sm uppercase tracking-pixel-wider text-aether-mint/60">
+        <Link href={user ? '/dashboard/home' : '/'} className="flex items-center gap-3 text-aether-cyan text-pixel-xl tracking-pixel-widest">
+          <span className="h-3 w-3 bg-aether-teal animate-pulse" />
+          AETHER<span className="text-aether-gold">SYS</span>
         </Link>
-        
-        {/* Right Side Actions */}
-        <div className="flex items-center gap-6">
+
+        <div className="flex items-center gap-4">
           {user ? (
             <>
-                {/* User Status Pill */}
-                <div className="hidden md:flex items-center gap-3 bg-void-800 border border-white/10 px-4 py-1.5 rounded-full shadow-glow-blue shrink-0">
-                    <div className="relative flex-shrink-0">
-                        {user.avatar ? (
-                             <img 
-                                src={user.avatar} 
-                                className="w-6 h-6 rounded-full border border-gold-500/50 object-cover" 
-                                alt="av" 
-                             />
-                        ) : (
-                             <div className="w-6 h-6 rounded-full bg-void-900 border border-gold-500/50 flex items-center justify-center text-[10px]">👤</div>
-                        )}
-                        <div className="absolute -bottom-1 -right-1 w-2 h-2 bg-green-500 rounded-full border border-black animate-pulse"></div>
-                    </div>
-                    <span className="text-mythril-200 text-sm font-tech tracking-wider uppercase">{user.name || 'User'}</span>
-                    
-                    {/* Currency Display */}
-                    <div className="w-[1px] h-4 bg-white/10 mx-1"></div>
-                    <div className="flex items-center gap-1 text-gold-400 font-tech">
-                        <span className="text-xs">AC</span>
-                        <span className="font-bold">{user.coins || 0}</span>
-                    </div>
+              <div className="hidden md:flex items-center gap-3 border-2 border-aether-teal bg-[#052828] px-4 py-2 shadow-[4px_4px_0_rgba(4,28,28,0.8)]">
+                <div className="relative">
+                  {user.avatar ? (
+                    <img src={user.avatar} alt="avatar" className="h-8 w-8 border-2 border-aether-cyan object-cover" />
+                  ) : (
+                    <div className="flex h-8 w-8 items-center justify-center border-2 border-aether-cyan">👤</div>
+                  )}
+                  <span className="absolute -bottom-1 -right-1 h-2 w-2 rounded-full bg-aether-teal animate-blink" />
                 </div>
+                <div className="flex flex-col leading-tight">
+                  <span className="text-aether-teal text-pixel-sm">PLAYER</span>
+                  <span className="text-pixel-lg text-aether-cyan">{user.name || 'USER'}</span>
+                </div>
+                <div className="h-8 w-[1px] bg-aether-teal/40" />
+                <div className="flex flex-col text-right leading-tight text-aether-gold">
+                  <span className="text-pixel-sm">COINS</span>
+                  <span className="text-pixel-2xl tracking-pixel-tight">{String(user.coins ?? 0).padStart(4, '0')}</span>
+                </div>
+              </div>
 
-                {/* Admin Link */}
-                {user.role === 'ADMIN' && (
-                    <Link href="/admin/members" className="hidden sm:block text-cyan-400 hover:text-cyan-300 text-sm font-tech uppercase tracking-widest border border-cyan-500/30 px-3 py-1 hover:bg-cyan-900/20 transition-all">
-                        監管核心
-                    </Link>
-                )}
+              {user.role === 'ADMIN' && (
+                <Link
+                  href="/admin/members"
+                  className="hidden sm:inline-flex border-2 border-aether-cyan px-3 py-2 tracking-pixel-wider text-aether-cyan hover:bg-aether-cyan hover:text-aether-dark transition"
+                >
+                  ADMIN
+                </Link>
+              )}
 
-                <LogoutButton />
+              <LogoutButton />
             </>
           ) : (
-            <Link 
-                href="/"
-                className="text-gold-400 hover:text-gold-300 text-sm font-tech uppercase tracking-widest border border-gold-500/30 px-4 py-1.5 hover:bg-gold-900/20 transition-all hover:shadow-glow-gold"
+            <Link
+              href="/"
+              className="border-2 border-aether-teal px-4 py-2 text-aether-teal hover:bg-aether-teal hover:text-aether-dark transition"
             >
-                啟動連結 (LOGIN)
+              LOGIN
             </Link>
           )}
         </div>

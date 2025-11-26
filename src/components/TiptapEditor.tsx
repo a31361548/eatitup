@@ -11,9 +11,10 @@ interface TiptapEditorProps {
   onChange: (content: string) => void
   editable?: boolean
   darkControls?: boolean
+  className?: string
 }
 
-export function TiptapEditor({ content, onChange, editable = true, darkControls = false }: TiptapEditorProps) {
+export function TiptapEditor({ content, onChange, editable = true, darkControls = false, className = '' }: TiptapEditorProps) {
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -30,7 +31,7 @@ export function TiptapEditor({ content, onChange, editable = true, darkControls 
     },
     editorProps: {
       attributes: {
-        class: `prose ${darkControls ? 'text-black' : 'prose-invert'} max-w-none focus:outline-none min-h-[400px] p-4`,
+        class: `prose ${darkControls ? 'text-black' : 'prose-invert'} max-w-none focus:outline-none min-h-[400px] p-4 ${className}`,
       },
     },
     immediatelyRender: false,
