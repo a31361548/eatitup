@@ -85,6 +85,13 @@
   --color-danger: #ef4444;
   --color-danger-600: #dc2626;
   --color-danger-700: #b91c1c;
+
+  /* Box Shadows */
+  --shadow-pixel-card: 8px 8px 0px 0px rgba(17, 66, 66, 0.8);
+  --shadow-hud: 0 0 30px rgba(103, 232, 249, 0.35);
+
+  /* Background Images */
+  --background-image-crt-grid: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
 }
 
 @layer base {
@@ -337,6 +344,41 @@
 
   .rotate-y-minus-180 {
     transform: rotateY(-180deg);
+  }
+
+  /* Animation Utilities */
+  .animate-blink {
+    animation: blink 1s steps(2, start) infinite;
+  }
+
+  .animate-shake {
+    animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+  }
+
+  .animate-scanline {
+    animation: scanline 8s linear infinite;
+  }
+
+  .animate-typewriter {
+    animation: typewriter 2s steps(40, end) 1s 1 normal both;
+  }
+
+  /* Keyframes */
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  @keyframes shake {
+    10%, 90% { transform: translate3d(-1px, 0, 0); }
+    20%, 80% { transform: translate3d(2px, 0, 0); }
+    30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+    40%, 60% { transform: translate3d(4px, 0, 0); }
+  }
+
+  @keyframes typewriter {
+    from { width: 0; }
+    to { width: 100%; }
   }
 
   @keyframes float {
