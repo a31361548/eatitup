@@ -92,6 +92,13 @@
 
   /* Background Images */
   --background-image-crt-grid: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+
+  /* Holographic Theme */
+  --color-holo-cyan: #00f0ff;
+  --color-holo-blue: #0a1020;
+  --color-holo-purple: #bc13fe;
+  --color-holo-glass: rgba(0, 240, 255, 0.1);
+  --color-holo-border: rgba(0, 240, 255, 0.5);
 }
 
 @layer base {
@@ -105,8 +112,8 @@
 
   body {
     font-family: 'VT323', monospace;
-    background-color: #041C1C;
-    color: #2DD4BF;
+    background: radial-gradient(circle at top, #0c1a2f 0%, #050912 45%, #02050b 100%);
+    color: #e4fff6;
     min-height: 100vh;
     overflow-x: hidden;
     -webkit-font-smoothing: none;
@@ -117,17 +124,30 @@
     image-rendering: crisp-edges;
   }
 
-  /* 添加像素網格背景效果 */
-  body::before {
+  body::before,
+  body::after {
     content: '';
     position: fixed;
     inset: 0;
-    background-image:
-      linear-gradient(rgba(45, 212, 191, 0.02) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(45, 212, 191, 0.02) 1px, transparent 1px);
-    background-size: 20px 20px;
     pointer-events: none;
-    z-index: 1;
+  }
+
+  body::before {
+    background-image:
+      radial-gradient(circle at 20% 20%, rgba(103, 232, 249, 0.12), transparent 60%),
+      radial-gradient(circle at 80% 15%, rgba(250, 204, 21, 0.08), transparent 55%),
+      linear-gradient(180deg, rgba(3, 9, 18, 0), rgba(0, 0, 0, 0.8));
+    z-index: 0;
+  }
+
+  body::after {
+    background-image:
+      linear-gradient(rgba(62, 249, 255, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(62, 249, 255, 0.04) 1px, transparent 1px);
+    background-size: 32px 32px;
+    mix-blend-mode: screen;
+    opacity: 0.4;
+    z-index: 0;
   }
 
   ::selection {
@@ -189,6 +209,64 @@
     background-color: #041C1C;
     border: 4px solid #2DD4BF;
     box-shadow: 8px 8px 0 rgba(4, 28, 28, 0.8);
+  }
+
+  .ritual-card {
+    position: relative;
+    border: 4px solid rgba(103, 232, 249, 0.6);
+    border-radius: 24px;
+    background: linear-gradient(160deg, rgba(7, 16, 33, 0.95) 0%, rgba(3, 13, 29, 0.85) 60%, rgba(5, 6, 14, 0.9) 100%);
+    box-shadow: 0 0 40px rgba(0, 240, 255, 0.1), inset 0 0 30px rgba(3, 217, 255, 0.08);
+    overflow: hidden;
+  }
+
+  .ritual-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(103, 232, 249, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(103, 232, 249, 0.05) 1px, transparent 1px);
+    background-size: 24px 24px;
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  .ritual-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 30% -10%, rgba(255, 255, 255, 0.15), transparent 45%);
+    mix-blend-mode: screen;
+    opacity: 0.45;
+    pointer-events: none;
+  }
+
+  .ritual-card-header {
+    position: relative;
+    padding: 1rem 1.5rem;
+    border-bottom: 4px solid rgba(103, 232, 249, 0.35);
+    background: linear-gradient(90deg, rgba(0, 240, 255, 0.1), rgba(103, 232, 249, 0.02));
+  }
+
+  .ritual-divider {
+    height: 4px;
+    width: 100%;
+    background-image: repeating-linear-gradient(90deg, rgba(103, 232, 249, 0.5) 0, rgba(103, 232, 249, 0.5) 12px, transparent 12px, transparent 24px);
+    opacity: 0.35;
+  }
+
+  .ritual-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(103, 232, 249, 0.4) transparent;
+  }
+
+  .ritual-scroll::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .ritual-scroll::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, rgba(103, 232, 249, 0.7), rgba(45, 212, 191, 0.5));
   }
 
   .pixel-shadow {
@@ -407,6 +485,20 @@
   @keyframes rune-spin {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
+  }
+
+  @keyframes glitch {
+    0% { transform: translate(0); }
+    20% { transform: translate(-2px, 2px); }
+    40% { transform: translate(-2px, -2px); }
+    60% { transform: translate(2px, 2px); }
+    80% { transform: translate(2px, -2px); }
+    100% { transform: translate(0); }
+  }
+
+  @keyframes window-open {
+    0% { opacity: 0; transform: scale(0.95) translateY(10px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
   }
 
   /* 像素化圖片 */

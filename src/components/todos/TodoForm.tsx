@@ -1,12 +1,12 @@
 'use client'
 
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import clsx from 'clsx'
 import type { Todo, TodoStatus } from '@/types/todo'
 import { TODO_STATUS_OPTIONS } from '@/types/todo'
-import { PixelButton } from '@/components/PixelComponents'
+import { TechButton } from '@/components/ui/TechButton'
+import { TechCalendar } from '@/components/ui/TechCalendar'
 
-const MIN_OFFSET_MINUTES = 5
 const DEFAULT_DURATION_MINUTES = 30
 
 export type TodoFormPayload = {
@@ -28,29 +28,21 @@ type TodoFormProps = {
 type TodoFormState = {
   title: string
   description: string
-  startAt: string
-  endAt: string
+  startAt: Date
+  endAt: Date
   status: TodoStatus
-}
-
-const clampMinutes = (date: Date): Date => {
-  const result = new Date(date)
-  result.setSeconds(0, 0)
-  return result
-}
-
-const toInputValue = (date: Date): string => {
-  const target = clampMinutes(date)
-  const y = target.getFullYear()
-  const m = `${target.getMonth() + 1}`.padStart(2, '0')
-  const d = `${target.getDate()}`.padStart(2, '0')
-  const h = `${target.getHours()}`.padStart(2, '0')
-  const min = `${target.getMinutes()}`.padStart(2, '0')
-  return `${y}-${m}-${d}T${h}:${min}`
+  manualStatus: boolean // Track if user manually changed status
 }
 
 const addMinutes = (base: Date, minutes: number): Date => {
   return new Date(base.getTime() + minutes * 60 * 1000)
+}
+
+const determineStatus = (start: Date, end: Date): TodoStatus => {
+    const now = new Date()
+    if (now > end) return 'NOT_STARTED' // Expired tasks revert to not started or stay as is
+    if (now >= start && now <= end) return 'IN_PROGRESS'
+    return 'NOT_STARTED'
 }
 
 const deriveInitialState = (todo?: Todo): TodoFormState => {
@@ -58,202 +50,199 @@ const deriveInitialState = (todo?: Todo): TodoFormState => {
     return {
       title: todo.title,
       description: todo.description ?? '',
-      startAt: toInputValue(new Date(todo.startAt)),
-      endAt: toInputValue(new Date(todo.endAt)),
+      startAt: new Date(todo.startAt),
+      endAt: new Date(todo.endAt),
       status: todo.status,
+      manualStatus: true, // Existing todos preserve their status
     }
   }
   const now = new Date()
-  const start = toInputValue(now)
-  const end = toInputValue(addMinutes(now, DEFAULT_DURATION_MINUTES))
+  // Round up to next 15 min
+  const start = new Date(Math.ceil(now.getTime() / (15 * 60 * 1000)) * (15 * 60 * 1000))
+  const end = addMinutes(start, DEFAULT_DURATION_MINUTES)
+  
   return {
     title: '',
     description: '',
     startAt: start,
     endAt: end,
     status: 'NOT_STARTED',
+    manualStatus: false,
   }
-}
-
-const toIsoString = (value: string): string | null => {
-  const parsed = new Date(value)
-  if (Number.isNaN(parsed.getTime())) return null
-  return parsed.toISOString()
 }
 
 export function TodoForm({ mode, initialTodo, submitting, onSubmit, onCancel }: TodoFormProps): React.ReactElement {
   const initialSnapshot = useMemo(() => deriveInitialState(initialTodo), [initialTodo])
   const [formState, setFormState] = useState<TodoFormState>(initialSnapshot)
   const [error, setError] = useState<string | null>(null)
-  const initialStartValueRef = useRef(initialSnapshot.startAt)
 
+  // Sync form state when initialTodo changes
   useEffect(() => {
     setFormState(initialSnapshot)
-    initialStartValueRef.current = initialSnapshot.startAt
     setError(null)
   }, [initialSnapshot])
 
-  const handleChange = (field: keyof TodoFormState, value: string) => {
+  // Auto-update status when dates change, unless manually overridden
+  useEffect(() => {
+    if (!formState.manualStatus) {
+        const newStatus = determineStatus(formState.startAt, formState.endAt)
+        if (newStatus !== formState.status) {
+            setFormState(prev => ({ ...prev, status: newStatus }))
+        }
+    }
+  }, [formState.startAt, formState.endAt, formState.manualStatus, formState.status])
+
+  const handleChange = (field: keyof TodoFormState, value: any) => {
     setFormState((prev) => {
       if (field === 'startAt') {
-        const adjustedEnd = adjustEndIfNeeded(value, prev.endAt)
-        return { ...prev, startAt: value, endAt: adjustedEnd }
-      }
-      if (field === 'endAt') {
-        return { ...prev, endAt: value }
+        const newStart = value as Date
+        // Auto-adjust end if start moves past it
+        let newEnd = prev.endAt
+        if (newEnd <= newStart) {
+            newEnd = addMinutes(newStart, DEFAULT_DURATION_MINUTES)
+        }
+        return { ...prev, startAt: newStart, endAt: newEnd }
       }
       if (field === 'status') {
-        return { ...prev, status: value as TodoStatus }
+        return { ...prev, status: value as TodoStatus, manualStatus: true }
       }
       return { ...prev, [field]: value }
     })
   }
 
-  const adjustEndIfNeeded = (startValue: string, endValue: string): string => {
-    const start = new Date(startValue)
-    const end = new Date(endValue)
-    if (Number.isNaN(start.getTime())) return endValue
-    const minEnd = start.getTime() + MIN_OFFSET_MINUTES * 60 * 1000
-    if (Number.isNaN(end.getTime()) || end.getTime() < minEnd) {
-      return toInputValue(new Date(minEnd))
-    }
-    return endValue
-  }
-
-  const validate = (): { startAt: string; endAt: string } | null => {
-    const startIso = toIsoString(formState.startAt)
-    const endIso = toIsoString(formState.endAt)
-    if (!startIso || !endIso) {
-      setError('請輸入正確的日期與時間')
-      return null
-    }
-    const startDate = new Date(startIso)
-    const endDate = new Date(endIso)
-    const now = Date.now()
-    const isEditing = Boolean(initialTodo)
-    const startChanged = formState.startAt !== initialStartValueRef.current
-    if (!isEditing || startChanged) {
-      if (startDate.getTime() < now) {
-        setError('開始時間不能早於現在')
-        return null
-      }
-    }
-    if (endDate.getTime() - startDate.getTime() < MIN_OFFSET_MINUTES * 60 * 1000) {
-      setError(`結束時間需至少晚於開始時間 ${MIN_OFFSET_MINUTES} 分鐘`)
-      return null
-    }
-    return { startAt: startIso, endAt: endIso }
-  }
-
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     setError(null)
-    const range = validate()
-    if (!range) return
+
+    if (!formState.title.trim()) {
+        setError('請輸入任務指令 (標題)')
+        return
+    }
+
+    if (formState.endAt <= formState.startAt) {
+        setError('結束時間必須晚於開始時間')
+        return
+    }
+
     const payload: TodoFormPayload = {
       title: formState.title.trim(),
       description: formState.description.trim() ? formState.description : undefined,
       status: formState.status,
-      startAt: range.startAt,
-      endAt: range.endAt,
+      startAt: formState.startAt.toISOString(),
+      endAt: formState.endAt.toISOString(),
     }
-    if (!payload.title) {
-      setError('請輸入待辦標題')
-      return
-    }
+    
     await onSubmit(payload)
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 border-4 border-aether-teal bg-[#031f1f]/95 p-6 text-aether-mint shadow-pixel-card">
-      <div className="flex flex-wrap items-center justify-between gap-3 font-pixel text-pixel-sm uppercase tracking-pixel-wider text-aether-cyan">
-        <span>{mode === 'edit' ? '編輯待辦' : '新增待辦'}</span>
+    <form
+      onSubmit={handleSubmit}
+      className="relative space-y-6 overflow-hidden rounded-[32px] border border-white/10 bg-black/25 p-6 text-white shadow-[0_30px_80px_rgba(0,0,0,0.45)]"
+    >
+      <div className="pointer-events-none absolute inset-0 opacity-30" aria-hidden>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(103,232,249,0.2),transparent_55%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_0%,rgba(250,204,21,0.15),transparent_55%)]" />
+      </div>
+
+      <div className="relative flex items-center justify-between border-b border-white/10 pb-4">
+        <div>
+          <p className="text-xs font-tech uppercase tracking-[0.45em] text-white/60">Ritual Console</p>
+          <h2 className="text-2xl font-heading">{mode === 'edit' ? '調整任務參數' : '新增任務指令'}</h2>
+        </div>
         {onCancel && mode === 'edit' && (
-          <button type="button" onClick={onCancel} className="text-aether-gold hover:text-white">
-            返回新增模式
+          <button type="button" onClick={onCancel} className="text-xs font-tech uppercase tracking-[0.35em] text-amber-200 hover:text-white">
+            取消編輯
           </button>
         )}
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
-        <label className="font-pixel text-pixel-xs uppercase tracking-pixel-wider text-aether-mint/60 md:col-span-2">
-          標題
-          <input
-            type="text"
-            value={formState.title}
-            onChange={(event) => handleChange('title', event.target.value)}
-            className="mt-2 w-full border-2 border-aether-dim bg-[#011111] px-4 py-3 text-aether-cyan focus:border-aether-cyan focus:outline-none"
-            placeholder="輸入待辦事項"
-            required
-          />
-        </label>
+      <div className="relative space-y-4">
+        {/* Title Input */}
+        <div className="space-y-1">
+            <label className="text-xs font-tech text-aether-cyan/70 uppercase tracking-widest">指令名稱 (TITLE)</label>
+            <input
+                type="text"
+                value={formState.title}
+                onChange={(e) => handleChange('title', e.target.value)}
+                className="w-full bg-aether-dark border border-aether-cyan/30 p-3 text-white placeholder-aether-mint/20 focus:border-aether-cyan focus:shadow-[0_0_15px_rgba(0,240,255,0.2)] outline-none transition-all font-heading tracking-wide"
+                placeholder="輸入任務名稱..."
+            />
+        </div>
 
-        <label className="font-pixel text-pixel-xs uppercase tracking-pixel-wider text-aether-mint/60 md:col-span-2">
-          描述
-          <textarea
-            rows={3}
-            value={formState.description}
-            onChange={(event) => handleChange('description', event.target.value)}
-            placeholder="補充內容（選填）"
-            className="mt-2 w-full border-2 border-aether-dim bg-[#011111] px-4 py-3 text-aether-cyan focus:border-aether-cyan focus:outline-none"
-          />
-        </label>
+        {/* Description Input */}
+        <div className="space-y-1">
+            <label className="text-xs font-tech text-aether-cyan/70 uppercase tracking-widest">詳細資訊 (DETAILS)</label>
+            <textarea
+                rows={3}
+                value={formState.description}
+                onChange={(e) => handleChange('description', e.target.value)}
+                className="w-full bg-aether-dark border border-aether-cyan/30 p-3 text-aether-mint/80 placeholder-aether-mint/20 focus:border-aether-cyan outline-none transition-all font-mono text-sm"
+                placeholder="// 額外參數..."
+            />
+        </div>
 
-        <label className="font-pixel text-pixel-xs uppercase tracking-pixel-wider text-aether-mint/60">
-          開始時間
-          <input
-            type="datetime-local"
-            value={formState.startAt}
-            min={toInputValue(new Date())}
-            onChange={(event) => handleChange('startAt', event.target.value)}
-            className="mt-2 w-full border-2 border-aether-dim bg-[#011111] px-4 py-3 text-aether-cyan focus:border-aether-cyan focus:outline-none"
-            required
-          />
-        </label>
+        {/* Date Pickers */}
+        <div className="grid md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+                <label className="text-xs font-tech text-aether-cyan/70 uppercase tracking-widest">啟動序列 (START)</label>
+                <TechCalendar 
+                    value={formState.startAt} 
+                    onChange={(date) => handleChange('startAt', date)} 
+                    minDate={new Date()}
+                />
+            </div>
+            <div className="space-y-2">
+                <label className="text-xs font-tech text-aether-cyan/70 uppercase tracking-widest">終止序列 (END)</label>
+                <TechCalendar 
+                    value={formState.endAt} 
+                    onChange={(date) => handleChange('endAt', date)} 
+                    minDate={formState.startAt}
+                />
+            </div>
+        </div>
 
-        <label className="font-pixel text-pixel-xs uppercase tracking-pixel-wider text-aether-mint/60">
-          結束時間
-          <input
-            type="datetime-local"
-            value={formState.endAt}
-            min={formState.startAt}
-            onChange={(event) => handleChange('endAt', event.target.value)}
-            className="mt-2 w-full border-2 border-aether-dim bg-[#011111] px-4 py-3 text-aether-cyan focus:border-aether-cyan focus:outline-none"
-            required
-          />
-        </label>
-
-        <label className="font-pixel text-pixel-xs uppercase tracking-pixel-wider text-aether-mint/60">
-          狀態
-          <select
-            value={formState.status}
-            onChange={(event) => handleChange('status', event.target.value)}
-            className="mt-2 w-full border-2 border-aether-dim bg-[#011111] px-4 py-3 text-aether-cyan focus:border-aether-cyan focus:outline-none"
-          >
-            {TODO_STATUS_OPTIONS.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-        </label>
+        {/* Status Override */}
+        <div className="space-y-1">
+            <label className="text-xs font-tech text-aether-cyan/70 uppercase tracking-widest flex justify-between">
+                <span>目前狀態 (STATUS)</span>
+                {!formState.manualStatus && <span className="text-aether-gold animate-pulse text-[10px]">[自動偵測]</span>}
+            </label>
+            <div className="flex flex-wrap gap-2">
+                {TODO_STATUS_OPTIONS.map((option) => (
+                    <button
+                        key={option.value}
+                        type="button"
+                        onClick={() => handleChange('status', option.value)}
+                        className={clsx(
+                            'px-3 py-1 text-xs font-tech border transition-all',
+                            formState.status === option.value 
+                                ? 'border-aether-cyan bg-aether-cyan/20 text-white shadow-[0_0_10px_rgba(0,240,255,0.3)]' 
+                                : 'border-aether-cyan/20 text-aether-mint/40 hover:border-aether-cyan/50 hover:text-aether-mint'
+                        )}
+                    >
+                        {option.label}
+                    </button>
+                ))}
+            </div>
+        </div>
       </div>
 
       {error && (
-        <div className="border-2 border-aether-alert bg-aether-alert/10 px-4 py-2 font-pixel text-pixel-sm uppercase tracking-pixel-wide text-aether-alert">
-          {error}
+        <div className="p-3 border border-red-500/50 bg-red-500/10 text-red-400 text-xs font-mono">
+          ⚠ 錯誤: {error}
         </div>
       )}
 
-      <div className="flex flex-wrap justify-end gap-3">
+      <div className="flex justify-end gap-4 pt-4 border-t border-aether-cyan/10">
         {onCancel && (
-          <PixelButton type="button" variant="secondary" onClick={onCancel} disabled={submitting}>
-            取消
-          </PixelButton>
+            <TechButton type="button" variant="ghost" onClick={onCancel} disabled={submitting}>
+                中止 (ABORT)
+            </TechButton>
         )}
-        <PixelButton type="submit" variant="primary" disabled={submitting} className={clsx(submitting && 'opacity-60')}>
-          {mode === 'edit' ? '儲存變更' : '建立待辦'}
-        </PixelButton>
+        <TechButton type="submit" variant="primary" disabled={submitting} className={clsx(submitting && 'opacity-50')}>
+            {submitting ? '處理中...' : (mode === 'edit' ? '更新協定 (UPDATE)' : '啟動任務 (INITIATE)')}
+        </TechButton>
       </div>
     </form>
   )

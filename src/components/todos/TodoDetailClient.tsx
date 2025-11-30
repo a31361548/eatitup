@@ -6,7 +6,7 @@ import clsx from 'clsx'
 import type { Todo } from '@/types/todo'
 import { TODO_STATUS_LABEL, TODO_STATUS_TONE } from '@/types/todo'
 import { TodoForm, type TodoFormPayload } from './TodoForm'
-import { PixelButton } from '@/components/PixelComponents'
+import { TechButton } from '@/components/ui/TechButton'
 
 type TodoDetailClientProps = {
   initialTodo: Todo
@@ -62,30 +62,39 @@ export function TodoDetailClient({ initialTodo }: TodoDetailClientProps): React.
 
   return (
     <div className="space-y-6">
-      <div className="border-4 border-aether-teal bg-[#031f1f]/95 p-6 text-aether-mint shadow-pixel-card">
-        <p className="font-pixel text-pixel-xs uppercase tracking-pixel-wider text-aether-cyan">目前狀態</p>
-        <div className="mt-3 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+      <div className="rounded-[32px] border border-white/10 bg-black/30 p-6 text-white shadow-[0_25px_70px_rgba(0,0,0,0.45)]">
+        <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <h2 className="font-header text-2xl text-white">{todo.title}</h2>
-            <p className="font-pixel text-pixel-sm text-aether-mint/70">{TODO_STATUS_LABEL[todo.status]}</p>
+            <p className="text-xs font-tech uppercase tracking-[0.4em] text-white/60">Current Status</p>
+            <h2 className="text-2xl font-heading">{todo.title}</h2>
           </div>
-          <span className={clsx('border-2 px-4 py-1 font-pixel text-pixel-xs uppercase tracking-pixel-wide', TODO_STATUS_TONE[todo.status])}>
+          <span className={clsx('rounded-full border px-4 py-1 text-xs font-tech uppercase tracking-[0.35em]', TODO_STATUS_TONE[todo.status])}>
             {TODO_STATUS_LABEL[todo.status]}
           </span>
+        </div>
+        <div className="mt-4 grid gap-4 text-sm text-white/70 sm:grid-cols-2">
+          <div className="rounded-2xl border border-white/10 bg-black/40 p-3">
+            <p className="text-[10px] uppercase tracking-[0.4em] text-white/50">開始</p>
+            <p className="font-mono text-white">{new Date(todo.startAt).toLocaleString('zh-TW')}</p>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-black/40 p-3">
+            <p className="text-[10px] uppercase tracking-[0.4em] text-white/50">結束</p>
+            <p className="font-mono text-white">{new Date(todo.endAt).toLocaleString('zh-TW')}</p>
+          </div>
         </div>
         {feedback && (
           <div
             className={clsx(
-              'mt-4 border-2 px-4 py-2 font-pixel text-pixel-sm uppercase tracking-pixel-wide',
-              feedback.type === 'success' ? 'border-aether-teal text-aether-teal' : 'border-aether-alert text-aether-alert'
+              'mt-4 rounded-2xl border px-4 py-3 text-sm font-tech uppercase tracking-[0.35em]',
+              feedback.type === 'success' ? 'border-emerald-400/40 text-emerald-200' : 'border-red-400/50 text-red-200'
             )}
           >
             {feedback.message}
           </div>
         )}
-        <PixelButton variant="danger" onClick={handleDelete} disabled={deleting} className="mt-4">
+        <TechButton variant="danger" onClick={handleDelete} disabled={deleting} className="mt-4 !px-5 !py-3">
           {deleting ? '刪除中...' : '刪除這筆待辦'}
-        </PixelButton>
+        </TechButton>
       </div>
 
       <TodoForm mode="edit" initialTodo={todo} submitting={submitting} onSubmit={handleSubmit} />

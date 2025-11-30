@@ -3,7 +3,8 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
-import { PixelButton } from '@/components/PixelComponents'
+import { TechButton } from '@/components/ui/TechButton'
+import clsx from 'clsx'
 
 const CHECK_IN_REWARD = 5
 const toIsoDate = (date: Date): string => {
@@ -40,7 +41,6 @@ export function CheckInCalendar() {
   const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate()
   const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay()
   
-  // 使用 useMemo 確保 hasCheckedInToday 會隨著 checkedDates 更新
   const hasCheckedInToday = useMemo(() => {
     return checkedDates.has(todayIso)
   }, [checkedDates, todayIso])
@@ -73,7 +73,6 @@ export function CheckInCalendar() {
       if (data.success) {
         const reward = typeof data.reward === 'number' ? data.reward : CHECK_IN_REWARD
         setFeedback({ type: 'success', message: `簽到成功！以太幣 +${reward}` })
-        // 重新從 API 獲取最新的簽到日期列表
         await refreshCheckIns()
         await update()
         router.refresh()
@@ -87,58 +86,74 @@ export function CheckInCalendar() {
     }
   }
 
-  if (loading) return <div className="h-64 border-4 border-aether-teal bg-[#031f1f]/60 animate-pulse" />
+  if (loading) return <div className="h-full w-full bg-aether-dark/50 animate-pulse rounded border border-aether-cyan/20" />
 
   return (
-    <div className="relative overflow-hidden border-4 border-aether-teal bg-[#031f1f]/95 p-5 text-aether-mint shadow-pixel-card">
-      <div className="pointer-events-none absolute inset-0 pixel-grid opacity-20" />
-      <div className="relative z-10 space-y-4">
-        <div className="font-pixel text-pixel-xs uppercase tracking-pixel-wider text-aether-cyan">
-          Chrono Sync
+    <div className="relative h-full w-full overflow-hidden rounded-[28px] border border-aether-cyan/20 bg-aether-dark/50 p-4 text-aether-mint flex flex-col">
+      {/* Decorative Header Line */}
+      <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-aether-cyan/50 to-transparent" />
+      
+      <div className="relative z-10 flex flex-col h-full">
+        <div className="flex items-center justify-between mb-2">
+            <div className="font-tech text-xs uppercase tracking-widest text-aether-cyan/70">
+            TEMPORAL LOG
+            </div>
+            <div className="font-tech text-xs text-aether-mint/50">
+                {currentYear}.{String(currentMonth + 1).padStart(2, '0')}
+            </div>
         </div>
-        <h2 className="font-header text-2xl text-aether-cyan">
-          {currentYear}年 {currentMonth + 1}月 簽到紀錄
-        </h2>
-        <div className="grid grid-cols-7 gap-2 text-center text-xs font-pixel uppercase text-aether-mint/60">
-          {['日', '一', '二', '三', '四', '五', '六'].map((d) => (
-            <div key={d} className="py-2">{d}</div>
-          ))}
-          {Array.from({ length: firstDayOfMonth }).map((_, i) => (
-            <div key={`empty-${i}`} />
-          ))}
-          {days.map((d) => (
-            <div
-              key={d.date}
-              className={`flex aspect-square items-center justify-center border-2 text-sm transition ${
-                d.checked
-                  ? 'border-aether-cyan bg-aether-cyan/20 text-white'
-                  : 'border-aether-dim text-aether-mint/60 hover:border-aether-cyan/50 hover:text-aether-cyan'
-              } ${d.date === todayIso ? 'outline outline-2 outline-aether-gold' : ''}`}
+
+        <div className="flex-1 flex flex-col justify-center">
+            <div className="grid grid-cols-7 gap-1 text-center text-[10px] font-tech uppercase text-aether-mint/40 mb-1">
+            {['日', '一', '二', '三', '四', '五', '六'].map((d) => (
+                <div key={d}>{d}</div>
+            ))}
+            </div>
+            <div className="grid grid-cols-7 gap-1 text-center text-xs font-mono">
+            {Array.from({ length: firstDayOfMonth }).map((_, i) => (
+                <div key={`empty-${i}`} />
+            ))}
+            {days.map((d) => (
+                <div
+                key={d.date}
+                className={clsx(
+                    'aspect-square flex items-center justify-center rounded-[1px] transition-all duration-300',
+                    d.checked
+                    ? 'bg-aether-cyan/20 text-aether-cyan shadow-[0_0_5px_rgba(0,240,255,0.3)]'
+                    : 'text-aether-mint/30 hover:bg-aether-cyan/5 hover:text-aether-mint',
+                    d.date === todayIso && !d.checked && 'border border-aether-gold/50 text-aether-gold animate-pulse',
+                    d.date === todayIso && d.checked && 'border border-aether-cyan'
+                )}
+                >
+                {d.day}
+                </div>
+            ))}
+            </div>
+        </div>
+
+        <div className="mt-3 space-y-2">
+            <div className="flex items-center justify-between text-[10px] font-tech uppercase tracking-wider text-aether-mint/60">
+                <span>STATUS: {hasCheckedInToday ? 'SYNCED' : 'PENDING'}</span>
+                <span>REWARD: +{CHECK_IN_REWARD} ETH</span>
+            </div>
+            
+            <TechButton
+                variant={hasCheckedInToday ? 'ghost' : 'primary'}
+                className="w-full text-xs py-2"
+                onClick={handleCheckIn}
+                disabled={hasCheckedInToday || submitting}
             >
-              {d.day}
-            </div>
-          ))}
-        </div>
-        <div className="text-center font-pixel text-pixel-sm uppercase tracking-pixel-wider text-aether-mint/80">
-          本月簽到 <span className="text-aether-cyan">{days.filter((d) => d.checked).length}</span> 天
-        </div>
-        <div className="space-y-2">
-          <PixelButton
-            variant={hasCheckedInToday ? 'secondary' : 'primary'}
-            fullWidth
-            onClick={handleCheckIn}
-            disabled={hasCheckedInToday || submitting}
-          >
-            {hasCheckedInToday ? '今日已簽到' : submitting ? '同步時間線中...' : `手動簽到 +${CHECK_IN_REWARD}`}
-          </PixelButton>
-          <p className="text-center font-pixel text-pixel-xs uppercase tracking-pixel-wider text-aether-mint/50">
-            每日首次簽到獎勵：+{CHECK_IN_REWARD}
-          </p>
-          {feedback && (
-            <div className={`text-center font-pixel text-pixel-sm ${feedback.type === 'success' ? 'text-aether-cyan' : 'text-aether-alert'}`}>
-              {feedback.message}
-            </div>
-          )}
+                {hasCheckedInToday ? '今日已簽到 (SYNCED)' : submitting ? '同步中...' : '手動簽到 (CHECK-IN)'}
+            </TechButton>
+            
+            {feedback && (
+                <div className={clsx(
+                    "text-center font-tech text-[10px] tracking-wide animate-fade-in",
+                    feedback.type === 'success' ? 'text-aether-cyan' : 'text-red-400'
+                )}>
+                {feedback.message}
+                </div>
+            )}
         </div>
       </div>
     </div>

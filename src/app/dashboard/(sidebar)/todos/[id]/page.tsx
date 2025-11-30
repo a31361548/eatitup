@@ -2,7 +2,8 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { getAuthenticatedUser } from '@/lib/currentUser'
-import { PageShell } from '@/components/ui/PageShell'
+import { HoloWindow } from '@/components/ui/HoloWindow'
+import { TechButton } from '@/components/ui/TechButton'
 import { TodoDetailClient } from '@/components/todos/TodoDetailClient'
 import type { Todo } from '@/types/todo'
 
@@ -27,22 +28,26 @@ export default async function TodoDetailPage({ params }: PageProps): Promise<Rea
   const todo = await prisma.todo.findFirst({ where: { id: params.id, userId: user.id } })
   if (!todo) redirect('/dashboard/todos')
   return (
-    <PageShell className="space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-4 border-4 border-aether-teal bg-[#031f1f]/95 p-6 text-aether-mint shadow-pixel-card">
-        <div className="font-pixel text-pixel-xs uppercase tracking-pixel-wider text-aether-cyan">
-          <p>Quick Edit</p>
-          <p className="mt-2 text-base tracking-pixel-normal text-white">編輯待辦</p>
-          <p className="mt-2 text-pixel-sm text-aether-mint/70">快速調整任務內容與狀態，系統仍會套用時間限制。</p>
-        </div>
-        <Link
-          href="/dashboard/todos"
-          className="border-2 border-aether-cyan px-4 py-2 font-pixel text-pixel-xs uppercase tracking-pixel-wider text-aether-cyan hover:bg-aether-cyan hover:text-aether-dark transition"
-        >
-          返回待辦清單
+    <HoloWindow
+      title={`TASK ORBIT // ${todo.id.slice(0, 6)}`}
+      className="h-full"
+      controls={
+        <Link href="/dashboard/todos">
+          <TechButton variant="ghost" className="!px-4 !py-2 text-[11px]">
+            返回清單
+          </TechButton>
         </Link>
-      </div>
+      }
+    >
+      <div className="space-y-6">
+        <div className="rounded-[32px] border border-white/10 bg-gradient-to-br from-white/10 to-black/30 p-6 text-white shadow-[0_25px_70px_rgba(0,0,0,0.45)]">
+          <p className="text-xs font-tech uppercase tracking-[0.45em] text-white/60">Task Editor</p>
+          <h1 className="text-3xl font-pixel uppercase tracking-[0.35em]">調整任務細節</h1>
+          <p className="mt-2 text-sm text-white/70">更新任務參數或刪除這筆儀式。變更後會立即同步。</p>
+        </div>
 
-      <TodoDetailClient initialTodo={serializeTodo(todo)} />
-    </PageShell>
+        <TodoDetailClient initialTodo={serializeTodo(todo)} />
+      </div>
+    </HoloWindow>
   )
 }

@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Swal from 'sweetalert2'
+import { TechButton } from '@/components/ui/TechButton'
 
 export function DeleteListButton({ listId }: { listId: string }) {
   const router = useRouter()
@@ -10,8 +11,8 @@ export function DeleteListButton({ listId }: { listId: string }) {
 
   const handleDelete = async () => {
     const result = await Swal.fire({
-      title: '刪除此模組？',
-      text: "此動作無法復原，確定要刪除這個命運演算法嗎？",
+      title: '刪除此卷軸？',
+      text: '此動作無法復原，確定要刪除此資料卷軸嗎？',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#FF0055',
@@ -19,7 +20,7 @@ export function DeleteListButton({ listId }: { listId: string }) {
       confirmButtonText: '確認刪除',
       cancelButtonText: '取消',
       background: '#041C1C',
-      color: '#67E8F9'
+      color: '#67E8F9',
     })
 
     if (!result.isConfirmed) return
@@ -30,20 +31,20 @@ export function DeleteListButton({ listId }: { listId: string }) {
       if (res.ok) {
         router.refresh()
         Swal.fire({
-            title: '已刪除',
-            icon: 'success',
-            timer: 1500,
-            showConfirmButton: false,
-            background: '#041C1C',
-            color: '#67E8F9'
+          title: '已刪除',
+          icon: 'success',
+          timer: 1500,
+          showConfirmButton: false,
+          background: '#041C1C',
+          color: '#67E8F9',
         })
       } else {
         Swal.fire({
-            title: '刪除失敗',
-            text: '無法刪除此模組',
-            icon: 'error',
-            background: '#041C1C',
-            color: '#FF0055'
+          title: '刪除失敗',
+          text: '無法刪除此卷軸',
+          icon: 'error',
+          background: '#041C1C',
+          color: '#FF0055',
         })
       }
     } catch (error) {
@@ -53,7 +54,7 @@ export function DeleteListButton({ listId }: { listId: string }) {
         text: '系統發生預期外的錯誤',
         icon: 'error',
         background: '#041C1C',
-        color: '#FF0055'
+        color: '#FF0055',
       })
     } finally {
       setLoading(false)
@@ -61,12 +62,8 @@ export function DeleteListButton({ listId }: { listId: string }) {
   }
 
   return (
-    <button
-      onClick={handleDelete}
-      disabled={loading}
-      className="rounded border border-aether-alert/30 bg-aether-alert/10 px-4 py-2 font-tech text-xs uppercase tracking-widest text-aether-alert transition hover:bg-aether-alert/20 hover:border-aether-alert disabled:opacity-50"
-    >
-      {loading ? '刪除中...' : '刪除'}
-    </button>
+    <TechButton variant="danger" onClick={handleDelete} disabled={loading} className="!px-4 !py-2 text-[11px]">
+      {loading ? '刪除中…' : '刪除'}
+    </TechButton>
   )
 }

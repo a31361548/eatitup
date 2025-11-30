@@ -1,17 +1,21 @@
-import { ReactNode, ReactElement } from 'react'
-import { DashboardSidebar } from '@/components/DashboardSidebar'
+import { ReactNode } from 'react'
+import { BackgroundGrid } from '@/components/ui/BackgroundGrid'
+import { JarvisSidebar } from '@/components/layout/JarvisSidebar'
+import { CommandHeader } from '@/components/layout/CommandHeader'
 
-export default function DashboardLayout({ children }: { children: ReactNode }): ReactElement {
+export default function DashboardRootLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="relative px-4 pb-16 pt-24 sm:px-6">
-      <div className="absolute inset-0 pixel-grid opacity-20 pointer-events-none" />
-      <div className="absolute inset-0 vignette" />
-
-      <div className="relative z-10 mx-auto grid w-full max-w-[1920px] gap-6 md:grid-cols-[220px_1fr]">
-        <DashboardSidebar />
-        <main className="min-w-0 border-4 border-aether-teal bg-[#031f1f]/95 p-6 text-aether-mint shadow-pixel-card">
-          {children}
-        </main>
+    <div className="relative min-h-screen w-full overflow-hidden text-white">
+      <BackgroundGrid />
+      <div className="fixed inset-0 -z-30 opacity-70" aria-hidden>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(0,243,255,0.15),transparent_55%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(250,204,21,0.08),transparent_60%)] blur-3xl" />
+        <div className="absolute inset-0 mix-blend-screen opacity-70" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)', backgroundSize: '60px 60px' }} />
+      </div>
+      <CommandHeader />
+      <JarvisSidebar />
+      <div className="relative z-10 mx-auto w-full max-w-[1920px] px-4 pb-16 pt-28 sm:px-6 md:px-8 lg:pt-32 lg:pl-40 lg:pr-12">
+        {children}
       </div>
     </div>
   )

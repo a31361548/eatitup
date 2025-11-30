@@ -220,49 +220,49 @@ export const ForgeArchive: React.FC<ForgeArchiveProps> = ({
   };
 
   return (
-    <div className="relative bg-[#1a100c] rounded-t-[40px] md:rounded-t-[100px] rounded-b-[20px] p-6 md:p-8 shadow-[0_20px_50px_rgba(0,0,0,0.8)] border-x-2 border-b-2 border-[#3e2723] group ring-1 ring-white/5">
+    <div className="relative bg-[#0a1020]/90 rounded-lg p-6 md:p-8 shadow-[0_0_30px_rgba(0,240,255,0.1)] border border-aether-cyan/30 backdrop-blur-sm group">
        {/* Glowing Top Edge */}
-       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[80%] h-[2px] bg-gradient-to-r from-transparent via-forge-gold to-transparent shadow-[0_0_15px_#ffb300]"></div>
+       <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-aether-cyan to-transparent shadow-[0_0_10px_#00f0ff]"></div>
        
        {/* Header */}
        <div className="text-center mb-6 mt-2">
-         <h1 className="text-3xl md:text-5xl font-rune text-forge-gold font-bold drop-shadow-md tracking-wide">
-           命運典藏
+         <h1 className="text-3xl md:text-5xl font-heading text-white font-bold drop-shadow-[0_0_10px_rgba(0,240,255,0.5)] tracking-wide">
+           DATA ARCHIVE
          </h1>
          <div className="flex items-center justify-center gap-4 mt-3 opacity-60">
-            <div className="h-[1px] w-8 md:w-12 bg-forge-bronze"></div>
-            <div className="w-2 h-2 rotate-45 bg-forge-gold"></div>
-            <div className="h-[1px] w-8 md:w-12 bg-forge-bronze"></div>
+            <div className="h-[1px] w-8 md:w-12 bg-aether-cyan"></div>
+            <div className="w-2 h-2 bg-aether-cyan animate-pulse"></div>
+            <div className="h-[1px] w-8 md:w-12 bg-aether-cyan"></div>
          </div>
        </div>
 
-       {/* List Selection (Magical Dropdown) */}
+       {/* List Selection (Tech Dropdown) */}
        <div className="relative mb-4">
           <select 
-            className="w-full bg-[#0f0500] border border-forge-bronze text-forge-light font-scroll p-3 rounded-lg focus:outline-none focus:border-forge-gold appearance-none cursor-pointer"
+            className="w-full bg-aether-dark border border-aether-cyan/30 text-aether-cyan font-tech p-3 rounded focus:outline-none focus:border-aether-cyan focus:shadow-[0_0_15px_rgba(0,240,255,0.3)] appearance-none cursor-pointer uppercase tracking-wider"
             onChange={(e) => loadList(e.target.value)}
             value={currentListId || ''}
             disabled={isSpinning}
           >
-             <option value="" disabled>選擇卷軸...</option>
+             <option value="" disabled>SELECT DATASET...</option>
              {lists.map(l => (
                <option key={l.id} value={l.id}>{l.title}</option>
              ))}
           </select>
-          <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-forge-gold">
+          <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-aether-cyan">
              ▼
           </div>
        </div>
 
        {/* Input Area */}
-       <div className="relative mb-4 bg-[#0f0500] rounded-xl border border-[#3e2723] shadow-inner overflow-hidden group-hover:border-[#5d4037] transition-colors">
-          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-forge-glow/20 to-transparent"></div>
+       <div className="relative mb-4 bg-aether-dark/50 rounded border border-aether-cyan/20 shadow-inner overflow-hidden group-hover:border-aether-cyan/50 transition-colors">
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-aether-cyan/20 to-transparent"></div>
           <textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
             disabled={isSpinning}
-            className="w-full h-48 md:h-64 bg-transparent p-6 font-scroll text-xl md:text-2xl text-forge-light focus:outline-none focus:bg-[#1a120f] transition-all resize-none forge-scroll leading-loose tracking-wide placeholder-white/20"
-            placeholder="在此刻寫命運..."
+            className="w-full h-48 md:h-64 bg-transparent p-6 font-mono text-xl md:text-2xl text-aether-mint focus:outline-none focus:bg-aether-dark transition-all resize-none custom-scrollbar leading-loose tracking-wide placeholder-aether-cyan/20"
+            placeholder="INPUT DATA STREAM..."
           />
        </div>
 
@@ -272,17 +272,17 @@ export const ForgeArchive: React.FC<ForgeArchiveProps> = ({
            type="text"
            value={newOption}
            onChange={(e) => setNewOption(e.target.value)}
-           placeholder="輸入新的命運碎片..."
+           placeholder="ADD NEW ENTRY..."
            disabled={isSpinning}
-           className="flex-1 bg-[#0f0500] border border-forge-bronze/80 text-forge-light font-scroll p-3 rounded-lg focus:outline-none focus:border-forge-gold placeholder-white/20 disabled:opacity-50"
+           className="flex-1 bg-aether-dark border border-aether-cyan/30 text-aether-cyan font-tech p-3 rounded focus:outline-none focus:border-aether-cyan placeholder-aether-cyan/20 disabled:opacity-50 uppercase tracking-wider"
          />
          <button
            type="button"
            onClick={handleAddOption}
            disabled={isSpinning}
-           className="px-6 bg-forge-gold/20 border border-forge-gold text-forge-light font-rune tracking-[0.3em] uppercase rounded-lg hover:bg-forge-gold/30 transition disabled:opacity-40 disabled:cursor-not-allowed"
+           className="px-6 bg-aether-cyan/10 border border-aether-cyan text-aether-cyan font-tech tracking-[0.2em] uppercase rounded hover:bg-aether-cyan hover:text-aether-dark transition disabled:opacity-40 disabled:cursor-not-allowed"
          >
-           刻入
+           INSERT
          </button>
        </div>
 
@@ -292,40 +292,38 @@ export const ForgeArchive: React.FC<ForgeArchiveProps> = ({
              type="text" 
              value={listName}
              onChange={(e) => setListName(e.target.value)}
-             placeholder="卷軸名稱"
-             className="flex-1 bg-[#0f0500] border border-forge-bronze text-forge-light font-scroll p-3 rounded-lg focus:outline-none focus:border-forge-gold placeholder-white/20"
+             placeholder="DATASET NAME"
+             className="flex-1 bg-aether-dark border border-aether-cyan/30 text-aether-cyan font-tech p-3 rounded focus:outline-none focus:border-aether-cyan placeholder-aether-cyan/20 uppercase tracking-wider"
              disabled={isSpinning}
           />
           <button 
              onClick={saveList}
              disabled={saving || isSpinning}
-             className="px-6 bg-forge-metal border border-forge-bronze text-forge-gold font-rune hover:bg-forge-brown hover:border-forge-gold transition-colors rounded-lg disabled:opacity-50"
+             className="px-6 bg-aether-dim border border-aether-cyan/50 text-white font-tech hover:bg-aether-cyan hover:text-aether-dark transition-colors rounded disabled:opacity-50 uppercase tracking-wider"
           >
-             {saving ? '鍛造中...' : '儲存卷軸'}
+             {saving ? 'SAVING...' : 'SAVE'}
           </button>
        </div>
 
-       {/* Action Button (The Hammer) */}
+       {/* Action Button (The Trigger) */}
        <button
          onClick={onSpin}
          disabled={isSpinning || optionsCount < 2}
-         className="w-full relative h-16 md:h-20 group/btn overflow-hidden rounded-sm bg-forge-brown border border-forge-gold/30 hover:border-forge-gold transition-all shadow-[0_5px_0_#1a0f0a] active:shadow-none active:translate-y-[5px] disabled:opacity-50 disabled:cursor-not-allowed"
+         className="w-full relative h-16 md:h-20 group/btn overflow-hidden rounded bg-aether-cyan/10 border border-aether-cyan hover:bg-aether-cyan hover:shadow-[0_0_30px_rgba(0,240,255,0.6)] transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
        >
-          {/* Molten Background */}
-          <div className="absolute inset-0 bg-gradient-to-r from-forge-dark via-forge-brown to-forge-dark"></div>
-          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-30"></div>
-          <div className="absolute bottom-0 left-0 w-full h-[50%] bg-gradient-to-t from-forge-glow/20 to-transparent opacity-0 group-hover/btn:opacity-100 transition-opacity"></div>
+          {/* Tech Background */}
+          <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(0,240,255,0.1)_50%,transparent_75%)] bg-[length:250%_250%] animate-[shimmer_2s_linear_infinite]"></div>
           
           <div className="relative z-10 flex items-center justify-center gap-3">
-              <span className="font-rune text-forge-light text-xl md:text-2xl tracking-[0.2em] uppercase group-hover/btn:text-white group-hover/btn:drop-shadow-[0_0_8px_#ffb300] transition-all">
-                {isSpinning ? '鍛造進行中...' : '啟動命運'}
+              <span className="font-heading text-white text-xl md:text-2xl tracking-[0.2em] uppercase group-hover/btn:text-aether-dark transition-all">
+                {isSpinning ? 'PROCESSING...' : 'INITIATE SEQUENCE'}
               </span>
           </div>
        </button>
        
        {optionsCount < 2 && (
-         <p className="text-center text-forge-ember font-scroll mt-4 text-sm italic animate-pulse">
-           ※ 需要至少兩種素材才能鍛造
+         <p className="text-center text-aether-alert font-tech mt-4 text-sm animate-pulse tracking-widest uppercase">
+           ⚠ INSUFFICIENT DATA FOR PROCESSING
          </p>
        )}
     </div>

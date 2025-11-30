@@ -5,6 +5,7 @@ import clsx from 'clsx'
 import type { Todo } from '@/types/todo'
 import { TODO_STATUS_LABEL, TODO_STATUS_TONE } from '@/types/todo'
 import { TodoForm, type TodoFormPayload } from './TodoForm'
+import { TechButton } from '@/components/ui/TechButton'
 
 type TodosClientProps = {
   initialTodos: Todo[]
@@ -104,112 +105,98 @@ export function TodosClient({ initialTodos }: TodosClientProps): React.ReactElem
   const activeTodoCount = useMemo(() => todos.filter((todo) => todo.status !== 'COMPLETED').length, [todos])
 
   return (
-    <div className="space-y-8">
-      <TodoForm
-        mode={editing ? 'edit' : 'create'}
-        initialTodo={editing ?? undefined}
-        submitting={submitting}
-        onSubmit={handleSubmit}
-        onCancel={editing ? () => setEditing(null) : undefined}
-      />
+    <div className="grid gap-8 xl:grid-cols-[1.05fr_0.95fr]">
+      <section>
+        <TodoForm
+          mode={editing ? 'edit' : 'create'}
+          initialTodo={editing ?? undefined}
+          submitting={submitting}
+          onSubmit={handleSubmit}
+          onCancel={editing ? () => setEditing(null) : undefined}
+        />
+      </section>
 
-      <div className="border-4 border-aether-teal bg-[#031f1f]/95 p-6 text-aether-mint shadow-pixel-card">
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div className="font-pixel text-pixel-sm uppercase tracking-pixel-wider text-aether-cyan">
-            <p>Tasks Overview</p>
-            <p className="mt-2 text-base tracking-pixel-wide text-white">
-              總計 {todos.length} 筆 | 未完成 {activeTodoCount}
-            </p>
+      <section className="space-y-6">
+        <div className="rounded-[32px] border border-white/10 bg-black/30 p-6 text-white shadow-[0_25px_70px_rgba(0,0,0,0.45)]">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <p className="text-xs font-tech uppercase tracking-[0.45em] text-white/60">Task Overview</p>
+              <p className="text-lg font-pixel uppercase tracking-[0.3em]">總計 {todos.length} 筆 | 未完成 {activeTodoCount}</p>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              <TechButton variant="secondary" className="!px-4 !py-2" onClick={() => setEditing(null)}>
+                新任務
+              </TechButton>
+              <TechButton
+                variant="primary"
+                className={clsx('!px-4 !py-2', refreshing && 'opacity-60')}
+                onClick={refresh}
+                disabled={refreshing}
+              >
+                {refreshing ? '更新中' : '刷新'}
+              </TechButton>
+            </div>
           </div>
-          <div className="flex gap-3 font-pixel text-pixel-xs uppercase tracking-pixel-wide">
-            <button
-              type="button"
-              onClick={() => setEditing(null)}
-              className="border-2 border-aether-teal px-3 py-2 text-aether-teal hover:bg-aether-teal hover:text-aether-dark transition"
-            >
-              新增
-            </button>
-            <button
-              type="button"
-              onClick={refresh}
+          {feedback && (
+            <div
               className={clsx(
-                'border-2 border-aether-cyan px-3 py-2 text-aether-cyan hover:bg-aether-cyan hover:text-aether-dark transition',
-                refreshing && 'opacity-60'
+                'mt-4 rounded-2xl border px-4 py-3 text-sm font-tech uppercase tracking-[0.35em]',
+                feedback.type === 'success' ? 'border-emerald-400/40 text-emerald-200' : 'border-red-400/50 text-red-200'
               )}
-              disabled={refreshing}
             >
-              {refreshing ? '更新中' : '刷新'}
-            </button>
-          </div>
-        </div>
-
-        {feedback && (
-          <div
-            className={clsx(
-              'mt-4 border-2 px-4 py-2 font-pixel text-pixel-sm uppercase tracking-pixel-wide',
-              feedback.type === 'success'
-                ? 'border-aether-teal text-aether-teal'
-                : 'border-aether-alert text-aether-alert'
-            )}
-          >
-            {feedback.message}
-          </div>
-        )}
-
-        <div className="mt-6 space-y-3">
-          {hasTodos ? (
-            todos.map((todo) => (
-              <article key={todo.id} className="border-2 border-aether-dim px-4 py-4 hover:border-aether-cyan transition">
-                <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
-                  <div>
-                    <h3 className="font-header text-xl text-white">{todo.title}</h3>
-                    {todo.description && <p className="font-pixel text-pixel-sm text-aether-mint/70">{todo.description}</p>}
-                  </div>
-                  <span
-                    className={clsx(
-                      'border-2 px-3 py-1 font-pixel text-pixel-xs uppercase tracking-pixel-wide',
-                      TODO_STATUS_TONE[todo.status]
-                    )}
-                  >
-                    {TODO_STATUS_LABEL[todo.status]}
-                  </span>
-                </div>
-                <dl className="mt-4 grid gap-4 font-pixel text-pixel-sm text-aether-mint/70 sm:grid-cols-2">
-                  <div className="border border-aether-dim px-3 py-2">
-                    <dt>開始</dt>
-                    <dd className="text-white">{formatDateTime(todo.startAt)}</dd>
-                  </div>
-                  <div className="border border-aether-dim px-3 py-2">
-                    <dt>結束</dt>
-                    <dd className="text-white">{formatDateTime(todo.endAt)}</dd>
-                  </div>
-                </dl>
-                <div className="mt-4 flex flex-wrap gap-3 font-pixel text-pixel-xs uppercase tracking-pixel-wide">
-                  <button
-                    type="button"
-                    onClick={() => setEditing(todo)}
-                    className="border-2 border-aether-teal px-3 py-2 text-aether-teal hover:bg-aether-teal hover:text-aether-dark transition"
-                  >
-                    編輯
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleDelete(todo)}
-                    className="border-2 border-aether-alert px-3 py-2 text-aether-alert hover:bg-aether-alert hover:text-aether-dark transition"
-                    disabled={deletingId === todo.id}
-                  >
-                    {deletingId === todo.id ? '刪除中' : '刪除'}
-                  </button>
-                </div>
-              </article>
-            ))
-          ) : (
-            <div className="border-2 border-dashed border-aether-dim px-4 py-6 text-center font-pixel text-pixel-sm text-aether-mint/60">
-              目前沒有待辦事項，先在上方建立第一筆吧！
+              {feedback.message}
             </div>
           )}
         </div>
-      </div>
+
+        <div className="rounded-[32px] border border-white/10 bg-gradient-to-b from-white/5 to-black/20 p-4 shadow-[0_25px_70px_rgba(0,0,0,0.45)]">
+          <div className="max-h-[600px] space-y-4 overflow-auto pr-1">
+            {hasTodos ? (
+              todos.map((todo) => (
+                <article key={todo.id} className="rounded-2xl border border-white/10 bg-black/30 p-4 text-white transition hover:border-cyan-200/60">
+                  <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+                    <div>
+                      <p className="text-xs font-tech uppercase tracking-[0.4em] text-white/60">ID: {todo.id.slice(0, 6)}</p>
+                      <h3 className="text-2xl font-heading">{todo.title}</h3>
+                      {todo.description && <p className="text-sm text-white/70">{todo.description}</p>}
+                    </div>
+                    <span className={clsx('rounded-full border px-4 py-1 text-xs font-tech uppercase tracking-[0.35em]', TODO_STATUS_TONE[todo.status])}>
+                      {TODO_STATUS_LABEL[todo.status]}
+                    </span>
+                  </div>
+                  <dl className="mt-4 grid gap-4 text-sm text-white/70 sm:grid-cols-2">
+                    <div className="rounded-2xl border border-white/10 bg-black/40 p-3">
+                      <dt className="text-xs uppercase tracking-[0.4em] text-white/50">開始</dt>
+                      <dd className="font-mono text-white">{formatDateTime(todo.startAt)}</dd>
+                    </div>
+                    <div className="rounded-2xl border border-white/10 bg-black/40 p-3">
+                      <dt className="text-xs uppercase tracking-[0.4em] text-white/50">結束</dt>
+                      <dd className="font-mono text-white">{formatDateTime(todo.endAt)}</dd>
+                    </div>
+                  </dl>
+                  <div className="mt-4 flex flex-wrap gap-3 text-xs font-tech uppercase tracking-[0.35em]">
+                    <TechButton variant="secondary" className="!px-4 !py-2" onClick={() => setEditing(todo)}>
+                      編輯
+                    </TechButton>
+                    <TechButton
+                      variant="danger"
+                      className="!px-4 !py-2"
+                      onClick={() => handleDelete(todo)}
+                      disabled={deletingId === todo.id}
+                    >
+                      {deletingId === todo.id ? '刪除中' : '刪除'}
+                    </TechButton>
+                  </div>
+                </article>
+              ))
+            ) : (
+              <div className="rounded-2xl border border-dashed border-white/20 p-10 text-center text-white/60">
+                目前沒有任務，請在左側建立第一筆。
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
     </div>
   )
 }

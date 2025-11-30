@@ -5,8 +5,8 @@ import { usePathname } from 'next/navigation'
 import { LogoutButton } from './LogoutButton'
 
 const links = [
-  { href: '/dashboard/home', label: '首頁', icon: '🏠' },
-  { href: '/dashboard', label: '會員中心', icon: '📊' },
+  { href: '/dashboard', label: '主控台', icon: '🏠' },
+  { href: '/dashboard/overview', label: '總覽', icon: '📊' },
   { href: '/dashboard/todos', label: '待辦清單', icon: '✅' },
   { href: '/dashboard/lists', label: '清單管理', icon: '📝' },
   { href: '/dashboard/notes', label: '記事本', icon: '📒' },
