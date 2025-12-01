@@ -81,7 +81,7 @@ export function TacticalHeader() {
                     <span className="text-aether-cyan/80">COMMAND CENTER</span>
                     {breadcrumbs && (
                         <>
-                            <span className="text-aether-cyan/30">//</span>
+                            <span className="text-aether-cyan/30">{'//'}</span>
                             <span className="text-aether-mint/80">{breadcrumbs}</span>
                         </>
                     )}
