@@ -2,9 +2,7 @@ import { prisma } from '@/lib/prisma'
 import { getAuthenticatedUser } from '@/lib/currentUser'
 import { TodoStatus } from '@prisma/client'
 import { z } from 'zod'
-
-const MIN_END_OFFSET_MS = 5 * 60 * 1000
-const DEFAULT_DURATION_MS = 30 * 60 * 1000
+import { clampToFuture, ensureMinimumDuration, resolveAutoStatus, toDate, DEFAULT_DURATION_MS } from '@/lib/todoTime'
 
 const TodoPayloadSchema = z.object({
   title: z.string().min(1),
@@ -14,20 +12,16 @@ const TodoPayloadSchema = z.object({
   status: z.nativeEnum(TodoStatus).optional(),
 })
 
-const toDateOrNull = (value?: string): Date | null => {
-  if (!value) return null
-  const parsed = new Date(value)
-  if (Number.isNaN(parsed.getTime())) return null
-  return parsed
-}
-
 const buildTimeRange = (start?: string, end?: string): { startAt: Date; endAt: Date } | null => {
   const now = new Date()
-  const parsedStart = toDateOrNull(start) ?? now
-  if (parsedStart.getTime() < now.getTime()) return null
-  const parsedEnd = toDateOrNull(end) ?? new Date(parsedStart.getTime() + DEFAULT_DURATION_MS)
-  if (parsedEnd.getTime() - parsedStart.getTime() < MIN_END_OFFSET_MS) return null
-  return { startAt: parsedStart, endAt: parsedEnd }
+  const parsedStart = start ? toDate(start) : null
+  if (start && !parsedStart) return null
+  const startAt = clampToFuture(parsedStart ?? now, now)
+  const parsedEnd = end ? toDate(end) : null
+  if (end && !parsedEnd) return null
+  const suggestedEnd = parsedEnd ?? new Date(startAt.getTime() + DEFAULT_DURATION_MS)
+  const endAt = ensureMinimumDuration(startAt, suggestedEnd)
+  return { startAt, endAt }
 }
 
 export async function GET(): Promise<Response> {
@@ -48,11 +42,12 @@ export async function POST(request: Request): Promise<Response> {
   if (!parsed.success) return new Response('資料格式錯誤', { status: 400 })
   const timeRange = buildTimeRange(parsed.data.startAt, parsed.data.endAt)
   if (!timeRange) return new Response('時間設定不正確', { status: 400 })
+  const resolvedStatus = resolveAutoStatus(parsed.data.status, timeRange.startAt, timeRange.endAt)
   const todo = await prisma.todo.create({
     data: {
       title: parsed.data.title,
       description: parsed.data.description,
-      status: parsed.data.status ?? TodoStatus.NOT_STARTED,
+      status: resolvedStatus as TodoStatus,
       startAt: timeRange.startAt,
       endAt: timeRange.endAt,
       userId: user.id,

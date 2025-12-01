@@ -1,10 +1,18 @@
+'use client'
+
+'use client'
+
 import Link from 'next/link'
 import clsx from 'clsx'
+import { useCallback, useMemo, useRef } from 'react'
 import type { Todo } from '@/types/todo'
-import { TODO_STATUS_LABEL, TODO_STATUS_TONE } from '@/types/todo'
+import { TODO_STATUS_LABEL, TODO_STATUS_TONE, TODO_PHASE_LABEL } from '@/types/todo'
 import { PageShell } from '@/components/ui/PageShell'
 import { TechButton } from '@/components/ui/TechButton'
 import { CheckInCalendar } from '@/components/CheckInCalendar'
+import { useTodosCountdown } from '@/hooks/useTodosCountdown'
+import { formatDuration, type CountdownPhase } from '@/lib/todoTime'
+import { updateTodoStatus } from '@/lib/todoActions'
 
 type CommandUser = {
   name: string | null
@@ -57,6 +65,17 @@ export function CommandAtrium({ user, todos, variant = 'command' }: CommandAtriu
   const activeMissions = todos.filter((todo) => todo.status !== 'COMPLETED').length
   const idleMissions = todos.length - activeMissions
   const now = new Date()
+  const autoStatusRef = useRef<Set<string>>(new Set())
+  const handlePhaseChange = useCallback((todo: Todo, phase: CountdownPhase) => {
+    if (phase === 'ACTIVE' && todo.status === 'NOT_STARTED' && !autoStatusRef.current.has(todo.id)) {
+      autoStatusRef.current.add(todo.id)
+      updateTodoStatus(todo.id, 'IN_PROGRESS').finally(() => {
+        autoStatusRef.current.delete(todo.id)
+      })
+    }
+  }, [])
+  const countdownEntries = useTodosCountdown(todos, { onPhaseChange: handlePhaseChange })
+  const countdownMap = useMemo(() => new Map(countdownEntries.map((entry) => [entry.todo.id, entry])), [countdownEntries])
 
   return (
     <PageShell className="space-y-20">
@@ -180,28 +199,50 @@ export function CommandAtrium({ user, todos, variant = 'command' }: CommandAtriu
           </div>
           <div className="mt-6 space-y-4">
             {todos.length > 0 ? (
-              todos.map((todo) => (
-                <article key={todo.id} className="rounded-3xl border border-white/10 bg-white/5 p-4 transition hover:border-cyan-200/60 hover:bg-white/10">
-                  <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
-                    <div>
-                      <p className="text-sm font-tech uppercase tracking-[0.35em] text-white/60">ID: {todo.id.slice(0, 6)}</p>
-                      <h3 className="text-2xl font-heading">{todo.title}</h3>
-                      {todo.description && <p className="text-sm text-white/70">{todo.description}</p>}
-                      <p className="mt-2 text-xs text-white/50">開始 {formatDateTime(todo.startAt)}</p>
+              todos.map((todo) => {
+                const countdown = countdownMap.get(todo.id)
+                const countdownLabel = countdown
+                  ? countdown.phase === 'UPCOMING'
+                    ? `距開始 ${formatDuration(countdown.startsIn)}`
+                    : countdown.phase === 'ACTIVE'
+                      ? `距結束 ${formatDuration(countdown.endsIn)}`
+                      : countdown.phase === 'OVERDUE'
+                        ? `超時 ${formatDuration(Math.abs(countdown.endsIn))}`
+                        : null
+                  : null
+                return (
+                  <article key={todo.id} className="rounded-3xl border border-white/10 bg-white/5 p-4 transition hover:border-cyan-200/60 hover:bg-white/10">
+                    <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+                      <div>
+                        <p className="text-sm font-tech uppercase tracking-[0.35em] text-white/60">ID: {todo.id.slice(0, 6)}</p>
+                        <h3 className="text-2xl font-heading">{todo.title}</h3>
+                        {todo.description && <p className="text-sm text-white/70">{todo.description}</p>}
+                        <p className="mt-2 text-xs text-white/50">開始 {formatDateTime(todo.startAt)}</p>
+                        {countdownLabel && (
+                          <p
+                            className={clsx(
+                              'mt-2 text-xs font-tech uppercase tracking-[0.35em]',
+                              countdown?.phase === 'OVERDUE' ? 'text-red-300' : 'text-aether-cyan'
+                            )}
+                          >
+                            {countdownLabel}
+                          </p>
+                        )}
+                      </div>
+                      <div className="flex flex-col items-end gap-3">
+                        <span className={clsx('rounded-full border px-4 py-1 text-xs font-tech uppercase tracking-[0.35em]', TODO_STATUS_TONE[todo.status])}>
+                          {TODO_STATUS_LABEL[todo.status]}
+                        </span>
+                        <Link href={`/dashboard/todos/${todo.id}`}>
+                          <TechButton variant="secondary" className="!px-4 !py-2 text-[10px]">
+                            編輯
+                          </TechButton>
+                        </Link>
+                      </div>
                     </div>
-                    <div className="flex flex-col items-end gap-3">
-                      <span className={clsx('rounded-full border px-4 py-1 text-xs font-tech uppercase tracking-[0.35em]', TODO_STATUS_TONE[todo.status])}>
-                        {TODO_STATUS_LABEL[todo.status]}
-                      </span>
-                      <Link href={`/dashboard/todos/${todo.id}`}>
-                        <TechButton variant="secondary" className="!px-4 !py-2 text-[10px]">
-                          編輯
-                        </TechButton>
-                      </Link>
-                    </div>
-                  </div>
-                </article>
-              ))
+                  </article>
+                )
+              })
             ) : (
               <div className="rounded-3xl border border-dashed border-white/20 p-12 text-center text-white/60">
                 尚無任務，立即在上方啟動第一個儀式。

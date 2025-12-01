@@ -1,17 +1,21 @@
 'use client'
 
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import clsx from 'clsx'
-import type { Todo } from '@/types/todo'
-import { TODO_STATUS_LABEL, TODO_STATUS_TONE } from '@/types/todo'
-import { TodoForm, type TodoFormPayload } from './TodoForm'
+import type { Todo, TodoStatus } from '@/types/todo'
+import { TODO_STATUS_LABEL, TODO_STATUS_TONE, TODO_PHASE_LABEL } from '@/types/todo'
+import { TodoForm, type TodoFormCommand, type TodoFormPayload } from './TodoForm'
 import { TechButton } from '@/components/ui/TechButton'
+import { useTodosCountdown } from '@/hooks/useTodosCountdown'
+import { formatDuration, type CountdownPhase } from '@/lib/todoTime'
+import { delayTodo, updateTodoStatus } from '@/lib/todoActions'
 
 type TodosClientProps = {
   initialTodos: Todo[]
 }
 
 type Feedback = { type: 'success' | 'error'; message: string } | null
+const DELAY_OPTIONS = [5, 10, 25] as const
 
 const sortTodos = (items: Todo[]): Todo[] => {
   return [...items].sort((a, b) => {
@@ -38,8 +42,67 @@ export function TodosClient({ initialTodos }: TodosClientProps): React.ReactElem
   const [refreshing, setRefreshing] = useState(false)
   const [deletingId, setDeletingId] = useState<string | null>(null)
   const [feedback, setFeedback] = useState<Feedback>(null)
+  const [formCommand, setFormCommand] = useState<TodoFormCommand | null>(null)
+  const [mutatingId, setMutatingId] = useState<string | null>(null)
+  useEffect(() => {
+    if (!editing) {
+      setFormCommand(null)
+    }
+  }, [editing])
 
   const hasTodos = todos.length > 0
+
+  const updateLocalTodo = useCallback((nextTodo: Todo) => {
+    setTodos((prev) => sortTodos([...prev.filter((item) => item.id !== nextTodo.id), nextTodo]))
+  }, [])
+
+  const handleQuickStatus = useCallback(
+    async (todo: Todo, status: TodoStatus, successMessage: string) => {
+      setMutatingId(todo.id)
+      setFeedback(null)
+      try {
+        const updated = await updateTodoStatus(todo.id, status)
+        updateLocalTodo(updated)
+        setFeedback({ type: 'success', message: successMessage })
+      } catch (error) {
+        setFeedback({ type: 'error', message: error instanceof Error ? error.message : '更新失敗' })
+      } finally {
+        setMutatingId(null)
+      }
+    },
+    [updateLocalTodo]
+  )
+
+  const handleDelay = useCallback(
+    async (todo: Todo, minutes: number) => {
+      setMutatingId(todo.id)
+      setFeedback(null)
+      try {
+        const updated = await delayTodo(todo, minutes)
+        updateLocalTodo(updated)
+        setFeedback({ type: 'success', message: `已延後 ${minutes} 分鐘` })
+      } catch (error) {
+        setFeedback({ type: 'error', message: error instanceof Error ? error.message : '延後失敗' })
+      } finally {
+        setMutatingId(null)
+      }
+    },
+    [updateLocalTodo]
+  )
+
+  const handleCustomDelay = useCallback(
+    async (todo: Todo) => {
+      const value = window.prompt('延後幾分鐘？', '15')
+      if (!value) return
+      const minutes = Number(value)
+      if (!Number.isFinite(minutes) || minutes <= 0) {
+        setFeedback({ type: 'error', message: '請輸入有效的分鐘數' })
+        return
+      }
+      await handleDelay(todo, minutes)
+    },
+    [handleDelay]
+  )
 
   const handleSubmit = async (payload: TodoFormPayload) => {
     setSubmitting(true)
@@ -102,6 +165,22 @@ export function TodosClient({ initialTodos }: TodosClientProps): React.ReactElem
     }
   }
 
+  const handlePhaseChange = useCallback((todo: Todo, phase: CountdownPhase) => {
+    if (phase === 'ACTIVE' && todo.status === 'NOT_STARTED') {
+      updateTodoStatus(todo.id, 'IN_PROGRESS')
+        .then((next) => {
+          updateLocalTodo(next)
+          setFeedback({ type: 'success', message: `「${next.title}」已自動啟動` })
+        })
+        .catch((error) => {
+          setFeedback({ type: 'error', message: error instanceof Error ? error.message : '自動啟動失敗' })
+        })
+    }
+  }, [updateLocalTodo])
+
+  const countdownEntries = useTodosCountdown(todos, { onPhaseChange: handlePhaseChange })
+  const countdownMap = useMemo(() => new Map(countdownEntries.map((entry) => [entry.todo.id, entry])), [countdownEntries])
+
   const activeTodoCount = useMemo(() => todos.filter((todo) => todo.status !== 'COMPLETED').length, [todos])
 
   return (
@@ -113,6 +192,8 @@ export function TodosClient({ initialTodos }: TodosClientProps): React.ReactElem
           submitting={submitting}
           onSubmit={handleSubmit}
           onCancel={editing ? () => setEditing(null) : undefined}
+          command={formCommand}
+          onCommandHandled={() => setFormCommand(null)}
         />
       </section>
 
@@ -152,43 +233,113 @@ export function TodosClient({ initialTodos }: TodosClientProps): React.ReactElem
         <div className="rounded-[32px] border border-white/10 bg-gradient-to-b from-white/5 to-black/20 p-4 shadow-[0_25px_70px_rgba(0,0,0,0.45)]">
           <div className="max-h-[600px] space-y-4 overflow-auto pr-1">
             {hasTodos ? (
-              todos.map((todo) => (
-                <article key={todo.id} className="rounded-2xl border border-white/10 bg-black/30 p-4 text-white transition hover:border-cyan-200/60">
-                  <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
-                    <div>
-                      <p className="text-xs font-tech uppercase tracking-[0.4em] text-white/60">ID: {todo.id.slice(0, 6)}</p>
-                      <h3 className="text-2xl font-heading">{todo.title}</h3>
-                      {todo.description && <p className="text-sm text-white/70">{todo.description}</p>}
+              todos.map((todo) => {
+                const countdown = countdownMap.get(todo.id)
+                const countdownText = countdown
+                  ? countdown.phase === 'UPCOMING'
+                    ? `距開始 ${formatDuration(countdown.startsIn)}`
+                    : countdown.phase === 'ACTIVE'
+                      ? `距結束 ${formatDuration(countdown.endsIn)}`
+                      : countdown.phase === 'OVERDUE'
+                        ? `超時 ${formatDuration(Math.abs(countdown.endsIn))}`
+                        : null
+                  : null
+                const isMutating = mutatingId === todo.id
+                return (
+                  <article key={todo.id} className="rounded-2xl border border-white/10 bg-black/30 p-4 text-white transition hover:border-cyan-200/60">
+                    <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+                      <div>
+                        <p className="text-xs font-tech uppercase tracking-[0.4em] text-white/60">ID: {todo.id.slice(0, 6)}</p>
+                        <h3 className="text-2xl font-heading">{todo.title}</h3>
+                        {todo.description && <p className="text-sm text-white/70">{todo.description}</p>}
+                      </div>
+                      <span className={clsx('rounded-full border px-4 py-1 text-xs font-tech uppercase tracking-[0.35em]', TODO_STATUS_TONE[todo.status])}>
+                        {TODO_STATUS_LABEL[todo.status]}
+                      </span>
                     </div>
-                    <span className={clsx('rounded-full border px-4 py-1 text-xs font-tech uppercase tracking-[0.35em]', TODO_STATUS_TONE[todo.status])}>
-                      {TODO_STATUS_LABEL[todo.status]}
-                    </span>
-                  </div>
-                  <dl className="mt-4 grid gap-4 text-sm text-white/70 sm:grid-cols-2">
-                    <div className="rounded-2xl border border-white/10 bg-black/40 p-3">
-                      <dt className="text-xs uppercase tracking-[0.4em] text-white/50">開始</dt>
-                      <dd className="font-mono text-white">{formatDateTime(todo.startAt)}</dd>
+                    <dl className="mt-4 grid gap-4 text-sm text-white/70 sm:grid-cols-2">
+                      <div className="rounded-2xl border border-white/10 bg-black/40 p-3">
+                        <dt className="text-xs uppercase tracking-[0.4em] text-white/50">開始</dt>
+                        <dd className="font-mono text-white">{formatDateTime(todo.startAt)}</dd>
+                      </div>
+                      <div className="rounded-2xl border border-white/10 bg-black/40 p-3">
+                        <dt className="text-xs uppercase tracking-[0.4em] text-white/50">結束</dt>
+                        <dd className="font-mono text-white">{formatDateTime(todo.endAt)}</dd>
+                      </div>
+                    </dl>
+                    {countdownText && (
+                      <div className="mt-3 rounded-2xl border border-white/10 bg-black/40 p-3">
+                        <p className="text-[10px] uppercase tracking-[0.4em] text-white/50">{TODO_PHASE_LABEL[countdown?.phase ?? 'UPCOMING']}</p>
+                        <p className={clsx('font-mono text-xl', countdown?.phase === 'OVERDUE' ? 'text-red-300' : 'text-aether-cyan')}>
+                          {countdownText}
+                        </p>
+                      </div>
+                    )}
+                    <div className="mt-4 flex flex-wrap gap-3 text-xs font-tech uppercase tracking-[0.35em]">
+                      <div className="flex flex-wrap gap-2">
+                        <TechButton variant="secondary" className="!px-4 !py-2" onClick={() => setEditing(todo)}>
+                          編輯
+                        </TechButton>
+                        <TechButton
+                          variant="ghost"
+                          className="!px-4 !py-2 text-[11px]"
+                          onClick={() => {
+                            setEditing(todo)
+                            setFormCommand({ type: 'restart', targetId: todo.id, issuedAt: Date.now() })
+                          }}
+                        >
+                          重啟
+                        </TechButton>
+                      </div>
+                      <TechButton
+                        variant="danger"
+                        className="!px-4 !py-2"
+                        onClick={() => handleDelete(todo)}
+                        disabled={deletingId === todo.id}
+                      >
+                        {deletingId === todo.id ? '刪除中' : '刪除'}
+                      </TechButton>
+                      <TechButton
+                        variant="primary"
+                        className="!px-4 !py-2"
+                        onClick={() => handleQuickStatus(todo, 'COMPLETED', `「${todo.title}」已完成`)}
+                        disabled={isMutating}
+                      >
+                        {isMutating ? '處理中' : '完成'}
+                      </TechButton>
+                      <div className="flex flex-wrap gap-2">
+                        {DELAY_OPTIONS.map((minutes) => (
+                          <button
+                            key={minutes}
+                            type="button"
+                            className="rounded-full border border-white/20 px-3 py-1 text-[10px] uppercase tracking-[0.35em] text-white/70 transition hover:border-aether-cyan"
+                            onClick={() => handleDelay(todo, minutes)}
+                            disabled={isMutating}
+                          >
+                            +{minutes} 分
+                          </button>
+                        ))}
+                        <button
+                          type="button"
+                          className="rounded-full border border-dashed border-white/20 px-3 py-1 text-[10px] uppercase tracking-[0.35em] text-white/60"
+                          onClick={() => handleCustomDelay(todo)}
+                          disabled={isMutating}
+                        >
+                          自訂延後
+                        </button>
+                      </div>
+                      <TechButton
+                        variant="ghost"
+                        className="!px-4 !py-2 text-red-300"
+                        onClick={() => handleQuickStatus(todo, 'FAILED', `「${todo.title}」標記為未完成`)}
+                        disabled={isMutating}
+                      >
+                        未完成
+                      </TechButton>
                     </div>
-                    <div className="rounded-2xl border border-white/10 bg-black/40 p-3">
-                      <dt className="text-xs uppercase tracking-[0.4em] text-white/50">結束</dt>
-                      <dd className="font-mono text-white">{formatDateTime(todo.endAt)}</dd>
-                    </div>
-                  </dl>
-                  <div className="mt-4 flex flex-wrap gap-3 text-xs font-tech uppercase tracking-[0.35em]">
-                    <TechButton variant="secondary" className="!px-4 !py-2" onClick={() => setEditing(todo)}>
-                      編輯
-                    </TechButton>
-                    <TechButton
-                      variant="danger"
-                      className="!px-4 !py-2"
-                      onClick={() => handleDelete(todo)}
-                      disabled={deletingId === todo.id}
-                    >
-                      {deletingId === todo.id ? '刪除中' : '刪除'}
-                    </TechButton>
-                  </div>
-                </article>
-              ))
+                  </article>
+                )
+              })
             ) : (
               <div className="rounded-2xl border border-dashed border-white/20 p-10 text-center text-white/60">
                 目前沒有任務，請在左側建立第一筆。

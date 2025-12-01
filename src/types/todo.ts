@@ -1,4 +1,5 @@
 export type TodoStatus = 'NOT_STARTED' | 'IN_PROGRESS' | 'COMPLETED' | 'FAILED'
+export type TodoPhase = 'UPCOMING' | 'ACTIVE' | 'OVERDUE' | 'DONE'
 
 export type Todo = {
   id: string
@@ -29,3 +30,10 @@ export const TODO_STATUS_OPTIONS = (Object.keys(TODO_STATUS_LABEL) as TodoStatus
   value,
   label: TODO_STATUS_LABEL[value],
 }))
+
+export const TODO_PHASE_LABEL: Record<TodoPhase, string> = {
+  UPCOMING: '待啟動',
+  ACTIVE: '進行中',
+  OVERDUE: '超時',
+  DONE: '已結束',
+}

@@ -2,8 +2,7 @@ import { prisma } from '@/lib/prisma'
 import { getAuthenticatedUser } from '@/lib/currentUser'
 import { TodoStatus } from '@prisma/client'
 import { z } from 'zod'
-
-const MIN_END_OFFSET_MS = 5 * 60 * 1000
+import { clampToFuture, ensureMinimumDuration, resolveAutoStatus, toDate } from '@/lib/todoTime'
 
 const TodoUpdateSchema = z.object({
   title: z.string().min(1).optional(),
@@ -15,13 +14,6 @@ const TodoUpdateSchema = z.object({
 
 type RouteContext = { params: { id: string } }
 
-const toDateOrNull = (value?: string): Date | null => {
-  if (!value) return null
-  const parsed = new Date(value)
-  if (Number.isNaN(parsed.getTime())) return null
-  return parsed
-}
-
 const buildUpdatedTimeRange = (
   existingStart: Date,
   existingEnd: Date,
@@ -29,12 +21,12 @@ const buildUpdatedTimeRange = (
   end?: string
 ): { startAt: Date; endAt: Date } | null => {
   const now = new Date()
-  const startAt = start ? toDateOrNull(start) : existingStart
-  const endAt = end ? toDateOrNull(end) : existingEnd
+  const startAt = start ? toDate(start) : existingStart
+  const endAt = end ? toDate(end) : existingEnd
   if (!startAt || !endAt) return null
-  if (start && startAt.getTime() < now.getTime()) return null
-  if (endAt.getTime() - startAt.getTime() < MIN_END_OFFSET_MS) return null
-  return { startAt, endAt }
+  const nextStart = start ? clampToFuture(startAt, now) : startAt
+  const nextEnd = ensureMinimumDuration(nextStart, endAt)
+  return { startAt: nextStart, endAt: nextEnd }
 }
 
 const getTodoOrThrow = async (userId: string, id: string) => {
@@ -65,12 +57,13 @@ export async function PATCH(request: Request, context: RouteContext): Promise<Re
     const existing = await getTodoOrThrow(user.id, context.params.id)
     const timeRange = buildUpdatedTimeRange(existing.startAt, existing.endAt, parsed.data.startAt, parsed.data.endAt)
     if (!timeRange) return new Response('時間設定不正確', { status: 400 })
+    const resolvedStatus = resolveAutoStatus(parsed.data.status ?? existing.status, timeRange.startAt, timeRange.endAt)
     const todo = await prisma.todo.update({
       where: { id: existing.id },
       data: {
         title: parsed.data.title ?? existing.title,
         description: parsed.data.description ?? existing.description,
-        status: parsed.data.status ?? existing.status,
+        status: resolvedStatus as TodoStatus,
         startAt: timeRange.startAt,
         endAt: timeRange.endAt,
       },
