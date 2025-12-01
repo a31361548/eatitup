@@ -25,22 +25,22 @@ export function LoginView() {
       })
 
       if (res?.error) {
-        setError('存取被拒：憑證無效')
+        setError('存取被拒 // 憑證無效')
       } else {
-        router.push('/dashboard')
+        router.push('/dashboard/home')
         router.refresh()
       }
     } catch (err) {
-      setError('系統錯誤：連線失敗')
+      setError('系統錯誤 // 連線失敗')
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <div className="animate-float">
-      <PixelCard title="身份驗證" glow="blue" className="w-full max-w-md relative z-10">
-          <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+    <div className="animate-float px-4">
+      <PixelCard title="身份驗證" glow="blue" className="w-full max-w-sm md:max-w-md lg:max-w-xl relative z-10">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
           <div className="space-y-4">
             <PixelInput 
               label="識別代號 (ID)" 
@@ -58,7 +58,7 @@ export function LoginView() {
           </div>
 
           {error && (
-            <div className="text-red-400 text-sm font-tech border border-red-900/50 bg-red-900/20 p-2 text-center animate-pulse">
+            <div className="border-2 border-aether-alert bg-aether-alert/10 px-3 py-2 text-center font-pixel text-pixel-sm uppercase tracking-pixel-normal text-aether-alert animate-pulse">
               ⚠ {error}
             </div>
           )}
@@ -72,13 +72,11 @@ export function LoginView() {
             {loading ? '驗證中...' : '啟動連結'}
           </PixelButton>
 
-          <div className="text-center">
-            <span className="text-mythril-300/40 text-xs font-tech uppercase tracking-widest">
-              AETHER OS v2.0.4
-            </span>
+          <div className="text-center font-pixel text-pixel-xs uppercase tracking-pixel-wider text-aether-mint/40">
+            AETHER OS v2.0.4
           </div>
         </form>
-    </PixelCard>
+      </PixelCard>
     </div>
   )
 }

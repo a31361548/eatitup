@@ -9,9 +9,6 @@ interface Props {
 export const ElvenWheel: React.FC<Props> = ({ options, isSpinning, onSpinEnd }) => {
   const wheelRef = useRef<HTMLDivElement>(null);
   const [rotation, setRotation] = useState(0);
-  
-  // Forge Palette: Alternating Dark Iron and Bronze
-  const colors = ['#2a1a15', '#3e2723', '#4e342e', '#1a0f0a'];
 
   useEffect(() => {
     if (isSpinning) {
@@ -40,86 +37,94 @@ export const ElvenWheel: React.FC<Props> = ({ options, isSpinning, onSpinEnd }) 
   };
 
   return (
-    <div className="relative w-[340px] h-[340px] md:w-[500px] md:h-[500px] lg:w-[600px] lg:h-[600px]">
-      
-      {/* 1. Background Glow (Molten Core) */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[85%] h-[85%] bg-forge-glow/20 blur-[60px] md:blur-[100px] rounded-full"></div>
+    <div className="relative mx-auto w-full max-w-[560px]">
+      <div className="relative aspect-square overflow-hidden rounded-[40px] border border-white/10 bg-black/30 p-6 shadow-[0_30px_90px_rgba(0,0,0,0.55)]">
+        {/* Reactor glow */}
+        <div className="pointer-events-none absolute inset-10 rounded-full bg-[radial-gradient(circle_at_center,rgba(103,232,249,0.18),transparent_65%)] blur-3xl" aria-hidden />
 
-      {/* 2. Rotating Rune Ring (Counter-Spin) */}
-      <div className="absolute inset-[-20px] md:inset-[-40px] rounded-full border border-forge-gold/20 flex items-center justify-center animate-spin-reverse opacity-60 pointer-events-none select-none">
-          <svg viewBox="0 0 100 100" className="w-full h-full p-2">
-            <path id="rune-curve" d="M 50, 50 m -45, 0 a 45,45 0 1,1 90,0 a 45,45 0 1,1 -90,0" fill="transparent" />
-            <text width="500">
-              <textPath xlinkHref="#rune-curve" className="text-[4px] fill-forge-gold font-rune tracking-[2px]">
-                ᚠ ᚢ ᚦ ᚨ ᚱ ᚲ ᚷ ᚹ ᚺ ᚾ ᛁ ᛃ ᛇ ᛈ ᛉ ᛊ ᛏ ᛒ ᛖ ᛗ ᛚ ᛜ ᛞ ᛟ ᚠ ᚢ ᚦ ᚨ ᚱ ᚲ ᚷ ᚹ ᚺ ᚾ ᛁ ᛃ ᛇ ᛈ ᛉ ᛊ ᛏ ᛒ ᛖ ᛗ ᛚ ᛜ ᛞ ᛟ
-              </textPath>
-            </text>
-          </svg>
-      </div>
-
-      {/* 3. The Pointer (Crystal Spike) */}
-      <div className="absolute -top-8 md:-top-12 left-1/2 -translate-x-1/2 z-30 filter drop-shadow-[0_0_15px_#ffb300]">
-         <div className="w-6 md:w-8 h-16 md:h-20 bg-gradient-to-b from-white via-forge-gold to-forge-glow [clip-path:polygon(50%_100%,_0%_0%,_100%_0%)] flex items-start justify-center pt-1">
-            <div className="w-1 h-8 md:h-12 bg-white/80 rounded-full blur-[1px]"></div>
-         </div>
-      </div>
-
-      {/* 4. The Main Wheel */}
-      <div 
-        ref={wheelRef}
-        className="w-full h-full rounded-full relative shadow-[0_0_30px_rgba(0,0,0,1)] border-[8px] md:border-[12px] border-[#1a100c]"
-        style={{
-          transform: `rotate(${rotation}deg)`,
-          transition: isSpinning ? 'transform 6s cubic-bezier(0.2, 0, 0.1, 1)' : 'none' // Ease-out quint-ish
-        }}
-      >
-        <svg viewBox="-1 -1 2 2" className="w-full h-full transform -rotate-90">
-          {options.map((opt, index) => {
-            const startAngle = index / options.length;
-            const endAngle = (index + 1) / options.length;
-            const [startX, startY] = getCoordinatesForPercent(startAngle);
-            const [endX, endY] = getCoordinatesForPercent(endAngle);
-            
-            const largeArcFlag = options.length === 1 ? 1 : 0; 
-            const pathData = options.length === 1 
-              ? `M 1 0 A 1 1 0 1 1 -1 0 A 1 1 0 1 1 1 0`
-              : `M 0 0 L ${startX} ${startY} A 1 1 0 ${largeArcFlag} 1 ${endX} ${endY} L 0 0`;
-
-            return (
-              <g key={index}>
-                <path 
-                  d={pathData} 
-                  fill={colors[index % colors.length]}
-                  stroke="#5d4037" 
-                  strokeWidth="0.015"
-                />
-                
-                {/* Text */}
-                <text
-                  x="0.65"
-                  y="0"
-                  fill={index % 2 === 0 ? "#ffe082" : "#d4af37"}
-                  fontSize="0.07"
-                  fontWeight="bold"
-                  fontFamily="Cinzel Decorative"
-                  textAnchor="middle"
-                  alignmentBaseline="middle"
-                  transform={`rotate(${(index + 0.5) * (360 / options.length)})`}
-                  style={{ textShadow: '0 0 2px rgba(0,0,0,0.8)' }}
-                >
-                  {opt.length > 15 ? opt.substring(0,12) + '...' : opt}
+        <div className="relative flex h-full w-full items-center justify-center">
+          {/* Rotating Tech Ring (kept within safe bounds) */}
+          <div className="pointer-events-none absolute inset-2 rounded-full border border-aether-cyan/20 opacity-70">
+            <div className="absolute inset-0 flex items-center justify-center animate-spin-reverse select-none">
+              <svg viewBox="0 0 100 100" className="h-[calc(100%-0.5rem)] w-[calc(100%-0.5rem)] p-2">
+                <path id="rune-curve" d="M 50, 50 m -45, 0 a 45,45 0 1,1 90,0 a 45,45 0 1,1 -90,0" fill="transparent" />
+                <text width="500">
+                  <textPath xlinkHref="#rune-curve" className="text-[4px] fill-aether-cyan font-tech tracking-[2px]">
+                    SYSTEM INITIALIZING // SCANNING SECTORS // CALCULATING PROBABILITY // AETHER CORE ONLINE //
+                  </textPath>
                 </text>
-              </g>
-            );
-          })}
-        </svg>
+              </svg>
+            </div>
+          </div>
 
-        {/* 5. Center Hub (Mechanical) */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[25%] h-[25%] rounded-full shadow-[0_5px_15px_black] flex items-center justify-center border-2 md:border-4 border-[#5d4037] bg-gradient-to-br from-[#3e2723] to-[#1a0f0a]">
-           {/* Inner rotating part */}
-           <div className={`w-[70%] h-[70%] border-2 border-dashed border-forge-gold/50 rounded-full flex items-center justify-center ${isSpinning ? 'animate-spin' : ''}`}>
-              <div className="w-3 md:w-4 h-3 md:h-4 bg-forge-glow rounded-full shadow-[0_0_20px_#ff6f00] animate-pulse"></div>
-           </div>
+          {/* Pointer kept inside container */}
+          <div className="absolute top-4 left-1/2 z-30 -translate-x-1/2 filter drop-shadow-[0_0_15px_#00f0ff]" aria-hidden>
+            <div className="flex h-16 w-6 items-start justify-center rounded-b-full bg-gradient-to-b from-white via-aether-cyan to-transparent [clip-path:polygon(50%_100%,_0%_0%,_100%_0%)] pt-1 md:h-20 md:w-8">
+              <div className="h-8 w-1 rounded-full bg-white/80 blur-[1px] md:h-12" />
+            </div>
+          </div>
+
+          {/* Main Wheel */}
+          <div
+            ref={wheelRef}
+            className="relative aspect-square w-full max-w-[420px] rounded-full border-[8px] border-aether-dark bg-[#020b12] shadow-[0_0_40px_rgba(0,240,255,0.18)] md:border-[12px]"
+            style={{
+              transform: `rotate(${rotation}deg)`,
+              transition: isSpinning ? 'transform 6s cubic-bezier(0.2, 0, 0.1, 1)' : 'none'
+            }}
+          >
+            <svg viewBox="-1 -1 2 2" className="h-full w-full -rotate-90">
+              {options.map((opt, index) => {
+                const startAngle = index / options.length;
+                const endAngle = (index + 1) / options.length;
+                const [startX, startY] = getCoordinatesForPercent(startAngle);
+                const [endX, endY] = getCoordinatesForPercent(endAngle);
+
+                const largeArcFlag = options.length === 1 ? 1 : 0;
+                const pathData =
+                  options.length === 1
+                    ? `M 1 0 A 1 1 0 1 1 -1 0 A 1 1 0 1 1 1 0`
+                    : `M 0 0 L ${startX} ${startY} A 1 1 0 ${largeArcFlag} 1 ${endX} ${endY} L 0 0`;
+
+                const isCyan = index % 2 === 0;
+
+                return (
+                  <g key={index}>
+                    <path
+                      d={pathData}
+                      fill={isCyan ? 'rgba(0, 240, 255, 0.1)' : 'rgba(10, 16, 32, 0.8)'}
+                      stroke="#00f0ff"
+                      strokeWidth="0.01"
+                      className="transition-all duration-300"
+                    />
+
+                    {/* Text */}
+                    <text
+                      x="0.65"
+                      y="0"
+                      fill={isCyan ? '#ffffff' : '#00f0ff'}
+                      fontSize="0.07"
+                      fontWeight="bold"
+                      fontFamily="Rajdhani"
+                      textAnchor="middle"
+                      alignmentBaseline="middle"
+                      transform={`rotate(${(index + 0.5) * (360 / options.length)})`}
+                      style={{ textShadow: '0 0 5px rgba(0,240,255,0.5)' }}
+                    >
+                      {opt.length > 15 ? `${opt.substring(0, 12)}...` : opt}
+                    </text>
+                  </g>
+                );
+              })}
+            </svg>
+
+            {/* Center Reactor */}
+            <div className="absolute top-1/2 left-1/2 flex h-[25%] w-[25%] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-2 border-aether-cyan bg-aether-dark shadow-[0_0_30px_rgba(0,240,255,0.3)] md:border-4">
+              <div className={`flex h-[70%] w-[70%] items-center justify-center rounded-full border-2 border-dashed border-aether-cyan/50 ${isSpinning ? 'animate-spin' : ''}`}>
+                <div className="h-3 w-3 rounded-full bg-aether-cyan shadow-[0_0_20px_#00f0ff] md:h-4 md:w-4" />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

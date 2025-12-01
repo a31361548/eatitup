@@ -4,74 +4,82 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { LogoutButton } from '@/components/LogoutButton'
 import { Session } from 'next-auth'
+import { useSession } from 'next-auth/react'
 
 interface NavbarClientProps {
   user: Session['user'] | undefined
 }
 
-export function NavbarClient({ user }: NavbarClientProps) {
+export function NavbarClient({ user }: NavbarClientProps): React.ReactElement | null {
   const pathname = usePathname()
-
-  // Hide Navbar on Login Page (root path)
-  if (pathname === '/') {
-    return null
-  }
+  if (pathname === '/') return null
+  const { data: session } = useSession()
+  const currentUser = session?.user ?? user
+  const isAdmin = currentUser?.role === 'ADMIN'
+  const playerName = currentUser?.name || 'USER'
+  const coins = String(currentUser?.coins ?? 0).padStart(4, '0')
 
   return (
-    <header className="border-b border-gold-500/20 bg-void-900/80 backdrop-blur-md sticky top-0 z-50">
-      <div className="max-w-6xl mx-auto flex justify-between items-center p-4">
-        {/* Logo */}
-        <Link 
-            href={user ? "/dashboard" : "/"}
-            className="text-transparent bg-clip-text bg-gradient-to-r from-gold-300 to-gold-600 text-2xl font-heading font-bold cursor-pointer hover:opacity-80 transition-opacity"
-        >
-            AETHER<span className="text-white font-light">OS</span>
-        </Link>
-        
-        {/* Right Side Actions */}
-        <div className="flex items-center gap-6">
-          {user ? (
+    <header className="sticky top-0 z-50 border-b border-aether-cyan/30 bg-[#020d0d]/95 backdrop-blur">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-3 px-4 py-3 font-pixel text-pixel-sm uppercase tracking-pixel-wider text-aether-mint/70">
+        <div className="flex flex-wrap items-center justify-between gap-3 text-aether-cyan">
+          <Link href={currentUser ? '/dashboard/home' : '/'} className="flex items-center gap-3 text-pixel-lg tracking-pixel-widest">
+            <span className="h-2.5 w-2.5 bg-aether-teal shadow-[0_0_12px_rgba(45,212,191,0.8)] animate-pulse" />
+            <span>
+              AETHER<span className="text-aether-gold">SYS</span>
+            </span>
+          </Link>
+          <div className="flex items-center gap-2 text-[10px] tracking-[0.35em] text-aether-mint/70">
+            <span className="flex items-center gap-2 text-white">
+              <span className="h-2 w-2 rounded-full bg-emerald-300 shadow-[0_0_12px_rgba(45,212,191,0.8)] animate-ping" aria-hidden />
+              SYSTEM ONLINE
+            </span>
+            <span className="hidden sm:inline-flex h-px w-16 bg-gradient-to-r from-transparent via-aether-cyan/50 to-transparent" aria-hidden />
+            <span className="hidden sm:inline-flex text-aether-cyan/70">SCAN READY</span>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-2 text-white sm:flex-row sm:items-center sm:justify-between">
+          {currentUser ? (
             <>
-                {/* User Status Pill */}
-                <div className="hidden md:flex items-center gap-3 bg-void-800 border border-white/10 px-4 py-1.5 rounded-full shadow-glow-blue shrink-0">
-                    <div className="relative flex-shrink-0">
-                        {user.avatar ? (
-                             <img 
-                                src={user.avatar} 
-                                className="w-6 h-6 rounded-full border border-gold-500/50 object-cover" 
-                                alt="av" 
-                             />
-                        ) : (
-                             <div className="w-6 h-6 rounded-full bg-void-900 border border-gold-500/50 flex items-center justify-center text-[10px]">👤</div>
-                        )}
-                        <div className="absolute -bottom-1 -right-1 w-2 h-2 bg-green-500 rounded-full border border-black animate-pulse"></div>
-                    </div>
-                    <span className="text-mythril-200 text-sm font-tech tracking-wider uppercase">{user.name || 'User'}</span>
-                    
-                    {/* Currency Display */}
-                    <div className="w-[1px] h-4 bg-white/10 mx-1"></div>
-                    <div className="flex items-center gap-1 text-gold-400 font-tech">
-                        <span className="text-xs">AC</span>
-                        <span className="font-bold">{user.coins || 0}</span>
-                    </div>
+              <div className="flex flex-1 items-center gap-3 rounded-xl border border-aether-cyan/30 bg-[#052828]/70 px-3 py-2">
+                <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg border border-aether-cyan/60 bg-black/40">
+                  {currentUser.avatar ? (
+                    <img src={currentUser.avatar} alt="avatar" className="h-full w-full object-cover" />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center text-lg text-aether-cyan">👤</div>
+                  )}
+                  <span className="absolute -bottom-1 -right-1 h-2.5 w-2.5 rounded-full border border-[#041c1c] bg-aether-teal shadow-[0_0_10px_rgba(45,212,191,0.9)] animate-blink" />
                 </div>
-
-                {/* Admin Link */}
-                {user.role === 'ADMIN' && (
-                    <Link href="/admin/members" className="hidden sm:block text-cyan-400 hover:text-cyan-300 text-sm font-tech uppercase tracking-widest border border-cyan-500/30 px-3 py-1 hover:bg-cyan-900/20 transition-all">
-                        監管核心
-                    </Link>
+                <div className="flex flex-1 flex-wrap items-center gap-3 text-[11px] tracking-[0.3em] text-aether-mint/80">
+                  <span className="text-xs text-aether-mint/50">PLAYER</span>
+                  <span className="rounded border border-white/10 px-2 py-0.5 text-white/80">{playerName}</span>
+                  <span className="hidden h-3 w-px bg-aether-cyan/40 sm:block" aria-hidden />
+                  <span className="text-xs text-aether-mint/50">COINS</span>
+                  <span className="text-pixel-xl tracking-pixel-tight text-aether-gold">{coins}</span>
+                </div>
+              </div>
+              <div className="flex flex-1 items-center justify-end gap-2 text-pixel-sm">
+                {isAdmin && (
+                  <Link
+                    href="/admin/members"
+                    className="inline-flex min-w-[96px] justify-center border border-aether-cyan px-3 py-2 text-center tracking-pixel-wider text-aether-cyan transition hover:bg-aether-cyan hover:text-aether-dark"
+                  >
+                    ADMIN
+                  </Link>
                 )}
-
                 <LogoutButton />
+              </div>
             </>
           ) : (
-            <Link 
+            <div className="flex w-full items-center justify-end">
+              <Link
                 href="/"
-                className="text-gold-400 hover:text-gold-300 text-sm font-tech uppercase tracking-widest border border-gold-500/30 px-4 py-1.5 hover:bg-gold-900/20 transition-all hover:shadow-glow-gold"
-            >
-                啟動連結 (LOGIN)
-            </Link>
+                className="border border-aether-teal px-5 py-2 text-aether-teal transition hover:bg-aether-teal hover:text-aether-dark"
+              >
+                LOGIN
+              </Link>
+            </div>
           )}
         </div>
       </div>

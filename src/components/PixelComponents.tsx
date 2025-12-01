@@ -1,124 +1,115 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode } from 'react'
 
-// --- Card ---
-interface FantasyCardProps {
-  children: ReactNode;
-  className?: string;
-  title?: string;
-  glow?: 'gold' | 'blue' | 'none';
-  onClick?: () => void;
+type PixelCardProps = {
+  children: ReactNode
+  className?: string
+  title?: string
+  glow?: 'gold' | 'blue' | 'none'
+  onClick?: () => void
 }
 
-export const PixelCard: React.FC<FantasyCardProps> = ({ children, className = '', title, glow = 'gold', onClick }) => {
-  const glowClass = glow === 'gold' ? 'shadow-glow-gold border-gold-500/30' : 
-                    glow === 'blue' ? 'shadow-glow-blue border-cyan-500/30' : 'border-white/10';
+export const PixelCard: React.FC<PixelCardProps> = ({ children, className = '', title, glow = 'gold', onClick }) => {
+  const tone = {
+    gold: { border: 'border-aether-teal', corner: 'bg-aether-teal', accent: 'text-aether-gold' },
+    blue: { border: 'border-aether-cyan', corner: 'bg-aether-cyan', accent: 'text-aether-cyan' },
+    none: { border: 'border-aether-dim', corner: 'bg-aether-dim', accent: 'text-aether-mint' },
+  }[glow]
 
   return (
-    <div onClick={onClick} className={`relative bg-void-800/80 backdrop-blur-md border ${glowClass} ${className} ${onClick ? 'cursor-pointer' : ''}`}>
-      {/* Tech/Magical Corners */}
-      <div className={`absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 ${glow === 'blue' ? 'border-cyan-400' : 'border-gold-500'}`}></div>
-      <div className={`absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 ${glow === 'blue' ? 'border-cyan-400' : 'border-gold-500'}`}></div>
-      <div className={`absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 ${glow === 'blue' ? 'border-cyan-400' : 'border-gold-500'}`}></div>
-      <div className={`absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 ${glow === 'blue' ? 'border-cyan-400' : 'border-gold-500'}`}></div>
-      
+    <div
+      onClick={onClick}
+      className={`relative bg-aether-dark border-4 ${tone.border} shadow-[8px_8px_0px_0px_rgba(17,66,66,0.8)] ${className} ${onClick ? 'cursor-pointer' : ''}`}
+    >
+      <div className={`absolute top-0 left-0 w-2 h-2 ${tone.corner}`} />
+      <div className={`absolute top-0 right-0 w-2 h-2 ${tone.corner}`} />
+      <div className={`absolute bottom-0 left-0 w-2 h-2 ${tone.corner}`} />
+      <div className={`absolute bottom-0 right-0 w-2 h-2 ${tone.corner}`} />
+
       {title && (
-        <div className="relative">
-             <div className={`absolute inset-x-0 bottom-0 h-[1px] bg-gradient-to-r from-transparent ${glow === 'blue' ? 'via-cyan-500' : 'via-gold-500'} to-transparent`}></div>
-             <h3 className={`text-2xl font-heading text-center py-3 uppercase tracking-[0.2em] ${glow === 'blue' ? 'text-cyan-400 drop-shadow-[0_0_5px_rgba(34,211,238,0.8)]' : 'text-gold-400 drop-shadow-[0_0_5px_rgba(251,191,36,0.8)]'}`}>
-                {title}
-             </h3>
+        <div className={`absolute -top-7 left-4 border-2 ${tone.border} bg-aether-dark px-4 py-1`}>
+          <h3 className={`font-header text-header-base tracking-pixel-wider ${tone.accent}`}>{title}</h3>
         </div>
       )}
-      <div className="p-6 relative z-10 h-full">
+
+      <div className="relative z-10 p-6">
         {children}
       </div>
     </div>
-  );
-};
-
-// --- Button ---
-interface FantasyButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'danger' | 'success';
+  )
 }
 
-export const PixelButton: React.FC<FantasyButtonProps> = ({ children, variant = 'primary', className = '', ...props }) => {
-  const baseStyle = "px-6 py-2 font-tech text-lg font-bold tracking-widest uppercase transition-all duration-300 clip-path-slant relative overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed";
-  
-  let variantStyle = "";
-  // Using clip-path for sci-fi feel
-  const slantStyle = { clipPath: 'polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%)' };
+type PixelButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+  variant?: 'primary' | 'secondary' | 'danger' | 'success'
+  fullWidth?: boolean
+}
 
-  switch(variant) {
+export const PixelButton: React.FC<PixelButtonProps> = ({ children, variant = 'primary', fullWidth = false, className = '', ...props }) => {
+  const base = 'font-pixel text-pixel-base uppercase tracking-pixel-wider px-8 py-4 border-4 shadow-[4px_4px_0px_0px_rgba(4,28,28,0.8)] transition-all duration-150 active:translate-x-[2px] active:translate-y-[2px] active:shadow-[2px_2px_0px_0px_rgba(4,28,28,0.8)] disabled:opacity-50 disabled:cursor-not-allowed'
+  const width = fullWidth ? 'w-full' : ''
+  let tone = ''
+
+  switch (variant) {
     case 'primary':
-      variantStyle = "bg-gold-500/10 text-gold-300 border border-gold-500/50 hover:bg-gold-500 hover:text-void-900 hover:shadow-glow-gold";
-      break;
+      tone = 'bg-aether-teal text-aether-dark border-aether-dark hover:bg-aether-cyan'
+      break
     case 'secondary':
-      variantStyle = "bg-mythril-200/5 text-mythril-300 border border-mythril-200/30 hover:bg-mythril-200/20";
-      break;
+      tone = 'bg-transparent text-aether-cyan border-aether-cyan hover:bg-aether-dim/30'
+      break
     case 'danger':
-      variantStyle = "bg-red-900/20 text-red-400 border border-red-500/50 hover:bg-red-600 hover:text-white hover:shadow-[0_0_15px_rgba(220,38,38,0.5)]";
-      break;
+      tone = 'bg-aether-alert text-white border-aether-alert/80 hover:brightness-110'
+      break
     case 'success':
-      variantStyle = "bg-cyan-900/20 text-cyan-400 border border-cyan-500/50 hover:bg-cyan-600 hover:text-white hover:shadow-glow-blue";
-      break;
+      tone = 'bg-aether-gold text-aether-dark border-aether-dark hover:bg-[#fde68a]'
+      break
   }
 
   return (
-    <button 
-        style={slantStyle}
-        className={`${baseStyle} ${variantStyle} ${className}`} 
-        {...props}
-    >
-      <span className="relative z-10 flex items-center justify-center gap-2">{children}</span>
+    <button className={`${base} ${tone} ${width} ${className}`} {...props}>
+      {children}
     </button>
-  );
-};
-
-// --- Input ---
-interface FantasyInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  label?: string;
+  )
 }
 
-export const PixelInput: React.FC<FantasyInputProps> = ({ label, className = '', ...props }) => {
-  return (
-    <div className="flex flex-col gap-1 mb-6 group w-full">
-      {label && <label className="text-gold-500/80 font-heading text-sm uppercase tracking-widest group-focus-within:text-cyan-400 transition-colors">{label}</label>}
-      <div className="relative w-full">
-          <input 
-            className={`w-full bg-void-900/50 border-b border-gold-500/30 p-2 text-xl text-mythril-100 font-tech focus:outline-none focus:border-cyan-400 focus:bg-void-900/80 transition-all placeholder-white/10 ${className}`}
-            {...props}
-          />
-          <div className="absolute bottom-0 left-0 h-[1px] w-0 bg-cyan-400 group-focus-within:w-full transition-all duration-500"></div>
-      </div>
-    </div>
-  );
-};
+type PixelInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
+  label?: string
+}
 
-// --- Modal ---
-interface PixelModalProps {
-    isOpen: boolean;
-    onClose: () => void;
-    children: ReactNode;
-    title?: string;
+export const PixelInput: React.FC<PixelInputProps> = ({ label, className = '', ...props }) => {
+  return (
+    <label className="flex flex-col gap-2 font-pixel text-pixel-sm uppercase tracking-pixel-wider text-aether-mint/70">
+      {label}
+      <input
+        className={`bg-[#011111] border-2 border-aether-teal text-aether-cyan px-5 py-4 font-pixel text-pixel-lg placeholder-aether-teal/40 focus:outline-none focus:border-aether-cyan focus:bg-[#022121] transition ${className}`}
+        {...props}
+      />
+    </label>
+  )
+}
+
+type PixelModalProps = {
+  isOpen: boolean
+  onClose: () => void
+  children: ReactNode
+  title?: string
 }
 
 export const PixelModal: React.FC<PixelModalProps> = ({ isOpen, onClose, children, title }) => {
-    if (!isOpen) return null;
+  if (!isOpen) return null
 
-    return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-            <div className="absolute inset-0 bg-void-900/90 backdrop-blur-sm" onClick={onClose}></div>
-            <div className="relative w-full max-w-2xl animate-float">
-                 <PixelCard title={title} glow="blue" className="bg-void-900 border-2 border-cyan-500/50 shadow-[0_0_50px_rgba(34,211,238,0.2)]">
-                    <button 
-                        onClick={onClose}
-                        className="absolute top-4 right-4 text-cyan-500 hover:text-white text-2xl"
-                    >
-                        ✖
-                    </button>
-                    {children}
-                 </PixelCard>
-            </div>
-        </div>
-    );
-};
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-aether-dark/90 backdrop-blur" onClick={onClose} />
+      <div className="relative w-full max-w-xl animate-float">
+        <PixelCard title={title} glow="blue">
+          <button
+            onClick={onClose}
+            className="absolute top-6 right-6 text-aether-cyan hover:text-white text-xl font-header"
+          >
+            ✕
+          </button>
+          {children}
+        </PixelCard>
+      </div>
+    </div>
+  )
+}
