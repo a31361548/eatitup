@@ -1,32 +1,7 @@
 
-> eatwhat@0.1.0 build
-> prisma generate && next build
+> eatwhat@0.1.0 lint
+> next lint
 
-Environment variables loaded from .env
-Prisma schema loaded from prisma\schema.prisma
-
-✔ Generated Prisma Client (v5.22.0) to .\node_modules\@prisma\client in 78ms
-
-Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
-
-Tip: Want to turn off tips and other hints? https://pris.ly/tip-4-nohints
-
-  ▲ Next.js 14.2.33
-  - Environments: .env
-
-   Creating an optimized production build ...
-Found 1 warning while optimizing generated CSS:
-
-│   }
-│ }
-│ @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Rajdhani:wght@300;500;700&display=swap');
-┆        ^-- @import rules must precede all rules aside from @charset and @layer statements
-┆
-│ @layer base {
-│   *, *::before, *::after {
-
- ✓ Compiled successfully
-   Linting and checking validity of types ...
 
 ./src/app/api/avatars/route.ts
 5:8  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
@@ -159,6 +134,7 @@ Found 1 warning while optimizing generated CSS:
 ./src/components/layout/TacticalHeader.tsx
 7:8  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
 42:6  Warning: React Hook useEffect has a missing dependency: 'tickers.length'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+84:67  Error: Comments inside children section of tag should be placed inside braces  react/jsx-no-comment-textnodes
 
 ./src/components/LoginView.tsx
 8:8  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
@@ -188,7 +164,8 @@ Found 1 warning while optimizing generated CSS:
 ./src/components/todos/TodoForm.tsx
 159:1  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
 162:42  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
-276:88  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
+276:60  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+276:65  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
 357:34  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
 375:72  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
 
@@ -203,7 +180,8 @@ Found 1 warning while optimizing generated CSS:
 11:8  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
 
 ./src/components/ui/NavbarClient.tsx
-50:21  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+16:29  Error: React Hook "useSession" is called conditionally. React Hooks must be called in the exact same order in every component render.  react-hooks/rules-of-hooks
+48:21  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
 
 ./src/components/ui/TechButton.tsx
 10:8  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
@@ -229,16 +207,3 @@ Found 1 warning while optimizing generated CSS:
 41:57  Warning: Missing return type on function.  @typescript-eslint/explicit-function-return-type
 
 info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/basic-features/eslint#disabling-rules
-Failed to compile.
-
-./src/components/dashboard/CommandAtrium.tsx:9:47
-Type error: 'TODO_PHASE_LABEL' is declared but its value is never read.
-
-   7 | import { useCallback, useMemo, useRef } from 'react'
-   8 | import type { Todo } from '@/types/todo'
->  9 | import { TODO_STATUS_LABEL, TODO_STATUS_TONE, TODO_PHASE_LABEL } from '@/types/todo'
-     |                                               ^
-  10 | import { PageShell } from '@/components/ui/PageShell'
-  11 | import { TechButton } from '@/components/ui/TechButton'
-  12 | import { CheckInCalendar } from '@/components/CheckInCalendar'
-Next.js build worker exited with code: 1 and signal: null

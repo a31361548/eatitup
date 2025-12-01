@@ -180,7 +180,7 @@ function PresetDropdown({ label, displayValue, options, activeId, onSelect }: Dr
   const [open, setOpen] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
 
-  useOutsideClick(containerRef, () => setOpen(false), open)
+  useOutsideClick(containerRef as React.RefObject<HTMLDivElement>, () => setOpen(false), open)
 
   return (
     <div className="space-y-1" ref={containerRef as React.RefObject<HTMLDivElement>}>
@@ -273,7 +273,7 @@ export function TodoForm({
     onCommandHandled?.()
   }, [command, handleRestart, initialTodo, mode, onCommandHandled])
 
-  const handleChange = (field: keyof TodoFormState, value: any) => {
+  const handleChange = (field: keyof TodoFormState, value: string | Date | TodoStatus) => {
     setFormState((prev) => {
       if (field === 'startAt') {
         const newStart = value as Date

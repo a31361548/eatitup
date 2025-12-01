@@ -12,8 +12,10 @@ interface NavbarClientProps {
 
 export function NavbarClient({ user }: NavbarClientProps): React.ReactElement | null {
   const pathname = usePathname()
-  if (pathname === '/') return null
   const { data: session } = useSession()
+  
+  if (pathname === '/') return null
+  
   const currentUser = session?.user ?? user
   const isAdmin = currentUser?.role === 'ADMIN'
   const playerName = currentUser?.name || 'USER'
