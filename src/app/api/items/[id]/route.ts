@@ -14,28 +14,36 @@ async function getOwnedItem(id: string, ownerId: string): Promise<ItemWithOwner 
   return item
 }
 
-export async function POST(req: Request, { params }: { params: { id: string } }): Promise<Response> {
+export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }): Promise<Response> {
   const user = await getAuthenticatedUser()
   if (!user) return new Response('未授權', { status: 401 })
+  
+  // Await params for Next.js 15+
+  const { id } = await params
+  
   const form = await req.formData()
   const method = form.get('_method')?.toString() ?? ''
   if (method !== 'DELETE') return new Response('不支援', { status: 405 })
-  const item = await getOwnedItem(params.id, user.id)
+  const item = await getOwnedItem(id, user.id)
   if (!item) return new Response('項目不存在', { status: 404 })
-  await prisma.item.delete({ where: { id: params.id } })
+  await prisma.item.delete({ where: { id } })
   return new Response(null, { status: 204 })
 }
 
 const PatchSchema = z.object({ label: z.string().min(1), weight: z.number().int().min(1) })
 
-export async function PATCH(req: Request, { params }: { params: { id: string } }): Promise<Response> {
+export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }): Promise<Response> {
   const user = await getAuthenticatedUser()
   if (!user) return new Response('未授權', { status: 401 })
+  
+  // Await params for Next.js 15+
+  const { id } = await params
+  
   const json = await req.json()
   const parsed = PatchSchema.safeParse(json)
   if (!parsed.success) return new Response('資料錯誤', { status: 400 })
-  const item = await getOwnedItem(params.id, user.id)
+  const item = await getOwnedItem(id, user.id)
   if (!item) return new Response('項目不存在', { status: 404 })
-  await prisma.item.update({ where: { id: params.id }, data: parsed.data })
+  await prisma.item.update({ where: { id }, data: parsed.data })
   return new Response(null, { status: 204 })
 }

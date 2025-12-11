@@ -1,0 +1,49 @@
+
+> eatwhat@0.1.0 build
+> prisma generate && next build
+
+Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+
+✔ Generated Prisma Client (v5.22.0) to .\node_modules\@prisma\client in 63ms
+
+Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
+
+Help us improve the Prisma ORM for everyone. Share your feedback in a short 2-min survey: https://pris.ly/orm/survey/release-5-22
+
+   ▲ Next.js 16.0.8 (Turbopack)
+   - Environments: .env
+
+ ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+   Creating an optimized production build ...
+Found 1 warning while optimizing generated CSS:
+
+│   }
+│ }
+│ @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Rajdhani:wght@300;500;700&display=swap');
+┆        ^-- @import rules must precede all rules aside from @charset and @layer statements
+┆
+│ @layer base {
+│   *, *::before, *::after {
+
+ ✓ Compiled successfully in 3.2s
+   Running TypeScript ...
+   Collecting page data using 15 workers ...
+   Generating static pages using 15 workers (0/23) ...
+   Generating static pages using 15 workers (5/23) 
+   Generating static pages using 15 workers (11/23) 
+   Generating static pages using 15 workers (17/23) 
+ ⨯ useSearchParams() should be wrapped in a suspense boundary at page "/modes/wheel". Read more: https://nextjs.org/docs/messages/missing-suspense-with-csr-bailout
+    at S (C:\Users\user\Desktop\GithubProject\eatitup\.next\server\chunks\ssr\node_modules_next_cf02c53c._.js:2:2111)
+    at p (C:\Users\user\Desktop\GithubProject\eatitup\.next\server\chunks\ssr\node_modules_next_cf02c53c._.js:4:4847)
+    at l (C:\Users\user\Desktop\GithubProject\eatitup\.next\server\chunks\ssr\_2be434b2._.js:2:2160)
+    at ar (C:\Users\user\Desktop\GithubProject\eatitup\node_modules\next\dist\compiled\next-server\app-page-turbo.runtime.prod.js:2:84366)
+    at aa (C:\Users\user\Desktop\GithubProject\eatitup\node_modules\next\dist\compiled\next-server\app-page-turbo.runtime.prod.js:2:86185)
+    at as (C:\Users\user\Desktop\GithubProject\eatitup\node_modules\next\dist\compiled\next-server\app-page-turbo.runtime.prod.js:2:107952)
+    at ao (C:\Users\user\Desktop\GithubProject\eatitup\node_modules\next\dist\compiled\next-server\app-page-turbo.runtime.prod.js:2:105374)
+    at an (C:\Users\user\Desktop\GithubProject\eatitup\node_modules\next\dist\compiled\next-server\app-page-turbo.runtime.prod.js:2:84718)
+    at aa (C:\Users\user\Desktop\GithubProject\eatitup\node_modules\next\dist\compiled\next-server\app-page-turbo.runtime.prod.js:2:86234)
+    at aa (C:\Users\user\Desktop\GithubProject\eatitup\node_modules\next\dist\compiled\next-server\app-page-turbo.runtime.prod.js:2:104714)
+Error occurred prerendering page "/modes/wheel". Read more: https://nextjs.org/docs/messages/prerender-error
+Export encountered an error on /modes/wheel/page: /modes/wheel, exiting the build.
+ ⨯ Next.js build worker exited with code: 1 and signal: null

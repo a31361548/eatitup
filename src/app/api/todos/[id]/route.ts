@@ -12,7 +12,7 @@ const TodoUpdateSchema = z.object({
   status: z.nativeEnum(TodoStatus).optional(),
 })
 
-type RouteContext = { params: { id: string } }
+type RouteContext = { params: Promise<{ id: string }> }
 
 const buildUpdatedTimeRange = (
   existingStart: Date,
@@ -38,8 +38,12 @@ const getTodoOrThrow = async (userId: string, id: string) => {
 export async function GET(_: Request, context: RouteContext): Promise<Response> {
   const user = await getAuthenticatedUser()
   if (!user) return new Response('未授權', { status: 401 })
+  
+  // Await params for Next.js 15+
+  const { id } = await context.params
+  
   try {
-    const todo = await getTodoOrThrow(user.id, context.params.id)
+    const todo = await getTodoOrThrow(user.id, id)
     return new Response(JSON.stringify({ todo }), { status: 200, headers: { 'Content-Type': 'application/json' } })
   } catch (error) {
     if (error instanceof Response) return error
@@ -50,11 +54,15 @@ export async function GET(_: Request, context: RouteContext): Promise<Response> 
 export async function PATCH(request: Request, context: RouteContext): Promise<Response> {
   const user = await getAuthenticatedUser()
   if (!user) return new Response('未授權', { status: 401 })
+  
+  // Await params for Next.js 15+
+  const { id } = await context.params
+  
   const json = await request.json().catch(() => null)
   const parsed = TodoUpdateSchema.safeParse(json)
   if (!parsed.success) return new Response('資料格式錯誤', { status: 400 })
   try {
-    const existing = await getTodoOrThrow(user.id, context.params.id)
+    const existing = await getTodoOrThrow(user.id, id)
     const timeRange = buildUpdatedTimeRange(existing.startAt, existing.endAt, parsed.data.startAt, parsed.data.endAt)
     if (!timeRange) return new Response('時間設定不正確', { status: 400 })
     const resolvedStatus = resolveAutoStatus(parsed.data.status ?? existing.status, timeRange.startAt, timeRange.endAt)
@@ -78,8 +86,12 @@ export async function PATCH(request: Request, context: RouteContext): Promise<Re
 export async function DELETE(_: Request, context: RouteContext): Promise<Response> {
   const user = await getAuthenticatedUser()
   if (!user) return new Response('未授權', { status: 401 })
+  
+  // Await params for Next.js 15+
+  const { id } = await context.params
+  
   try {
-    const todo = await getTodoOrThrow(user.id, context.params.id)
+    const todo = await getTodoOrThrow(user.id, id)
     await prisma.todo.delete({ where: { id: todo.id } })
     return new Response(null, { status: 204 })
   } catch (error) {
