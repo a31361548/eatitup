@@ -10,9 +10,13 @@ const UpdateSchema = z.object({
   status: z.nativeEnum(MemberStatus).optional()
 })
 
-export async function PATCH(req: Request, { params }: { params: { id: string } }): Promise<Response> {
+export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }): Promise<Response> {
   const admin = await getAuthenticatedUser({ requireAdmin: true })
   if (!admin) return new Response('未授權', { status: 401 })
+  
+  // Await params for Next.js 15+
+  const { id } = await params
+  
   const json = await req.json().catch(() => null)
   const parsed = UpdateSchema.safeParse(json)
   if (!parsed.success) {
@@ -23,7 +27,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   }
   try {
     const member = await prisma.user.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         email: parsed.data.email,
         name: parsed.data.name,

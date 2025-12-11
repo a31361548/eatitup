@@ -1,4 +1,4 @@
-import React from 'react';
+
 
 // SVG Components for styling
 export const CornerGuard = ({ className }: { className?: string }) => (

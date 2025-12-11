@@ -8,43 +8,52 @@ const UpdateNoteSchema = z.object({
   content: z.string().optional(),
 })
 
-export async function GET(_req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const user = await getAuthenticatedUser()
   if (!user) return new NextResponse('Unauthorized', { status: 401 })
+  
+  // Await params for Next.js 15+
+  const { id } = await params
 
-  const note = await prisma.note.findUnique({ where: { id: params.id } })
+  const note = await prisma.note.findUnique({ where: { id } })
   if (!note || note.userId !== user.id) return new NextResponse('Not Found', { status: 404 })
 
   return NextResponse.json({ note })
 }
 
-export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const user = await getAuthenticatedUser()
   if (!user) return new NextResponse('Unauthorized', { status: 401 })
+  
+  // Await params for Next.js 15+
+  const { id } = await params
 
   const json = await req.json()
   const parsed = UpdateNoteSchema.safeParse(json)
   if (!parsed.success) return new NextResponse('Invalid data', { status: 400 })
 
-  const note = await prisma.note.findUnique({ where: { id: params.id } })
+  const note = await prisma.note.findUnique({ where: { id } })
   if (!note || note.userId !== user.id) return new NextResponse('Not Found', { status: 404 })
 
   await prisma.note.update({
-    where: { id: params.id },
+    where: { id },
     data: parsed.data,
   })
 
   return new NextResponse(null, { status: 204 })
 }
 
-export async function DELETE(_req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const user = await getAuthenticatedUser()
   if (!user) return new NextResponse('Unauthorized', { status: 401 })
+  
+  // Await params for Next.js 15+
+  const { id } = await params
 
-  const note = await prisma.note.findUnique({ where: { id: params.id } })
+  const note = await prisma.note.findUnique({ where: { id } })
   if (!note || note.userId !== user.id) return new NextResponse('Not Found', { status: 404 })
 
-  await prisma.note.delete({ where: { id: params.id } })
+  await prisma.note.delete({ where: { id } })
 
   return new NextResponse(null, { status: 204 })
 }

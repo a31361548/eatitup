@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { HoloWindow } from '@/components/ui/HoloWindow'
@@ -10,7 +10,8 @@ import { ForgeArchive } from '@/components/ForgeArchive'
 
 const DEFAULT_OPTIONS = ['龍息寶庫', '弒君審判', '鳳凰之焰', '虛空旅者', '聖耀裁決', '鋼鐵意志']
 
-export default function WheelPage() {
+// Separate component that uses useSearchParams
+function WheelPageContent() {
   const router = useRouter()
   const sp = useSearchParams()
   const itemsParam = sp.get('items')
@@ -89,5 +90,14 @@ export default function WheelPage() {
         </section>
       </div>
     </HoloWindow>
+  )
+}
+
+// Main page component with Suspense boundary
+export default function WheelPage() {
+  return (
+    <Suspense fallback={<div className="flex h-full items-center justify-center text-white">載入中...</div>}>
+      <WheelPageContent />
+    </Suspense>
   )
 }
