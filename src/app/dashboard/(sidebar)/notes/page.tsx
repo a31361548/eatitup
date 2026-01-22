@@ -72,12 +72,13 @@ export default function NotesPage() {
       text: "此動作無法復原，確定要執行刪除程序嗎？",
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#FF0055',
-      cancelButtonColor: '#114242',
+      confirmButtonColor: '#f43f5e',
+      cancelButtonColor: '#0f172a',
       confirmButtonText: '確認刪除',
       cancelButtonText: '取消',
-      background: '#041C1C',
-      color: '#67E8F9'
+      background: '#020617',
+      color: '#5eead4'
+
     })
 
     if (result.isConfirmed) {
@@ -90,8 +91,9 @@ export default function NotesPage() {
           icon: 'success',
           timer: 1500,
           showConfirmButton: false,
-          background: '#041C1C',
-          color: '#67E8F9'
+          background: '#020617',
+          color: '#5eead4'
+
         })
       } catch (error) {
         console.error('Failed to delete note', error)

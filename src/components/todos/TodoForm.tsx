@@ -195,7 +195,7 @@ function PresetDropdown({ label, displayValue, options, activeId, onSelect }: Dr
           <span className="text-xs text-aether-cyan/60">{open ? '▲' : '▼'}</span>
         </button>
         {open && (
-          <div className="absolute z-20 mt-2 w-full rounded-2xl border border-aether-cyan/30 bg-[#041c1c] p-2 shadow-[0_20px_50px_rgba(0,0,0,0.45)]">
+          <div className="absolute z-20 mt-2 w-full rounded-2xl border border-aether-cyan/30 bg-aether-dark p-2 shadow-[0_20px_50px_rgba(0,0,0,0.45)]">
             {options.map((option) => (
               <div
                 key={option.id}

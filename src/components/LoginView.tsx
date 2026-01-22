@@ -27,9 +27,10 @@ export function LoginView() {
       if (res?.error) {
         setError('存取被拒 // 憑證無效')
       } else {
-        router.push('/dashboard/home')
+        router.push('/dashboard')
         router.refresh()
       }
+
     } catch (err) {
       setError('系統錯誤 // 連線失敗')
     } finally {

@@ -59,7 +59,8 @@ export const PixelButton: React.FC<PixelButtonProps> = ({ children, variant = 'p
       tone = 'bg-aether-alert text-white border-aether-alert/80 hover:brightness-110'
       break
     case 'success':
-      tone = 'bg-aether-gold text-aether-dark border-aether-dark hover:bg-[#fde68a]'
+      tone = 'bg-aether-gold text-aether-dark border-aether-dark hover:bg-aether-gold/80'
+
       break
   }
 
@@ -79,7 +80,8 @@ export const PixelInput: React.FC<PixelInputProps> = ({ label, className = '', .
     <label className="flex flex-col gap-2 font-pixel text-pixel-sm uppercase tracking-pixel-wider text-aether-mint/70">
       {label}
       <input
-        className={`bg-[#011111] border-2 border-aether-teal text-aether-cyan px-5 py-4 font-pixel text-pixel-lg placeholder-aether-teal/40 focus:outline-none focus:border-aether-cyan focus:bg-[#022121] transition ${className}`}
+        className={`bg-aether-dark border-2 border-aether-teal text-aether-cyan px-5 py-4 font-pixel text-pixel-lg placeholder-aether-teal/40 focus:outline-none focus:border-aether-cyan focus:bg-aether-dim transition ${className}`}
+
         {...props}
       />
     </label>

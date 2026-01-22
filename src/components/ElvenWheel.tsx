@@ -58,7 +58,7 @@ export const ElvenWheel: React.FC<Props> = ({ options, isSpinning, onSpinEnd }) 
           </div>
 
           {/* Pointer kept inside container */}
-          <div className="absolute top-4 left-1/2 z-30 -translate-x-1/2 filter drop-shadow-[0_0_15px_#00f0ff]" aria-hidden>
+          <div className="absolute top-4 left-1/2 z-30 -translate-x-1/2 filter drop-shadow-[0_0_15px_rgba(94,234,212,0.7)]" aria-hidden>
             <div className="flex h-16 w-6 items-start justify-center rounded-b-full bg-gradient-to-b from-white via-aether-cyan to-transparent [clip-path:polygon(50%_100%,_0%_0%,_100%_0%)] pt-1 md:h-20 md:w-8">
               <div className="h-8 w-1 rounded-full bg-white/80 blur-[1px] md:h-12" />
             </div>
@@ -67,7 +67,8 @@ export const ElvenWheel: React.FC<Props> = ({ options, isSpinning, onSpinEnd }) 
           {/* Main Wheel */}
           <div
             ref={wheelRef}
-            className="relative aspect-square w-full max-w-[420px] rounded-full border-[8px] border-aether-dark bg-[#020b12] shadow-[0_0_40px_rgba(0,240,255,0.18)] md:border-[12px]"
+            className="relative aspect-square w-full max-w-[420px] rounded-full border-[8px] border-aether-dark bg-aether-dim shadow-[0_0_40px_rgba(94,234,212,0.18)] md:border-[12px]"
+
             style={{
               transform: `rotate(${rotation}deg)`,
               transition: isSpinning ? 'transform 6s cubic-bezier(0.2, 0, 0.1, 1)' : 'none'
@@ -93,7 +94,7 @@ export const ElvenWheel: React.FC<Props> = ({ options, isSpinning, onSpinEnd }) 
                     <path
                       d={pathData}
                       fill={isCyan ? 'rgba(0, 240, 255, 0.1)' : 'rgba(10, 16, 32, 0.8)'}
-                      stroke="#00f0ff"
+                      stroke="#5eead4"
                       strokeWidth="0.01"
                       className="transition-all duration-300"
                     />
@@ -102,7 +103,7 @@ export const ElvenWheel: React.FC<Props> = ({ options, isSpinning, onSpinEnd }) 
                     <text
                       x="0.65"
                       y="0"
-                      fill={isCyan ? '#ffffff' : '#00f0ff'}
+                      fill={isCyan ? '#ffffff' : '#5eead4'}
                       fontSize="0.07"
                       fontWeight="bold"
                       fontFamily="Rajdhani"
@@ -121,7 +122,7 @@ export const ElvenWheel: React.FC<Props> = ({ options, isSpinning, onSpinEnd }) 
             {/* Center Reactor */}
             <div className="absolute top-1/2 left-1/2 flex h-[25%] w-[25%] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-2 border-aether-cyan bg-aether-dark shadow-[0_0_30px_rgba(0,240,255,0.3)] md:border-4">
               <div className={`flex h-[70%] w-[70%] items-center justify-center rounded-full border-2 border-dashed border-aether-cyan/50 ${isSpinning ? 'animate-spin' : ''}`}>
-                <div className="h-3 w-3 rounded-full bg-aether-cyan shadow-[0_0_20px_#00f0ff] md:h-4 md:w-4" />
+                <div className="h-3 w-3 rounded-full bg-aether-cyan shadow-[0_0_20px_rgba(94,234,212,0.7)] md:h-4 md:w-4" />
               </div>
             </div>
           </div>

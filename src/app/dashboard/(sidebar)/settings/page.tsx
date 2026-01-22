@@ -53,16 +53,17 @@ export default function SettingsPage() {
           timer: 1200,
           position: 'top-end',
           showConfirmButton: false,
-          background: '#041C1C',
-          color: '#67E8F9',
+          background: '#020617',
+          color: '#5eead4',
         })
+
       } else {
         Swal.fire({
           icon: 'error',
           title: '更新失敗',
           text: '請稍後再試',
-          background: '#041C1C',
-          color: '#FF0055',
+          background: '#020617',
+          color: '#f43f5e',
         })
       }
     } catch (error) {
@@ -71,11 +72,12 @@ export default function SettingsPage() {
         icon: 'error',
         title: '系統錯誤',
         text: '無法連線到伺服器',
-        background: '#041C1C',
-        color: '#FF0055',
+        background: '#020617',
+        color: '#f43f5e',
       })
     }
   }
+
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -110,19 +112,21 @@ export default function SettingsPage() {
           icon: 'error',
           title: '上傳失敗',
           text: '請確認檔案格式',
-          background: '#041C1C',
-          color: '#FF0055',
+          background: '#020617',
+          color: '#f43f5e',
         })
+
       }
     } catch (error) {
       console.error(error)
-      Swal.fire({
-        icon: 'error',
-        title: '系統錯誤',
-        text: '上傳中斷',
-        background: '#041C1C',
-        color: '#FF0055',
-      })
+        Swal.fire({
+          icon: 'error',
+          title: '系統錯誤',
+          text: '上傳中斷',
+          background: '#020617',
+          color: '#f43f5e',
+        })
+
     } finally {
       setUploading(false)
     }

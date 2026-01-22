@@ -109,11 +109,12 @@ export default async function ListsPage(): Promise<React.ReactElement> {
                           編輯
                         </TechButton>
                       </Link>
-                      <Link href={`/modes/wheel?items=${qs}`} className="flex-1">
+                      <Link href={`/dashboard/oracle?items=${qs}`} className="flex-1">
                         <TechButton variant="primary" className="w-full !px-4 !py-2 text-[11px]">
                           啟動輪盤
                         </TechButton>
                       </Link>
+
                       <div className="flex-none">
                         <DeleteListButton listId={list.id} />
                       </div>
