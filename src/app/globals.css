@@ -1,7 +1,6 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Rajdhani:wght@300;500;700&display=swap');
-
 @theme {
+
   /* 字體家族 */
   --font-heading: "Press Start 2P", cursive;
   --font-header: "Press Start 2P", cursive;
@@ -31,14 +30,15 @@
   --tracking-pixel-wider: 0.4em;
   --tracking-pixel-widest: 0.6em;
   
-  /* Aether 顏色系統 */
-  --color-aether-dark: #041C1C;
-  --color-aether-dim: #114242;
-  --color-aether-teal: #2DD4BF;
-  --color-aether-cyan: #67E8F9;
-  --color-aether-gold: #FACC15;
-  --color-aether-alert: #FF0055;
-  --color-aether-mint: #A7F3D0;
+  /* Aether 顏色系統 - Cold Steel Theme */
+  --color-aether-dark: #020617; /* Slate 950 */
+  --color-aether-dim: #0f172a;  /* Slate 900 */
+  --color-aether-teal: #2dd4bf; /* Teal 400 */
+  --color-aether-cyan: #5eead4; /* Teal 300 - Ice Blue */
+  --color-aether-gold: #fde047; /* Yellow 300 - Neon Yellow */
+  --color-aether-alert: #f43f5e; /* Rose 500 */
+  --color-aether-mint: #ccfbf1; /* Teal 100 */
+
   
   /* CRT 顏色 */
   --color-crt-glass: #0B2A2A;
@@ -57,9 +57,10 @@
   --color-gold-glow: #ffae00;
   
   /* Cyan 顏色 */
-  --color-cyan-400: #22d3ee;
-  --color-cyan-500: #06b6d4;
-  --color-cyan-glow: #00f0ff;
+  --color-cyan-400: #5eead4;
+  --color-cyan-500: #2dd4bf;
+  --color-cyan-glow: #5eead4;
+
   
   /* Mythril 顏色 */
   --color-mythril-100: #f1f5f9;
@@ -94,14 +95,16 @@
   --background-image-crt-grid: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
 
   /* Holographic Theme */
-  --color-holo-cyan: #00f0ff;
-  --color-holo-blue: #0a1020;
-  --color-holo-purple: #bc13fe;
-  --color-holo-glass: rgba(0, 240, 255, 0.1);
-  --color-holo-border: rgba(0, 240, 255, 0.5);
+  --color-holo-cyan: #5eead4;
+  --color-holo-blue: #0f172a;
+  --color-holo-purple: #94a3b8;
+  --color-holo-glass: rgba(94, 234, 212, 0.1);
+  --color-holo-border: rgba(94, 234, 212, 0.5);
+
 }
 
 @layer base {
+
   *, *::before, *::after {
     box-sizing: border-box;
   }
@@ -111,9 +114,10 @@
   }
 
   body {
-    font-family: 'VT323', monospace;
-    background: radial-gradient(circle at top, #0c1a2f 0%, #050912 45%, #02050b 100%);
-    color: #e4fff6;
+    font-family: 'Rajdhani', "Noto Sans TC", sans-serif;
+    background: radial-gradient(circle at top, #0f172a 0%, #020617 100%);
+    color: #ccfbf1;
+
     min-height: 100vh;
     overflow-x: hidden;
     -webkit-font-smoothing: none;
@@ -134,16 +138,17 @@
 
   body::before {
     background-image:
-      radial-gradient(circle at 20% 20%, rgba(103, 232, 249, 0.12), transparent 60%),
-      radial-gradient(circle at 80% 15%, rgba(250, 204, 21, 0.08), transparent 55%),
-      linear-gradient(180deg, rgba(3, 9, 18, 0), rgba(0, 0, 0, 0.8));
+      radial-gradient(circle at 20% 20%, rgba(94, 234, 212, 0.08), transparent 60%),
+      radial-gradient(circle at 80% 15%, rgba(45, 212, 191, 0.05), transparent 55%),
+      linear-gradient(180deg, rgba(2, 6, 23, 0), rgba(2, 6, 23, 0.8));
     z-index: 0;
   }
 
   body::after {
     background-image:
-      linear-gradient(rgba(62, 249, 255, 0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(62, 249, 255, 0.04) 1px, transparent 1px);
+      linear-gradient(rgba(94, 234, 212, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(94, 234, 212, 0.03) 1px, transparent 1px);
+
     background-size: 32px 32px;
     mix-blend-mode: screen;
     opacity: 0.4;
@@ -151,8 +156,8 @@
   }
 
   ::selection {
-    background: #2DD4BF;
-    color: #041C1C;
+    background: var(--color-aether-cyan);
+    color: var(--color-aether-dark);
   }
 
   ::-webkit-scrollbar {
@@ -161,17 +166,18 @@
   }
 
   ::-webkit-scrollbar-track {
-    background: #041C1C;
+    background: var(--color-aether-dark);
   }
 
   ::-webkit-scrollbar-thumb {
-    background: linear-gradient(#114242, #2DD4BF);
-    border: 2px solid #041C1C;
+    background: linear-gradient(var(--color-aether-dim), var(--color-aether-teal));
+    border: 2px solid var(--color-aether-dark);
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(#2DD4BF, #67E8F9);
+    background: linear-gradient(var(--color-aether-teal), var(--color-aether-cyan));
   }
+
 }
 
 @layer components {
@@ -206,10 +212,11 @@
 
 @layer utilities {
   .pixel-panel {
-    background-color: #041C1C;
-    border: 4px solid #2DD4BF;
-    box-shadow: 8px 8px 0 rgba(4, 28, 28, 0.8);
+    background-color: var(--color-aether-dark);
+    border: 4px solid var(--color-aether-teal);
+    box-shadow: 8px 8px 0 rgba(2, 6, 23, 0.8);
   }
+
 
   .ritual-card {
     position: relative;
@@ -275,13 +282,14 @@
 
   .pixel-border {
     box-shadow:
-      -4px 0 0 0 #041C1C,
-      4px 0 0 0 #041C1C,
-      0 -4px 0 0 #041C1C,
-      0 4px 0 0 #041C1C,
-      0 0 0 4px #2DD4BF;
+      -4px 0 0 0 var(--color-aether-dark),
+      4px 0 0 0 var(--color-aether-dark),
+      0 -4px 0 0 var(--color-aether-dark),
+      0 4px 0 0 var(--color-aether-dark),
+      0 0 0 4px var(--color-aether-teal);
     margin: 4px;
   }
+
 
   .hud-divider {
     border-top: 2px dashed rgba(103, 232, 249, 0.4);
@@ -357,13 +365,14 @@
     bottom: -10px;
     width: 4px;
     height: 4px;
-    background: radial-gradient(circle, #FACC15 0%, #FF0055 100%);
+    background: radial-gradient(circle, #5eead4 0%, #0f172a 100%);
     border-radius: 50%;
-    box-shadow: 0 0 10px #FACC15, 0 0 20px #FF0055;
+    box-shadow: 0 0 10px rgba(94, 234, 212, 0.7), 0 0 20px rgba(15, 23, 42, 0.6);
     pointer-events: none;
     z-index: 0;
     animation: rise linear infinite;
   }
+
 
   .vignette {
     position: fixed;

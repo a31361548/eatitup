@@ -134,7 +134,7 @@ export function CheckInCalendar() {
         <div className="mt-3 space-y-2">
             <div className="flex items-center justify-between text-[10px] font-tech uppercase tracking-wider text-aether-mint/60">
                 <span>STATUS: {hasCheckedInToday ? 'SYNCED' : 'PENDING'}</span>
-                <span>REWARD: +{CHECK_IN_REWARD} ETH</span>
+                <span>REWARD: +{CHECK_IN_REWARD} COINS</span>
             </div>
             
             <TechButton

@@ -73,7 +73,7 @@ export function TechCalendar({ value, onChange, minDate }: TechCalendarProps) {
               disabled={disabled}
               className={clsx(
                 'p-2 rounded hover:bg-aether-cyan/20 transition-colors relative group',
-                selected ? 'bg-aether-cyan text-black font-bold shadow-[0_0_10px_#00f0ff]' : 'text-white',
+                selected ? 'bg-aether-cyan text-black font-bold shadow-[0_0_10px_rgba(94,234,212,0.7)]' : 'text-white',
                 disabled && 'opacity-20 cursor-not-allowed hover:bg-transparent'
               )}
             >

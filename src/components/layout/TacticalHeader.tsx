@@ -2,10 +2,19 @@
 
 import { useState, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
+import Link from 'next/link'
 import clsx from 'clsx'
+import { useSession } from 'next-auth/react'
+import { LogoutButton } from '@/components/LogoutButton'
+import { useAuxiliary } from '@/context/AuxiliaryContext'
 
 export function TacticalHeader() {
   const pathname = usePathname()
+  const { data: session } = useSession()
+  const { toggleView } = useAuxiliary()
+  const currentUser = session?.user
+  const isAdmin = currentUser?.role === 'ADMIN'
+
   const [time, setTime] = useState<string>('')
   const [ping, setPing] = useState<number>(24)
   const [tickerIndex, setTickerIndex] = useState(0)
@@ -51,27 +60,27 @@ export function TacticalHeader() {
   return (
     <header className="fixed top-0 left-0 z-50 w-full font-tech text-white select-none">
       {/* Main Bar Background */}
-      <div className="relative h-14 w-full bg-[#030b16]/95 backdrop-blur-md border-b border-aether-cyan/20 shadow-[0_5px_20px_rgba(0,0,0,0.5)]">
+      <div className="relative h-14 w-full bg-aether-dim/95 backdrop-blur-md border-b border-aether-cyan/20 shadow-[0_5px_20px_rgba(0,0,0,0.5)]">
         
         {/* Energy Line */}
-        <div className="absolute bottom-0 left-0 w-full h-[1px] bg-aether-cyan/50 shadow-[0_0_10px_#00f0ff] animate-pulse" />
+        <div className="absolute bottom-0 left-0 w-full h-[1px] bg-aether-cyan/50 shadow-[0_0_10px_rgba(94,234,212,0.7)] animate-pulse" />
         
-        <div className="h-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+        <div className="h-full w-full px-3 sm:px-5 lg:px-6 flex items-center justify-between">
             
             {/* Left: Identity & Breadcrumbs */}
             <div className="flex items-center gap-6">
                 {/* Logo Area */}
-                <div className="flex items-center gap-3 group cursor-default">
+                <Link href="/dashboard" className="flex items-center gap-3 group cursor-pointer">
                     <div className="relative w-8 h-8 flex items-center justify-center">
                         <div className="absolute inset-0 border border-aether-cyan/30 rotate-45 group-hover:rotate-90 transition-transform duration-500" />
                         <div className="absolute inset-1 border border-aether-cyan/60 rotate-0 group-hover:-rotate-45 transition-transform duration-500" />
-                        <div className="w-2 h-2 bg-aether-cyan shadow-[0_0_10px_#00f0ff] rounded-full animate-pulse" />
+                        <div className="w-2 h-2 bg-aether-cyan shadow-[0_0_10px_rgba(94,234,212,0.7)] rounded-full animate-pulse" />
                     </div>
                     <div className="flex flex-col">
                         <span className="text-lg font-heading tracking-widest text-white leading-none">AETHER</span>
                         <span className="text-[10px] text-aether-cyan/60 tracking-[0.3em] leading-none mt-1">OS v2.1</span>
                     </div>
-                </div>
+                </Link>
 
                 {/* Separator */}
                 <div className="h-8 w-[1px] bg-white/10 -skew-x-12 hidden md:block" />
@@ -121,14 +130,40 @@ export function TacticalHeader() {
                     </span>
                 </div>
 
-                {/* Status Indicator */}
+                {/* Actions */}
+                {currentUser && (
+                  <div className="hidden xl:flex items-center gap-2">
+                    {isAdmin && (
+                      <Link
+                        href="/admin/members"
+                        className="inline-flex min-w-[80px] items-center justify-center border border-aether-cyan px-3 py-1 text-[10px] tracking-[0.3em] text-aether-cyan transition hover:bg-aether-cyan hover:text-aether-dark"
+                      >
+                        ADMIN
+                      </Link>
+                    )}
+                    <LogoutButton />
+                  </div>
+                )}
+
+                {/* Status Indicator / Mobile Aux Toggle */}
                 <div className="flex items-center gap-2 pl-4 border-l border-white/10">
                     <div className="flex flex-col items-end">
                         <span className="text-[10px] text-aether-mint/40 tracking-wider hidden sm:block">STATUS</span>
                         <span className="text-xs text-aether-teal tracking-widest font-bold">ONLINE</span>
                     </div>
-                    <div className="w-2 h-2 bg-aether-teal rounded-full shadow-[0_0_10px_#2dd4bf] animate-pulse" />
+                    {/* Mobile Toggle Button */}
+                    <button 
+                        onClick={() => toggleView('SYSTEM_STATUS')}
+                        className="w-8 h-8 flex items-center justify-center hover:bg-white/5 rounded transition-colors xl:hidden relative group"
+                        aria-label="Toggle Aux Panel"
+                    >
+                        <div className="w-2 h-2 bg-aether-teal rounded-full shadow-[0_0_10px_rgba(45,212,191,0.6)] animate-pulse group-active:scale-90" />
+                        <span className="absolute inset-0 border border-white/10 rounded-full scale-0 group-hover:scale-100 transition-transform" />
+                    </button>
+                    {/* Desktop Status Dot */}
+                    <div className="w-2 h-2 bg-aether-teal rounded-full shadow-[0_0_10px_rgba(45,212,191,0.6)] animate-pulse hidden xl:block" />
                 </div>
+
             </div>
 
         </div>

@@ -92,9 +92,10 @@ export function HolographicPad({
             icon: 'warning',
             title: '缺少標題',
             text: '請為這份日誌輸入標題',
-            background: '#041C1C',
-            color: '#67E8F9',
-            confirmButtonColor: '#2DD4BF',
+            background: '#020617',
+            color: '#5eead4',
+            confirmButtonColor: '#2dd4bf',
+
             confirmButtonText: '確定'
         });
         return;
@@ -120,8 +121,9 @@ export function HolographicPad({
             position: 'top-end',
             showConfirmButton: false,
             timer: 1500,
-            background: '#041C1C',
-            color: '#67E8F9'
+            background: '#020617',
+            color: '#5EEAD4'
+
         });
       }
     } catch (error) {
@@ -130,8 +132,9 @@ export function HolographicPad({
         icon: 'error',
         title: '上傳失敗',
         text: '儲存過程中發生錯誤',
-        background: '#041C1C',
-        color: '#FF0055',
+        background: '#020617',
+        color: '#f43f5e',
+
         confirmButtonText: '確定'
       });
     } finally {
@@ -150,11 +153,12 @@ export function HolographicPad({
         confirmButtonText: '儲存並離開',
         denyButtonText: '捨棄變更',
         cancelButtonText: '取消',
-        background: '#041C1C',
-        color: '#67E8F9',
-        confirmButtonColor: '#2DD4BF',
-        denyButtonColor: '#FF0055',
-        cancelButtonColor: '#114242'
+        background: '#020617',
+        color: '#5eead4',
+        confirmButtonColor: '#2dd4bf',
+        denyButtonColor: '#f43f5e',
+        cancelButtonColor: '#0f172a'
+
       }).then((result) => {
         if (result.isConfirmed) {
           handleSave(true);
@@ -179,14 +183,16 @@ export function HolographicPad({
                 initial={{ opacity: 0, scale: 0.9, y: 20 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                className="relative w-full max-w-4xl h-[85vh] flex flex-col bg-[#041C1C]/90 border border-aether-cyan/50 shadow-[0_0_30px_rgba(103,232,249,0.2)] rounded-lg overflow-hidden"
+                className="relative w-full max-w-4xl h-[85vh] flex flex-col bg-aether-dark/90 border border-aether-cyan/50 shadow-[0_0_30px_rgba(94,234,212,0.2)] rounded-lg overflow-hidden"
+
             >
                 {/* Holographic Grid Background */}
                 <div className="absolute inset-0 pointer-events-none bg-tech-grid-overlay opacity-30" />
                 <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-aether-cyan/5 via-transparent to-aether-cyan/5" />
                 
                 {/* Header */}
-                <div className="relative z-10 flex items-center justify-between p-4 border-b border-aether-cyan/30 bg-[#041C1C]/50 backdrop-blur">
+                <div className="relative z-10 flex items-center justify-between p-4 border-b border-aether-cyan/30 bg-aether-dark/50 backdrop-blur">
+
                     <div className="flex items-center gap-4 flex-1">
                         <div className="w-2 h-8 bg-aether-cyan animate-pulse" />
                         <input 
@@ -263,7 +269,8 @@ export function HolographicPad({
                 </div>
 
                 {/* Footer */}
-                <div className="relative z-10 p-4 border-t border-aether-cyan/30 bg-[#041C1C]/80 backdrop-blur flex justify-between items-center">
+                <div className="relative z-10 p-4 border-t border-aether-cyan/30 bg-aether-dark/80 backdrop-blur flex justify-between items-center">
+
                     <div className="text-xs font-tech text-aether-cyan/50 tracking-widest">
                         狀態: {saving ? '上傳中...' : (isDirty ? '未儲存' : '已同步')}
                     </div>

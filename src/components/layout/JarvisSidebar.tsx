@@ -23,9 +23,10 @@ const navItems = [
   },
   { 
     title: '轉盤', 
-    href: '/modes/wheel',
+    href: '/dashboard/oracle',
     icon: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2v20"/><path d="M2 12h20"/><path d="m4.93 4.93 14.14 14.14"/><path d="m19.07 4.93-14.14 14.14"/></svg>
   },
+
   { 
     title: '清單', 
     href: '/dashboard/lists',
@@ -47,35 +48,38 @@ export function JarvisSidebar() {
   const pathname = usePathname()
 
   const desktopNav = (
-    <nav className="fixed left-4 top-1/2 z-50 hidden -translate-y-1/2 flex-col gap-4 lg:flex">
-      <div className="mx-auto h-20 w-[1px] bg-gradient-to-b from-transparent to-aether-cyan/50" />
-      <div className="flex flex-col gap-2 rounded-2xl border border-aether-cyan/20 bg-[#030b16]/70 p-2 shadow-[0_0_30px_rgba(0,0,0,0.5)] backdrop-blur">
+    <nav className="fixed left-0 top-14 bottom-0 z-40 hidden w-20 flex-col items-center border-r border-aether-cyan/20 bg-aether-dark/95 py-6 backdrop-blur-sm lg:flex">
+      <div className="flex flex-1 flex-col gap-4 w-full px-2">
         {navItems.map((item) => {
           const isActive = pathname === item.href
           return (
             <Link
               key={item.href}
               href={item.href}
-              className={`group relative flex h-12 w-12 items-center justify-center rounded transition-all duration-300 ${
+              className={`group relative flex h-14 w-full items-center justify-center rounded-xl transition-all duration-300 ${
                 isActive
-                  ? 'bg-aether-cyan/20 text-aether-cyan shadow-[0_0_15px_rgba(0,240,255,0.3)]'
-                  : 'text-aether-cyan/40 hover:bg-aether-cyan/10 hover:text-aether-cyan'
+                  ? 'bg-aether-cyan/10 text-aether-cyan shadow-[inset_0_0_10px_rgba(0,240,255,0.2)] border border-aether-cyan/30'
+                  : 'text-aether-cyan/40 hover:bg-aether-cyan/5 hover:text-aether-cyan hover:border hover:border-aether-cyan/10'
               }`}
               aria-label={item.title}
             >
               <div className="relative z-10 transition-transform duration-300 group-hover:scale-110">{item.icon}</div>
-              {isActive && <div className="absolute -left-3 top-1/2 h-6 w-1 -translate-y-1/2 rounded-r bg-aether-cyan shadow-[0_0_10px_#00f0ff]" />}
-              <div className="pointer-events-none absolute left-full z-50 ml-4 -translate-x-2 whitespace-nowrap border border-aether-cyan/30 bg-[#030b16] px-3 py-1 font-tech text-xs tracking-widest text-aether-cyan opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100">
+              {isActive && <div className="absolute left-0 top-1/2 h-8 w-1 -translate-y-1/2 rounded-r bg-aether-cyan shadow-[0_0_10px_rgba(94,234,212,0.7)]" />}
+              
+              {/* Tooltip */}
+              <div className="pointer-events-none absolute left-full z-50 ml-4 -translate-x-2 whitespace-nowrap border border-aether-cyan/30 bg-aether-dim px-3 py-1 font-tech text-xs tracking-widest text-aether-cyan opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100">
                 {item.title}
                 <div className="absolute top-1/2 -left-4 h-[1px] w-4 bg-aether-cyan/30" />
               </div>
             </Link>
           )
         })}
-        <div className="mx-auto my-1 h-[1px] w-8 bg-aether-cyan/20" />
+      </div>
+
+      <div className="w-full px-2 mt-auto">
         <button
           onClick={() => signOut({ callbackUrl: '/' })}
-          className="group relative flex h-12 w-12 items-center justify-center rounded text-red-500/60 transition-all duration-300 hover:bg-red-500/10 hover:text-red-400"
+          className="group relative flex h-14 w-full items-center justify-center rounded-xl text-red-500/60 transition-all duration-300 hover:bg-red-500/10 hover:text-red-400 hover:border hover:border-red-500/20"
           aria-label="登出"
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -83,33 +87,34 @@ export function JarvisSidebar() {
             <polyline points="16 17 21 12 16 7" />
             <line x1="21" x2="9" y1="12" y2="12" />
           </svg>
-          <div className="pointer-events-none absolute left-full z-50 ml-4 -translate-x-2 whitespace-nowrap border border-red-500/30 bg-[#030b16] px-3 py-1 font-tech text-xs tracking-widest text-red-400 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100">
+          <div className="pointer-events-none absolute left-full z-50 ml-4 -translate-x-2 whitespace-nowrap border border-red-500/30 bg-aether-dim px-3 py-1 font-tech text-xs tracking-widest text-red-400 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100">
             登出 (LOGOUT)
             <div className="absolute top-1/2 -left-4 h-[1px] w-4 bg-red-500/30" />
           </div>
         </button>
       </div>
-      <div className="mx-auto h-20 w-[1px] bg-gradient-to-t from-transparent to-aether-cyan/50" />
     </nav>
   )
 
+
   const mobileNav = (
-    <nav className="fixed bottom-4 left-1/2 z-40 flex w-[calc(100%-2rem)] max-w-[460px] -translate-x-1/2 items-center justify-between rounded-3xl border border-cyan-300/20 bg-[#030b16]/90 px-3 py-2 text-[10px] font-tech tracking-[0.2em] text-white/60 shadow-[0_20px_60px_rgba(0,0,0,0.7)] backdrop-blur lg:hidden">
+    <nav className="fixed bottom-4 left-1/2 z-40 flex w-[calc(100%-2rem)] max-w-[460px] -translate-x-1/2 items-center justify-between rounded-3xl border border-aether-cyan/20 bg-aether-dim/90 px-3 py-2 text-[10px] font-tech tracking-[0.2em] text-white/60 shadow-[0_20px_60px_rgba(0,0,0,0.7)] backdrop-blur lg:hidden">
       {navItems.map((item) => {
         const isActive = pathname === item.href
         return (
           <Link key={item.href} href={item.href} className="flex flex-1 flex-col items-center gap-1 text-center" aria-label={item.title}>
             <span
-              className={`flex h-9 w-9 items-center justify-center rounded-full border ${
-                isActive ? 'border-cyan-300/80 bg-cyan-500/20 text-white' : 'border-white/10 bg-white/5 text-white/60'
+              className={`flex h-9 w-9 items-center justify-center rounded-full border transition-all duration-300 ${
+                isActive ? 'border-aether-cyan/80 bg-aether-cyan/10 text-aether-cyan shadow-[0_0_15px_rgba(94,234,212,0.3)]' : 'border-white/10 bg-white/5 text-white/60'
               }`}
             >
               {item.icon}
             </span>
-            <span className={isActive ? 'text-white' : 'text-white/50'}>{item.title}</span>
+            <span className={isActive ? 'text-aether-cyan' : 'text-white/50'}>{item.title}</span>
           </Link>
         )
       })}
+
       <button
         onClick={() => signOut({ callbackUrl: '/' })}
         className="flex flex-col items-center gap-1 text-red-400"

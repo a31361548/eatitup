@@ -16,7 +16,8 @@ export function TechButton({
   ...props
 }: TechButtonProps & { as?: React.ElementType }) {
   const baseStyles =
-    'relative inline-flex items-center justify-center gap-3 rounded-xl border-2 px-6 py-3 font-pixel text-pixel-sm uppercase tracking-[0.35em] transition-all duration-300 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-cyan-300/30'
+    'relative inline-flex items-center justify-center gap-2 sm:gap-3 rounded-xl border-2 px-4 py-2 sm:px-6 sm:py-3 font-pixel text-pixel-xs sm:text-pixel-sm uppercase tracking-[0.35em] transition-all duration-300 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-cyan-300/30'
+
 
   const variants: Record<Required<TechButtonProps>['variant'], string> = {
     primary:

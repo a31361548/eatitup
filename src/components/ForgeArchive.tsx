@@ -220,9 +220,10 @@ export const ForgeArchive: React.FC<ForgeArchiveProps> = ({
   };
 
   return (
-    <div className="relative bg-[#0a1020]/90 rounded-lg p-6 md:p-8 shadow-[0_0_30px_rgba(0,240,255,0.1)] border border-aether-cyan/30 backdrop-blur-sm group">
+    <div className="relative bg-aether-dim/90 rounded-lg p-6 md:p-8 shadow-[0_0_30px_rgba(94,234,212,0.12)] border border-aether-cyan/30 backdrop-blur-sm group">
        {/* Glowing Top Edge */}
-       <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-aether-cyan to-transparent shadow-[0_0_10px_#00f0ff]"></div>
+       <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-aether-cyan to-transparent shadow-[0_0_10px_rgba(94,234,212,0.6)]"></div>
+
        
        {/* Header */}
        <div className="text-center mb-6 mt-2">
