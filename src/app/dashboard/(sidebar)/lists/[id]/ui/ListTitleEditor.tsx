@@ -32,7 +32,7 @@ export default function ListTitleEditor({ listId, initialTitle }: Props): React.
       <div className="mt-3 flex flex-wrap gap-3">
         <input
           id="list-title-editor"
-          className="flex-1 rounded-2xl border border-white/15 bg-black/50 px-4 py-3 text-lg font-heading text-white outline-none transition focus:border-cyan-300"
+          className="flex-1 rounded-2xl border border-white/15 bg-black/50 px-4 py-3 text-lg font-heading text-white outline-none transition focus:border-samurai-blue"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
@@ -40,7 +40,7 @@ export default function ListTitleEditor({ listId, initialTitle }: Props): React.
           {status === 'saving' ? '儲存中…' : status === 'saved' ? '已儲存' : '儲存標題'}
         </TechButton>
       </div>
-      {status === 'error' && <p className="mt-2 text-sm text-red-200">儲存失敗，請稍後再試</p>}
+      {status === 'error' && <p className="mt-2 text-sm text-samurai-red">儲存失敗，請稍後再試</p>}
     </div>
   )
 }

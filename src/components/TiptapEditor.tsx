@@ -53,9 +53,9 @@ export function TiptapEditor({ content, onChange, editable = true, darkControls 
       onClick={onClick}
       title={title}
       className={`rounded p-2 text-sm transition-colors ${
-        isActive 
-          ? (darkControls ? 'bg-black/10 text-black font-bold' : 'bg-emerald-500/20 text-emerald-400') 
-          : (darkControls ? 'text-gray-700 hover:bg-black/5 hover:text-black' : 'text-white/60 hover:bg-white/10 hover:text-white')
+          isActive 
+            ? 'bg-samurai-blue/20 text-samurai-blue font-bold shadow-[0_0_10px_rgba(59,130,246,0.3)]' 
+            : 'text-samurai-text/60 hover:bg-samurai-blue/10 hover:text-white'
       }`}
     >
       {children}
@@ -63,9 +63,9 @@ export function TiptapEditor({ content, onChange, editable = true, darkControls 
   )
 
   return (
-    <div className={`rounded-xl border overflow-hidden ${darkControls ? 'border-[#d7c69c] bg-transparent' : 'border-white/10 bg-white/5'}`}>
+    <div className={`depth-hud rounded-xl border overflow-hidden ${darkControls ? 'border-samurai-blue/30 bg-transparent' : 'border-white/10 bg-white/5'}`}>
       {editable && (
-        <div className={`flex flex-wrap gap-1 border-b p-2 ${darkControls ? 'border-[#d7c69c] bg-[#e8d5a8]/50' : 'border-white/10 bg-white/5'}`}>
+        <div className={`flex flex-wrap gap-1 border-b p-2 ${darkControls ? 'border-samurai-blue/30 bg-samurai-blue/5' : 'border-white/10 bg-white/5'}`}>
           <ToolbarButton
             onClick={() => editor.chain().focus().toggleBold().run()}
             isActive={editor.isActive('bold')}
@@ -87,7 +87,7 @@ export function TiptapEditor({ content, onChange, editable = true, darkControls 
           >
             <s>S</s>
           </ToolbarButton>
-          <div className={`mx-1 w-px ${darkControls ? 'bg-[#d7c69c]' : 'bg-white/10'}`} />
+          <div className={`mx-1 w-px ${darkControls ? 'bg-samurai-blue/30' : 'bg-white/10'}`} />
           <div className="flex items-center gap-1">
              <input
                 type="color"
@@ -97,7 +97,7 @@ export function TiptapEditor({ content, onChange, editable = true, darkControls 
                 title="文字顏色"
              />
           </div>
-          <div className={`mx-1 w-px ${darkControls ? 'bg-[#d7c69c]' : 'bg-white/10'}`} />
+          <div className={`mx-1 w-px ${darkControls ? 'bg-samurai-blue/30' : 'bg-white/10'}`} />
           <ToolbarButton
             onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
             isActive={editor.isActive('heading', { level: 1 })}
@@ -119,7 +119,7 @@ export function TiptapEditor({ content, onChange, editable = true, darkControls 
           >
             H3
           </ToolbarButton>
-          <div className={`mx-1 w-px ${darkControls ? 'bg-[#d7c69c]' : 'bg-white/10'}`} />
+          <div className={`mx-1 w-px ${darkControls ? 'bg-samurai-blue/30' : 'bg-white/10'}`} />
           <ToolbarButton
             onClick={() => editor.chain().focus().toggleBulletList().run()}
             isActive={editor.isActive('bulletList')}
@@ -134,7 +134,7 @@ export function TiptapEditor({ content, onChange, editable = true, darkControls 
           >
             1. List
           </ToolbarButton>
-          <div className={`mx-1 w-px ${darkControls ? 'bg-[#d7c69c]' : 'bg-white/10'}`} />
+          <div className={`mx-1 w-px ${darkControls ? 'bg-samurai-blue/30' : 'bg-white/10'}`} />
           <ToolbarButton
             onClick={() => editor.chain().focus().toggleBlockquote().run()}
             isActive={editor.isActive('blockquote')}
@@ -149,7 +149,7 @@ export function TiptapEditor({ content, onChange, editable = true, darkControls 
           >
             —
           </ToolbarButton>
-          <div className={`mx-1 w-px ${darkControls ? 'bg-[#d7c69c]' : 'bg-white/10'}`} />
+          <div className={`mx-1 w-px ${darkControls ? 'bg-samurai-blue/30' : 'bg-white/10'}`} />
           <ToolbarButton
             onClick={() => editor.chain().focus().undo().run()}
             isActive={false}

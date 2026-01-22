@@ -53,8 +53,8 @@ export default function SettingsPage() {
           timer: 1200,
           position: 'top-end',
           showConfirmButton: false,
-          background: '#020617',
-          color: '#5eead4',
+          background: 'var(--color-samurai-dark)',
+          color: 'var(--color-samurai-blue)',
         })
 
       } else {
@@ -62,8 +62,8 @@ export default function SettingsPage() {
           icon: 'error',
           title: '更新失敗',
           text: '請稍後再試',
-          background: '#020617',
-          color: '#f43f5e',
+          background: 'var(--color-samurai-dark)',
+          color: 'var(--color-samurai-red)',
         })
       }
     } catch (error) {
@@ -72,8 +72,8 @@ export default function SettingsPage() {
         icon: 'error',
         title: '系統錯誤',
         text: '無法連線到伺服器',
-        background: '#020617',
-        color: '#f43f5e',
+        background: '#09090B',
+        color: '#F43F5E',
       })
     }
   }
@@ -112,8 +112,8 @@ export default function SettingsPage() {
           icon: 'error',
           title: '上傳失敗',
           text: '請確認檔案格式',
-          background: '#020617',
-          color: '#f43f5e',
+          background: 'var(--color-samurai-dark)',
+          color: 'var(--color-samurai-red)',
         })
 
       }
@@ -123,8 +123,8 @@ export default function SettingsPage() {
           icon: 'error',
           title: '系統錯誤',
           text: '上傳中斷',
-          background: '#020617',
-          color: '#f43f5e',
+          background: 'var(--color-samurai-dark)',
+          color: 'var(--color-samurai-red)',
         })
 
     } finally {
@@ -183,7 +183,7 @@ export default function SettingsPage() {
                 onMouseEnter={() => handleAvatarHover(index, true)}
                 onMouseLeave={() => handleAvatarHover(index, false)}
                 className={`relative aspect-square overflow-hidden rounded-[18px] border transition ${
-                  selectedAvatar === avatar ? 'border-cyan-300 shadow-[0_0_15px_rgba(6,182,212,0.5)]' : 'border-white/10 hover:border-cyan-200/60'
+                  selectedAvatar === avatar ? 'border-samurai-blue shadow-[0_0_15px_rgba(59,130,246,0.5)]' : 'border-white/10 hover:border-samurai-blue/60'
                 }`}
               >
                 <img src={avatar} alt="Avatar" className="h-full w-full object-cover" />
@@ -201,7 +201,7 @@ export default function SettingsPage() {
                 <Cropper image={previewImage} crop={crop} zoom={zoom} aspect={1} onCropChange={setCrop} onCropComplete={onCropComplete} onZoomChange={setZoom} cropShape="round" showGrid={false} />
               </div>
               <div className="mb-6">
-                <input type="range" value={zoom} min={1} max={3} step={0.1} onChange={(e) => setZoom(Number(e.target.value))} className="h-1 w-full cursor-pointer appearance-none rounded-lg bg-black/40 accent-cyan-300" />
+                <input type="range" value={zoom} min={1} max={3} step={0.1} onChange={(e) => setZoom(Number(e.target.value))} className="h-1 w-full cursor-pointer appearance-none rounded-lg bg-black/40 accent-samurai-blue" />
               </div>
               <div className="flex gap-4">
                 <TechButton variant="ghost" className="flex-1" onClick={handleCloseModal} disabled={uploading}>

@@ -42,13 +42,13 @@ export default function ItemRow({ item }: Props): React.ReactElement {
     <li className="rounded-[28px] border border-white/10 bg-black/25 p-4 text-white shadow-[inset_0_0_25px_rgba(0,0,0,0.4)]">
       <div className="flex flex-col gap-3 md:flex-row md:items-center">
         <input
-          className="flex-1 rounded-2xl border border-white/15 bg-black/50 px-4 py-3 text-white outline-none transition focus:border-cyan-300"
+          className="flex-1 rounded-2xl border border-white/15 bg-black/50 px-4 py-3 text-white outline-none transition focus:border-samurai-blue"
           value={label}
           onChange={(e) => setLabel(e.target.value)}
         />
         <div className="flex flex-wrap gap-2 md:justify-end">
           <input
-            className="w-24 rounded-2xl border border-white/15 bg-black/50 px-4 py-3 text-center text-white outline-none focus:border-cyan-300"
+            className="w-24 rounded-2xl border border-white/15 bg-black/50 px-4 py-3 text-center text-white outline-none focus:border-samurai-blue"
             type="number"
             min={1}
             value={Number.isNaN(weight) ? '' : weight}
@@ -62,8 +62,8 @@ export default function ItemRow({ item }: Props): React.ReactElement {
           </TechButton>
         </div>
       </div>
-      {status === 'error' && <p className="mt-2 text-sm text-red-200">請確認名稱與權重</p>}
-      {status === 'saved' && <p className="mt-2 text-sm text-emerald-200">已儲存</p>}
+      {status === 'error' && <p className="mt-2 text-sm text-samurai-red">請確認名稱與權重</p>}
+      {status === 'saved' && <p className="mt-2 text-sm text-samurai-success">已儲存</p>}
     </li>
   )
 }

@@ -111,7 +111,7 @@ export function RightSidebar() {
         )}
 
       {/* Content Area */}
-      <div className="flex-1 overflow-y-auto p-4 scrollbar-thin scrollbar-thumb-aether-cyan/20 scrollbar-track-transparent">
+      <div className="flex-1 overflow-y-auto p-4">
         {currentView === 'SYSTEM_STATUS' && (
           <div className="space-y-4">
              <div className="rounded border border-aether-cyan/20 bg-black/40 p-1">

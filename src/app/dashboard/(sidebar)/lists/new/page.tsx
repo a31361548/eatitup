@@ -51,12 +51,12 @@ export default function NewListPage(): React.ReactElement {
             </label>
             <input
               id="list-title"
-              className="w-full rounded-2xl border border-white/15 bg-black/50 p-4 font-heading text-lg text-white outline-none transition focus:border-cyan-300 focus:shadow-[0_0_20px_rgba(6,182,212,0.3)]"
+              className="w-full rounded-2xl border border-white/15 bg-black/50 p-4 font-heading text-lg text-white outline-none transition focus:border-samurai-blue focus:shadow-[0_0_20px_rgba(59,130,246,0.3)]"
               placeholder="例如：午餐協定 V1"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
             />
-            {error && <p className="rounded-2xl border border-red-500/40 bg-red-500/10 p-3 text-sm text-red-200">{error}</p>}
+            {error && <p className="rounded-2xl border border-samurai-red/40 bg-samurai-red/10 p-3 text-sm text-samurai-red">{error}</p>}
           </div>
 
           <div className="flex flex-wrap gap-4 border-t border-white/10 pt-4">

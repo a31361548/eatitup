@@ -85,6 +85,9 @@ export const ForgeArchive: React.FC<ForgeArchiveProps> = ({
         icon: 'warning',
         title: '請輸入選項內容',
         confirmButtonText: '好的',
+        background: 'var(--color-samurai-dark)',
+        color: 'var(--color-samurai-yellow)',
+        confirmButtonColor: 'var(--color-samurai-red)'
       });
       return;
     }
@@ -95,6 +98,8 @@ export const ForgeArchive: React.FC<ForgeArchiveProps> = ({
       title: '已加入新選項',
       timer: 1600,
       showConfirmButton: false,
+      background: 'var(--color-samurai-dark)',
+      color: 'var(--color-samurai-blue)'
     });
   };
 
@@ -120,6 +125,9 @@ export const ForgeArchive: React.FC<ForgeArchiveProps> = ({
       void Swal.fire({
         icon: 'warning',
         title: '請輸入卷軸名稱',
+        background: 'var(--color-samurai-dark)',
+        color: 'var(--color-samurai-yellow)',
+        confirmButtonColor: 'var(--color-samurai-red)'
       });
       return;
     }
@@ -129,6 +137,9 @@ export const ForgeArchive: React.FC<ForgeArchiveProps> = ({
       void Swal.fire({
         icon: 'warning',
         title: '至少需要一個選項',
+        background: 'var(--color-samurai-dark)',
+        color: 'var(--color-samurai-yellow)',
+        confirmButtonColor: 'var(--color-samurai-red)'
       });
       return;
     }
@@ -174,6 +185,8 @@ export const ForgeArchive: React.FC<ForgeArchiveProps> = ({
           title: '卷軸已更新',
           timer: 1800,
           showConfirmButton: false,
+          background: '#09090B',
+          color: '#3B82F6'
         });
       } else {
         // Create new list
@@ -199,6 +212,8 @@ export const ForgeArchive: React.FC<ForgeArchiveProps> = ({
           title: '已建立新的命運卷軸',
           timer: 1800,
           showConfirmButton: false,
+          background: '#09090B',
+          color: '#3B82F6'
         });
       }
 
@@ -213,6 +228,8 @@ export const ForgeArchive: React.FC<ForgeArchiveProps> = ({
         icon: 'error',
         title: '鍛造失敗',
         text: '請稍後再試',
+        background: 'var(--color-samurai-dark)',
+        color: 'var(--color-samurai-red)'
       });
     } finally {
       setSaving(false);
@@ -220,27 +237,27 @@ export const ForgeArchive: React.FC<ForgeArchiveProps> = ({
   };
 
   return (
-    <div className="relative bg-aether-dim/90 rounded-lg p-6 md:p-8 shadow-[0_0_30px_rgba(94,234,212,0.12)] border border-aether-cyan/30 backdrop-blur-sm group">
+    <div className="relative bg-samurai-dim/90 rounded-lg p-6 md:p-8 shadow-[0_0_30px_rgba(59,130,246,0.12)] border border-samurai-blue/30 backdrop-blur-sm group">
        {/* Glowing Top Edge */}
-       <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-aether-cyan to-transparent shadow-[0_0_10px_rgba(94,234,212,0.6)]"></div>
+       <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-samurai-blue to-transparent shadow-[0_0_10px_rgba(59,130,246,0.6)]"></div>
 
        
        {/* Header */}
        <div className="text-center mb-6 mt-2">
-         <h1 className="text-3xl md:text-5xl font-heading text-white font-bold drop-shadow-[0_0_10px_rgba(0,240,255,0.5)] tracking-wide">
+         <h1 className="text-3xl md:text-5xl font-heading text-white font-bold drop-shadow-[0_0_10px_rgba(59,130,246,0.5)] tracking-wide">
            DATA ARCHIVE
          </h1>
          <div className="flex items-center justify-center gap-4 mt-3 opacity-60">
-            <div className="h-[1px] w-8 md:w-12 bg-aether-cyan"></div>
-            <div className="w-2 h-2 bg-aether-cyan animate-pulse"></div>
-            <div className="h-[1px] w-8 md:w-12 bg-aether-cyan"></div>
+            <div className="h-[1px] w-8 md:w-12 bg-samurai-blue"></div>
+            <div className="w-2 h-2 bg-samurai-blue animate-pulse"></div>
+            <div className="h-[1px] w-8 md:w-12 bg-samurai-blue"></div>
          </div>
        </div>
 
        {/* List Selection (Tech Dropdown) */}
        <div className="relative mb-4">
           <select 
-            className="w-full bg-aether-dark border border-aether-cyan/30 text-aether-cyan font-tech p-3 rounded focus:outline-none focus:border-aether-cyan focus:shadow-[0_0_15px_rgba(0,240,255,0.3)] appearance-none cursor-pointer uppercase tracking-wider"
+            className="w-full bg-samurai-dark border border-samurai-blue/30 text-samurai-blue font-tech p-3 rounded focus:outline-none focus:border-samurai-blue focus:shadow-[0_0_15px_rgba(59,130,246,0.3)] appearance-none cursor-pointer uppercase tracking-wider"
             onChange={(e) => loadList(e.target.value)}
             value={currentListId || ''}
             disabled={isSpinning}
@@ -250,19 +267,19 @@ export const ForgeArchive: React.FC<ForgeArchiveProps> = ({
                <option key={l.id} value={l.id}>{l.title}</option>
              ))}
           </select>
-          <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-aether-cyan">
+          <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-samurai-blue">
              ▼
           </div>
        </div>
 
        {/* Input Area */}
-       <div className="relative mb-4 bg-aether-dark/50 rounded border border-aether-cyan/20 shadow-inner overflow-hidden group-hover:border-aether-cyan/50 transition-colors">
-          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-aether-cyan/20 to-transparent"></div>
+       <div className="relative mb-4 bg-samurai-dark/50 rounded border border-samurai-blue/20 shadow-inner overflow-hidden group-hover:border-samurai-blue/50 transition-colors">
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-samurai-blue/20 to-transparent"></div>
           <textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
             disabled={isSpinning}
-            className="w-full h-48 md:h-64 bg-transparent p-6 font-mono text-xl md:text-2xl text-aether-mint focus:outline-none focus:bg-aether-dark transition-all resize-none custom-scrollbar leading-loose tracking-wide placeholder-aether-cyan/20"
+            className="w-full h-48 md:h-64 bg-transparent p-6 font-mono text-xl md:text-2xl text-samurai-text focus:outline-none focus:bg-samurai-dark transition-all resize-none custom-scrollbar leading-loose tracking-wide placeholder-samurai-blue/20"
             placeholder="INPUT DATA STREAM..."
           />
        </div>
@@ -275,13 +292,13 @@ export const ForgeArchive: React.FC<ForgeArchiveProps> = ({
            onChange={(e) => setNewOption(e.target.value)}
            placeholder="ADD NEW ENTRY..."
            disabled={isSpinning}
-           className="flex-1 bg-aether-dark border border-aether-cyan/30 text-aether-cyan font-tech p-3 rounded focus:outline-none focus:border-aether-cyan placeholder-aether-cyan/20 disabled:opacity-50 uppercase tracking-wider"
+           className="flex-1 bg-samurai-dark border border-samurai-blue/30 text-samurai-blue font-tech p-3 rounded focus:outline-none focus:border-samurai-blue placeholder-samurai-blue/20 disabled:opacity-50 uppercase tracking-wider"
          />
          <button
            type="button"
            onClick={handleAddOption}
            disabled={isSpinning}
-           className="px-6 bg-aether-cyan/10 border border-aether-cyan text-aether-cyan font-tech tracking-[0.2em] uppercase rounded hover:bg-aether-cyan hover:text-aether-dark transition disabled:opacity-40 disabled:cursor-not-allowed"
+           className="px-6 bg-samurai-blue/10 border border-samurai-blue text-samurai-blue font-tech tracking-[0.2em] uppercase rounded hover:bg-samurai-blue hover:text-samurai-dark transition disabled:opacity-40 disabled:cursor-not-allowed"
          >
            INSERT
          </button>
@@ -294,13 +311,13 @@ export const ForgeArchive: React.FC<ForgeArchiveProps> = ({
              value={listName}
              onChange={(e) => setListName(e.target.value)}
              placeholder="DATASET NAME"
-             className="flex-1 bg-aether-dark border border-aether-cyan/30 text-aether-cyan font-tech p-3 rounded focus:outline-none focus:border-aether-cyan placeholder-aether-cyan/20 uppercase tracking-wider"
+             className="flex-1 bg-samurai-dark border border-samurai-blue/30 text-samurai-blue font-tech p-3 rounded focus:outline-none focus:border-samurai-blue placeholder-samurai-blue/20 uppercase tracking-wider"
              disabled={isSpinning}
           />
           <button 
              onClick={saveList}
              disabled={saving || isSpinning}
-             className="px-6 bg-aether-dim border border-aether-cyan/50 text-white font-tech hover:bg-aether-cyan hover:text-aether-dark transition-colors rounded disabled:opacity-50 uppercase tracking-wider"
+             className="px-6 bg-samurai-dim border border-samurai-blue/50 text-white font-tech hover:bg-samurai-blue hover:text-samurai-dark transition-colors rounded disabled:opacity-50 uppercase tracking-wider"
           >
              {saving ? 'SAVING...' : 'SAVE'}
           </button>
@@ -310,20 +327,20 @@ export const ForgeArchive: React.FC<ForgeArchiveProps> = ({
        <button
          onClick={onSpin}
          disabled={isSpinning || optionsCount < 2}
-         className="w-full relative h-16 md:h-20 group/btn overflow-hidden rounded bg-aether-cyan/10 border border-aether-cyan hover:bg-aether-cyan hover:shadow-[0_0_30px_rgba(0,240,255,0.6)] transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+         className="w-full relative h-16 md:h-20 group/btn overflow-hidden rounded bg-samurai-blue/10 border border-samurai-blue hover:bg-samurai-blue hover:shadow-[0_0_30px_rgba(59,130,246,0.6)] transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
        >
           {/* Tech Background */}
-          <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(0,240,255,0.1)_50%,transparent_75%)] bg-[length:250%_250%] animate-[shimmer_2s_linear_infinite]"></div>
+          <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(59,130,246,0.1)_50%,transparent_75%)] bg-[length:250%_250%] animate-[shimmer_2s_linear_infinite]"></div>
           
           <div className="relative z-10 flex items-center justify-center gap-3">
-              <span className="font-heading text-white text-xl md:text-2xl tracking-[0.2em] uppercase group-hover/btn:text-aether-dark transition-all">
+              <span className="font-heading text-white text-xl md:text-2xl tracking-[0.2em] uppercase group-hover/btn:text-samurai-dark transition-all">
                 {isSpinning ? 'PROCESSING...' : 'INITIATE SEQUENCE'}
               </span>
           </div>
        </button>
        
        {optionsCount < 2 && (
-         <p className="text-center text-aether-alert font-tech mt-4 text-sm animate-pulse tracking-widest uppercase">
+         <p className="text-center text-samurai-red font-tech mt-4 text-sm animate-pulse tracking-widest uppercase">
            ⚠ INSUFFICIENT DATA FOR PROCESSING
          </p>
        )}

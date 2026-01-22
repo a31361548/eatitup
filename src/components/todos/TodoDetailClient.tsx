@@ -124,7 +124,7 @@ export function TodoDetailClient({ initialTodo }: TodoDetailClientProps): React.
           {countdownDisplay && (
             <div className="rounded-2xl border border-white/10 bg-black/40 p-3 sm:col-span-2">
               <p className="text-[10px] uppercase tracking-[0.4em] text-white/50">{countdownDisplay.label}</p>
-              <p className={clsx('font-mono text-2xl', countdownDisplay.phase === 'OVERDUE' ? 'text-red-300' : 'text-aether-cyan')}>
+              <p className={clsx('font-mono text-2xl', countdownDisplay.phase === 'OVERDUE' ? 'text-samurai-red' : 'text-samurai-blue')}>
                 {countdownDisplay.value}
               </p>
             </div>
@@ -134,7 +134,7 @@ export function TodoDetailClient({ initialTodo }: TodoDetailClientProps): React.
           <div
             className={clsx(
               'mt-4 rounded-2xl border px-4 py-3 text-sm font-tech uppercase tracking-[0.35em]',
-              feedback.type === 'success' ? 'border-emerald-400/40 text-emerald-200' : 'border-red-400/50 text-red-200'
+              feedback.type === 'success' ? 'border-samurai-success/40 text-samurai-success' : 'border-samurai-red/50 text-samurai-red'
             )}
           >
             {feedback.message}
@@ -157,7 +157,7 @@ export function TodoDetailClient({ initialTodo }: TodoDetailClientProps): React.
               </button>
             ))}
           </div>
-          <TechButton variant="ghost" className="text-red-300" onClick={() => handleQuickStatus('FAILED', '已標記未完成')} disabled={actioning}>
+          <TechButton variant="ghost" className="text-samurai-red" onClick={() => handleQuickStatus('FAILED', '已標記未完成')} disabled={actioning}>
             未完成
           </TechButton>
           <TechButton variant="danger" onClick={handleDelete} disabled={deleting} className="!px-5 !py-3">

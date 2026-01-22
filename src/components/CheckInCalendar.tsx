@@ -119,7 +119,7 @@ export function CheckInCalendar() {
                 className={clsx(
                     'aspect-square flex items-center justify-center rounded-[1px] transition-all duration-300',
                     d.checked
-                    ? 'bg-aether-cyan/20 text-aether-cyan shadow-[0_0_5px_rgba(0,240,255,0.3)]'
+                    ? 'bg-samurai-blue/20 text-samurai-blue shadow-[0_0_5px_rgba(59,130,246,0.3)]'
                     : 'text-aether-mint/30 hover:bg-aether-cyan/5 hover:text-aether-mint',
                     d.date === todayIso && !d.checked && 'border border-aether-gold/50 text-aether-gold animate-pulse',
                     d.date === todayIso && d.checked && 'border border-aether-cyan'
@@ -149,7 +149,7 @@ export function CheckInCalendar() {
             {feedback && (
                 <div className={clsx(
                     "text-center font-tech text-[10px] tracking-wide animate-fade-in",
-                    feedback.type === 'success' ? 'text-aether-cyan' : 'text-red-400'
+                    feedback.type === 'success' ? 'text-samurai-blue' : 'text-samurai-red'
                 )}>
                 {feedback.message}
                 </div>

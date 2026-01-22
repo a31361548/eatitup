@@ -21,13 +21,13 @@ export function TechButton({
 
   const variants: Record<Required<TechButtonProps>['variant'], string> = {
     primary:
-      'border-cyan-300/80 bg-gradient-to-br from-cyan-500/30 to-cyan-900/60 text-white shadow-[0_10px_40px_rgba(0,240,255,0.3)] hover:-translate-y-0.5 hover:shadow-[0_15px_45px_rgba(0,240,255,0.4)]',
+      'border-samurai-blue/80 bg-gradient-to-br from-samurai-blue/30 to-samurai-blue/10 text-white shadow-[0_10px_40px_rgba(59,130,246,0.3)] hover:-translate-y-0.5 hover:shadow-[0_15px_45px_rgba(59,130,246,0.4)]',
     secondary:
-      'border-emerald-200/60 bg-gradient-to-br from-emerald-400/10 to-cyan-500/5 text-emerald-100 hover:text-white hover:border-emerald-200/90',
+      'border-samurai-success/60 bg-gradient-to-br from-samurai-success/10 to-samurai-blue/5 text-samurai-success hover:text-white hover:border-samurai-success/90',
     danger:
-      'border-red-400/70 bg-gradient-to-br from-red-500/20 to-red-900/70 text-red-200 hover:-translate-y-0.5 hover:border-red-300 hover:text-white',
+      'border-samurai-red/70 bg-gradient-to-br from-samurai-red/20 to-samurai-red/10 text-samurai-red hover:-translate-y-0.5 hover:border-samurai-red hover:text-white',
     ghost:
-      'border-transparent bg-transparent text-aether-mint/60 hover:border-cyan-200/60 hover:bg-cyan-200/5 hover:text-white',
+      'border-transparent bg-transparent text-samurai-text/60 hover:border-samurai-blue/60 hover:bg-samurai-blue/5 hover:text-white',
   }
 
   return (

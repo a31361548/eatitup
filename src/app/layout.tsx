@@ -2,6 +2,15 @@ import { ReactNode } from 'react'
 import './globals.css'
 import { Navbar } from '@/components/ui/Navbar'
 import { Providers } from '@/components/Providers'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'RONIN',
+  description: 'Gamified productivity system for the digital age.',
+  icons: {
+    icon: '/icon.svg',
+  },
+}
 
 export default function RootLayout({ children }: { children: ReactNode }): React.ReactElement {
   return (
@@ -9,7 +18,7 @@ export default function RootLayout({ children }: { children: ReactNode }): React
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet" />
       </head>
       <body className="min-h-screen bg-aether-dark text-aether-cyan font-pixel overflow-x-hidden relative">
         <div className="scanlines" />

@@ -47,9 +47,9 @@ export function TechCalendar({ value, onChange, minDate }: TechCalendarProps) {
   }
 
   return (
-    <div className="border border-aether-cyan/30 bg-aether-dark/80 p-4 rounded clip-path-angle-sm w-full max-w-sm">
+    <div className="border border-samurai-blue/30 bg-samurai-dim/80 p-4 rounded clip-path-angle-sm w-full max-w-sm backdrop-blur-md">
       {/* Header */}
-      <div className="flex items-center justify-between mb-4 font-tech text-aether-cyan">
+      <div className="flex items-center justify-between mb-4 font-tech text-samurai-blue">
         <button type="button" onClick={handlePrevMonth} className="hover:text-white transition-colors">{'<<'}</button>
         <span className="tracking-widest">
             {currentMonth.toLocaleDateString('zh-TW', { year: 'numeric', month: 'long' })}
@@ -58,7 +58,7 @@ export function TechCalendar({ value, onChange, minDate }: TechCalendarProps) {
       </div>
 
       {/* Grid */}
-      <div className="grid grid-cols-7 gap-1 mb-4 text-center font-mono text-xs text-aether-mint/50">
+      <div className="grid grid-cols-7 gap-1 mb-4 text-center font-mono text-xs text-samurai-text/50">
         {['日', '一', '二', '三', '四', '五', '六'].map(d => <div key={d}>{d}</div>)}
         {Array.from({ length: firstDayOfMonth }).map((_, i) => <div key={`empty-${i}`} />)}
         {Array.from({ length: daysInMonth }).map((_, i) => {
@@ -72,8 +72,8 @@ export function TechCalendar({ value, onChange, minDate }: TechCalendarProps) {
               onClick={() => handleDateClick(day)}
               disabled={disabled}
               className={clsx(
-                'p-2 rounded hover:bg-aether-cyan/20 transition-colors relative group',
-                selected ? 'bg-aether-cyan text-black font-bold shadow-[0_0_10px_rgba(94,234,212,0.7)]' : 'text-white',
+                'p-2 rounded hover:bg-samurai-blue/20 transition-colors relative group',
+                selected ? 'bg-samurai-blue text-white font-bold shadow-[0_0_10px_rgba(59,130,246,0.7)]' : 'text-white',
                 disabled && 'opacity-20 cursor-not-allowed hover:bg-transparent'
               )}
             >
@@ -85,21 +85,21 @@ export function TechCalendar({ value, onChange, minDate }: TechCalendarProps) {
       </div>
 
       {/* Time Picker */}
-      <div className="flex items-center justify-center gap-2 border-t border-aether-cyan/20 pt-4">
+      <div className="flex items-center justify-center gap-2 border-t border-samurai-blue/20 pt-4">
         <select 
             value={value.getHours()} 
             onChange={(e) => handleTimeChange('hour', e.target.value)}
-            className="bg-aether-dark border border-aether-cyan/30 text-aether-cyan p-1 rounded font-mono focus:outline-none"
+            className="bg-samurai-dark border border-samurai-blue/30 text-samurai-blue p-1 rounded font-mono focus:outline-none"
         >
             {Array.from({ length: 24 }).map((_, i) => (
                 <option key={i} value={i}>{String(i).padStart(2, '0')}</option>
             ))}
         </select>
-        <span className="text-aether-cyan">:</span>
+        <span className="text-samurai-blue">:</span>
         <select 
             value={value.getMinutes()} 
             onChange={(e) => handleTimeChange('minute', e.target.value)}
-            className="bg-aether-dark border border-aether-cyan/30 text-aether-cyan p-1 rounded font-mono focus:outline-none"
+            className="bg-samurai-dark border border-samurai-blue/30 text-samurai-blue p-1 rounded font-mono focus:outline-none"
         >
             {Array.from({ length: 60 }).map((_, i) => (
                 <option key={i} value={i}>{String(i).padStart(2, '0')}</option>

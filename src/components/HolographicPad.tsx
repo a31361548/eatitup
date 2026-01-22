@@ -66,10 +66,8 @@ export function HolographicPad({
       if (res.ok) {
         const data = await res.json();
         setTitle(data.note.title);
-        // Handle legacy JSON content vs plain HTML
         try {
             const parsed = JSON.parse(data.note.content);
-            // If it was the old book format {1: "html"}, extract page 1
             if (typeof parsed === 'object' && parsed !== null && '1' in parsed) {
                 setContent(parsed['1']);
             } else {
@@ -92,23 +90,15 @@ export function HolographicPad({
             icon: 'warning',
             title: '缺少標題',
             text: '請為這份日誌輸入標題',
-            background: '#020617',
-            color: '#5eead4',
-            confirmButtonColor: '#2dd4bf',
-
+            background: 'var(--color-samurai-dark)',
+            color: 'var(--color-samurai-yellow)',
+            confirmButtonColor: 'var(--color-samurai-red)',
             confirmButtonText: '確定'
         });
         return;
     }
     setSaving(true);
     try {
-      // Save as plain string for now, or JSON if we want to keep metadata
-      // The old format was JSON pages. Let's just save the HTML string to be simple, 
-      // or wrap it if we want to be compatible. 
-      // For now, let's just save the content string. The backend likely expects a string.
-      // But wait, the old component saved `JSON.stringify(pages)`.
-      // To maintain compatibility if we ever switch back (unlikely) or just to be safe:
-      // Let's just save the content directly. The backend schema is likely just String.
       await onSave(title, content);
       setIsDirty(false);
       if (shouldClose) {
@@ -121,9 +111,8 @@ export function HolographicPad({
             position: 'top-end',
             showConfirmButton: false,
             timer: 1500,
-            background: '#020617',
-            color: '#5EEAD4'
-
+            background: 'var(--color-samurai-dark)',
+            color: 'var(--color-samurai-blue)'
         });
       }
     } catch (error) {
@@ -132,9 +121,8 @@ export function HolographicPad({
         icon: 'error',
         title: '上傳失敗',
         text: '儲存過程中發生錯誤',
-        background: '#020617',
-        color: '#f43f5e',
-
+        background: 'var(--color-samurai-dark)',
+        color: 'var(--color-samurai-red)',
         confirmButtonText: '確定'
       });
     } finally {
@@ -153,11 +141,11 @@ export function HolographicPad({
         confirmButtonText: '儲存並離開',
         denyButtonText: '捨棄變更',
         cancelButtonText: '取消',
-        background: '#020617',
-        color: '#5eead4',
-        confirmButtonColor: '#2dd4bf',
-        denyButtonColor: '#f43f5e',
-        cancelButtonColor: '#0f172a'
+        background: 'var(--color-samurai-dark)',
+        color: 'var(--color-samurai-text)',
+        confirmButtonColor: 'var(--color-samurai-blue)',
+        denyButtonColor: 'var(--color-samurai-red)',
+        cancelButtonColor: 'var(--color-samurai-dim)'
 
       }).then((result) => {
         if (result.isConfirmed) {
@@ -183,30 +171,29 @@ export function HolographicPad({
                 initial={{ opacity: 0, scale: 0.9, y: 20 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                className="relative w-full max-w-4xl h-[85vh] flex flex-col bg-aether-dark/90 border border-aether-cyan/50 shadow-[0_0_30px_rgba(94,234,212,0.2)] rounded-lg overflow-hidden"
-
+                className="relative w-full max-w-4xl h-[85vh] flex flex-col bg-samurai-dark/95 border border-samurai-blue/50 shadow-[0_0_30px_rgba(59,130,246,0.2)] rounded-lg overflow-hidden"
             >
                 {/* Holographic Grid Background */}
-                <div className="absolute inset-0 pointer-events-none bg-tech-grid-overlay opacity-30" />
-                <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-aether-cyan/5 via-transparent to-aether-cyan/5" />
+                <div className="absolute inset-0 pointer-events-none depth-base opacity-30" />
+                <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-samurai-blue/5 via-transparent to-samurai-blue/5" />
                 
                 {/* Header */}
-                <div className="relative z-10 flex items-center justify-between p-4 border-b border-aether-cyan/30 bg-aether-dark/50 backdrop-blur">
+                <div className="relative z-10 flex items-center justify-between p-4 border-b border-samurai-blue/30 bg-samurai-dim/50 backdrop-blur">
 
                     <div className="flex items-center gap-4 flex-1">
-                        <div className="w-2 h-8 bg-aether-cyan animate-pulse" />
+                        <div className="w-2 h-8 bg-samurai-red animate-pulse" />
                         <input 
                             type="text" 
                             value={title}
                             onChange={(e) => { setTitle(e.target.value); setIsDirty(true); }}
                             placeholder="輸入標題..."
-                            className="bg-transparent border-none text-2xl font-tech text-white placeholder-aether-mint/30 focus:outline-none w-full tracking-wider"
+                            className="bg-transparent border-none text-2xl font-tech text-white placeholder-samurai-text/30 focus:outline-none w-full tracking-wider"
                         />
                     </div>
                     
                     <div className="flex items-center gap-3">
                         {/* Font Selector */}
-                        <div className="flex items-center bg-aether-dim/50 rounded border border-aether-cyan/20 p-1 mr-4">
+                        <div className="flex items-center bg-samurai-dim/50 rounded border border-samurai-blue/20 p-1 mr-4">
                             {FONT_OPTIONS.map((font) => (
                                 <button
                                     key={font.id}
@@ -214,8 +201,8 @@ export function HolographicPad({
                                     className={clsx(
                                         "px-3 py-1 text-xs uppercase transition-all rounded",
                                         selectedFont === font.id 
-                                            ? "bg-aether-cyan text-aether-dark font-bold shadow-[0_0_10px_rgba(103,232,249,0.5)]" 
-                                            : "text-aether-cyan/70 hover:text-white hover:bg-white/10"
+                                            ? "bg-samurai-blue text-white font-bold shadow-[0_0_10px_rgba(59,130,246,0.5)]" 
+                                            : "text-samurai-blue/70 hover:text-white hover:bg-white/10"
                                     )}
                                 >
                                     {font.label}
@@ -226,7 +213,7 @@ export function HolographicPad({
                         {noteId && onDelete && (
                             <button 
                                 onClick={onDelete}
-                                className="p-2 text-aether-alert hover:bg-aether-alert/10 rounded transition-colors border border-transparent hover:border-aether-alert/50"
+                                className="p-2 text-samurai-red hover:bg-samurai-red/10 rounded transition-colors border border-transparent hover:border-samurai-red/50"
                                 title="刪除日誌"
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
@@ -237,7 +224,7 @@ export function HolographicPad({
                         
                         <button 
                             onClick={handleCloseRequest}
-                            className="p-2 text-aether-cyan hover:bg-aether-cyan/10 rounded transition-colors border border-transparent hover:border-aether-cyan/50"
+                            className="p-2 text-samurai-blue hover:bg-samurai-blue/10 rounded transition-colors border border-transparent hover:border-samurai-blue/50"
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -249,7 +236,7 @@ export function HolographicPad({
                 {/* Content Area */}
                 <div className="flex-1 overflow-hidden relative z-10 flex flex-col">
                     {loading ? (
-                        <div className="flex items-center justify-center h-full text-aether-cyan/50 font-tech animate-pulse tracking-widest">
+                        <div className="flex items-center justify-center h-full text-samurai-blue/50 font-tech animate-pulse tracking-widest">
                             資料流初始化中...
                         </div>
                     ) : (
@@ -262,16 +249,16 @@ export function HolographicPad({
                                 }}
                                 editable={true}
                                 darkControls={false}
-                                className={clsx("min-h-[60vh] text-white/90 selection:bg-aether-cyan selection:text-black", currentFontClass)}
+                                className={clsx("min-h-[60vh] text-white/90 selection:bg-samurai-blue selection:text-white", currentFontClass)}
                             />
                         </div>
                     )}
                 </div>
 
                 {/* Footer */}
-                <div className="relative z-10 p-4 border-t border-aether-cyan/30 bg-aether-dark/80 backdrop-blur flex justify-between items-center">
+                <div className="relative z-10 p-4 border-t border-samurai-blue/30 bg-samurai-dim/80 backdrop-blur flex justify-between items-center">
 
-                    <div className="text-xs font-tech text-aether-cyan/50 tracking-widest">
+                    <div className="text-xs font-tech text-samurai-blue/50 tracking-widest">
                         狀態: {saving ? '上傳中...' : (isDirty ? '未儲存' : '已同步')}
                     </div>
                     <button
@@ -280,8 +267,8 @@ export function HolographicPad({
                         className={clsx(
                             "px-8 py-2 font-tech font-bold uppercase tracking-widest transition-all clip-path-slant",
                             saving 
-                                ? "bg-aether-dim text-white/50 cursor-wait" 
-                                : "bg-aether-cyan text-aether-dark hover:bg-white hover:shadow-[0_0_20px_rgba(103,232,249,0.6)]"
+                                ? "bg-samurai-dim text-white/50 cursor-wait" 
+                                : "bg-samurai-blue text-white hover:bg-white hover:text-samurai-blue hover:shadow-[0_0_20px_rgba(59,130,246,0.6)]"
                         )}
                     >
                         {saving ? '處理中' : '儲存資料'}
