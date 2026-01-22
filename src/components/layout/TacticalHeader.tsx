@@ -17,6 +17,7 @@ export function TacticalHeader() {
 
   const [time, setTime] = useState<string>('')
   const [ping, setPing] = useState<number>(24)
+  const [mounted, setMounted] = useState(false)
   const [tickerIndex, setTickerIndex] = useState(0)
 
   const tickers = [
@@ -24,10 +25,11 @@ export function TacticalHeader() {
     'SECURITY: ACTIVE',
     'NETWORK: SECURE',
     'ENCRYPTION: AES-256',
-    'PROTOCOL: OMEGA'
+    'PROTOCOL: SAMURAI'
   ]
 
   useEffect(() => {
+    setMounted(true)
     const timer = setInterval(() => {
       const now = new Date()
       setTime(now.toLocaleTimeString('en-US', { hour12: false }))
@@ -60,11 +62,11 @@ export function TacticalHeader() {
   return (
     <header className="fixed top-0 left-0 z-50 w-full font-tech text-white select-none">
       {/* Main Bar Background */}
-      <div className="relative h-14 w-full bg-aether-dim/95 backdrop-blur-md border-b border-aether-cyan/20 shadow-[0_5px_20px_rgba(0,0,0,0.5)]">
+      <div className="relative h-14 w-full bg-samurai-dim/95 backdrop-blur-md border-b border-samurai-blue/20 shadow-[0_5px_20px_rgba(0,0,0,0.5)]">
         
-        {/* Energy Line */}
-        <div className="absolute bottom-0 left-0 w-full h-[1px] bg-aether-cyan/50 shadow-[0_0_10px_rgba(94,234,212,0.7)] animate-pulse" />
-        
+        {/* Animated Loading Bar */}
+        <div className="absolute bottom-0 left-0 w-full h-[1px] bg-samurai-red/50 shadow-[0_0_10px_rgba(244,63,94,0.7)] animate-pulse" />
+
         <div className="h-full w-full px-3 sm:px-5 lg:px-6 flex items-center justify-between">
             
             {/* Left: Identity & Breadcrumbs */}
@@ -72,13 +74,13 @@ export function TacticalHeader() {
                 {/* Logo Area */}
                 <Link href="/dashboard" className="flex items-center gap-3 group cursor-pointer">
                     <div className="relative w-8 h-8 flex items-center justify-center">
-                        <div className="absolute inset-0 border border-aether-cyan/30 rotate-45 group-hover:rotate-90 transition-transform duration-500" />
-                        <div className="absolute inset-1 border border-aether-cyan/60 rotate-0 group-hover:-rotate-45 transition-transform duration-500" />
-                        <div className="w-2 h-2 bg-aether-cyan shadow-[0_0_10px_rgba(94,234,212,0.7)] rounded-full animate-pulse" />
+                        <div className="absolute inset-0 border border-samurai-red/30 rotate-45 group-hover:rotate-90 transition-transform duration-500" />
+                        <div className="absolute inset-1 border border-samurai-red/60 rotate-0 group-hover:-rotate-45 transition-transform duration-500" />
+                        <div className="w-2 h-2 bg-samurai-red shadow-[0_0_10px_rgba(244,63,94,0.7)] rounded-full animate-pulse" />
                     </div>
                     <div className="flex flex-col">
-                        <span className="text-lg font-heading tracking-widest text-white leading-none">AETHER</span>
-                        <span className="text-[10px] text-aether-cyan/60 tracking-[0.3em] leading-none mt-1">OS v2.1</span>
+                        <span className="text-lg font-heading tracking-widest text-white leading-none">SAMURAI</span>
+                        <span className="text-[10px] text-samurai-blue/60 tracking-[0.3em] leading-none mt-1">OS v4.0</span>
                     </div>
                 </Link>
 
@@ -86,12 +88,12 @@ export function TacticalHeader() {
                 <div className="h-8 w-[1px] bg-white/10 -skew-x-12 hidden md:block" />
 
                 {/* Breadcrumbs */}
-                <div className="hidden md:flex items-center gap-2 text-xs tracking-widest text-aether-mint/50">
-                    <span className="text-aether-cyan/80">COMMAND CENTER</span>
+                <div className="hidden md:flex items-center gap-2 text-xs tracking-widest text-samurai-text/50">
+                    <span className="text-samurai-blue/80">COMMAND CENTER</span>
                     {breadcrumbs && (
                         <>
-                            <span className="text-aether-cyan/30">{'//'}</span>
-                            <span className="text-aether-mint/80">{breadcrumbs}</span>
+                            <span className="text-samurai-blue/30">{'//'}</span>
+                            <span className="text-samurai-text/80">{breadcrumbs}</span>
                         </>
                     )}
                 </div>
@@ -99,13 +101,13 @@ export function TacticalHeader() {
 
             {/* Center: Ticker (Hidden on mobile) */}
             <div className="hidden lg:flex items-center justify-center flex-1 mx-4">
-                <div className="relative overflow-hidden px-8 py-1 border-x border-aether-cyan/10 bg-aether-cyan/5 rounded-sm">
-                    <div className="text-xs tracking-[0.3em] text-aether-cyan animate-pulse">
+                <div className="relative overflow-hidden px-8 py-1 border-x border-samurai-blue/10 bg-samurai-blue/5 rounded-sm">
+                    <div className="text-xs tracking-[0.3em] text-samurai-blue animate-pulse">
                         {tickers[tickerIndex]}
                     </div>
                     {/* Decorative brackets */}
-                    <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-aether-cyan/30" />
-                    <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-aether-cyan/30" />
+                    <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-samurai-blue/30" />
+                    <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-samurai-blue/30" />
                 </div>
             </div>
 
@@ -113,10 +115,10 @@ export function TacticalHeader() {
             <div className="flex items-center gap-4 sm:gap-8">
                 {/* Ping */}
                 <div className="hidden sm:flex flex-col items-end">
-                    <span className="text-[10px] text-aether-mint/40 tracking-wider">LATENCY</span>
+                    <span className="text-[10px] text-samurai-text/40 tracking-wider">LATENCY</span>
                     <span className={clsx(
                         "text-xs tracking-widest font-mono",
-                        ping < 50 ? "text-aether-mint" : "text-aether-alert"
+                        ping < 50 ? "text-samurai-text" : "text-samurai-red"
                     )}>
                         {ping}ms
                     </span>
@@ -124,9 +126,9 @@ export function TacticalHeader() {
 
                 {/* Time */}
                 <div className="flex flex-col items-end min-w-[80px]">
-                    <span className="text-[10px] text-aether-mint/40 tracking-wider">LOCAL TIME</span>
+                    <span className="text-[10px] text-samurai-text/40 tracking-wider">LOCAL TIME</span>
                     <span className="text-lg font-mono text-white leading-none tracking-widest shadow-[0_0_10px_rgba(255,255,255,0.2)]">
-                        {time || '00:00:00'}
+                        {mounted ? time : '00:00:00'}
                     </span>
                 </div>
 
@@ -136,7 +138,7 @@ export function TacticalHeader() {
                     {isAdmin && (
                       <Link
                         href="/admin/members"
-                        className="inline-flex min-w-[80px] items-center justify-center border border-aether-cyan px-3 py-1 text-[10px] tracking-[0.3em] text-aether-cyan transition hover:bg-aether-cyan hover:text-aether-dark"
+                        className="inline-flex min-w-[80px] items-center justify-center border border-samurai-red px-3 py-1 text-[10px] tracking-[0.3em] text-samurai-red transition hover:bg-samurai-red hover:text-white"
                       >
                         ADMIN
                       </Link>
@@ -148,8 +150,8 @@ export function TacticalHeader() {
                 {/* Status Indicator / Mobile Aux Toggle */}
                 <div className="flex items-center gap-2 pl-4 border-l border-white/10">
                     <div className="flex flex-col items-end">
-                        <span className="text-[10px] text-aether-mint/40 tracking-wider hidden sm:block">STATUS</span>
-                        <span className="text-xs text-aether-teal tracking-widest font-bold">ONLINE</span>
+                        <span className="text-[10px] text-samurai-text/40 tracking-wider hidden sm:block">STATUS</span>
+                        <span className="text-xs text-samurai-red tracking-widest font-bold">ONLINE</span>
                     </div>
                     {/* Mobile Toggle Button */}
                     <button 
@@ -157,13 +159,12 @@ export function TacticalHeader() {
                         className="w-8 h-8 flex items-center justify-center hover:bg-white/5 rounded transition-colors xl:hidden relative group"
                         aria-label="Toggle Aux Panel"
                     >
-                        <div className="w-2 h-2 bg-aether-teal rounded-full shadow-[0_0_10px_rgba(45,212,191,0.6)] animate-pulse group-active:scale-90" />
+                        <div className="w-2 h-2 bg-samurai-red rounded-full shadow-[0_0_10px_rgba(244,63,94,0.6)] animate-pulse group-active:scale-90" />
                         <span className="absolute inset-0 border border-white/10 rounded-full scale-0 group-hover:scale-100 transition-transform" />
                     </button>
                     {/* Desktop Status Dot */}
-                    <div className="w-2 h-2 bg-aether-teal rounded-full shadow-[0_0_10px_rgba(45,212,191,0.6)] animate-pulse hidden xl:block" />
+                    <div className="w-2 h-2 bg-samurai-red rounded-full shadow-[0_0_10px_rgba(244,63,94,0.6)] animate-pulse hidden xl:block" />
                 </div>
-
             </div>
 
         </div>
@@ -171,8 +172,8 @@ export function TacticalHeader() {
       
       {/* Decorative Bottom Tags */}
       <div className="absolute top-full right-8 flex gap-1">
-         <div className="w-8 h-2 bg-aether-cyan/20 clip-path-slant" />
-         <div className="w-4 h-2 bg-aether-cyan/40 clip-path-slant" />
+         <div className="w-8 h-2 bg-samurai-blue/20 clip-path-slant" />
+         <div className="w-4 h-2 bg-samurai-blue/40 clip-path-slant" />
       </div>
     </header>
   )

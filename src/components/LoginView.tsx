@@ -40,7 +40,7 @@ export function LoginView() {
 
   return (
     <div className="animate-float px-4">
-      <PixelCard title="身份驗證" glow="blue" className="w-full max-w-sm md:max-w-md lg:max-w-xl relative z-10">
+      <PixelCard title="身份驗證" glow="red" className="w-full max-w-sm md:max-w-md lg:max-w-xl relative z-10">
         <form onSubmit={handleSubmit} className="flex flex-col gap-6">
           <div className="space-y-4">
             <PixelInput 
@@ -59,7 +59,7 @@ export function LoginView() {
           </div>
 
           {error && (
-            <div className="border-2 border-aether-alert bg-aether-alert/10 px-3 py-2 text-center font-pixel text-pixel-sm uppercase tracking-pixel-normal text-aether-alert animate-pulse">
+            <div className="border border-samurai-red bg-samurai-red/10 px-3 py-2 text-center font-tech text-sm uppercase tracking-wider text-samurai-red animate-pulse shadow-[0_0_25px_rgba(244,63,94,0.3)]">
               ⚠ {error}
             </div>
           )}
@@ -67,14 +67,14 @@ export function LoginView() {
           <PixelButton 
             type="submit" 
             disabled={loading} 
-            variant="success"
+            variant="primary"
             className="w-full"
           >
             {loading ? '驗證中...' : '啟動連結'}
           </PixelButton>
 
-          <div className="text-center font-pixel text-pixel-xs uppercase tracking-pixel-wider text-aether-mint/40">
-            AETHER OS v2.0.4
+          <div className="text-center font-tech text-xs uppercase tracking-widest text-samurai-text/40">
+            SAMURAI OS v4.0.1
           </div>
         </form>
       </PixelCard>

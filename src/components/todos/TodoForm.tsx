@@ -184,7 +184,7 @@ function PresetDropdown({ label, displayValue, options, activeId, onSelect }: Dr
 
   return (
     <div className="space-y-1" ref={containerRef as React.RefObject<HTMLDivElement>}>
-      <label className="text-xs font-tech uppercase tracking-[0.4em] text-aether-cyan/70">{label}</label>
+      <label className="text-xs font-tech uppercase tracking-[0.4em] text-samurai-blue/70">{label}</label>
       <div className="relative">
         <button
           type="button"
@@ -192,16 +192,16 @@ function PresetDropdown({ label, displayValue, options, activeId, onSelect }: Dr
           className="flex w-full items-center justify-between rounded-2xl border border-white/15 bg-black/40 px-4 py-3 text-left text-sm text-white/80"
         >
           <span>{displayValue}</span>
-          <span className="text-xs text-aether-cyan/60">{open ? '▲' : '▼'}</span>
+          <span className="text-xs text-samurai-blue/60">{open ? '▲' : '▼'}</span>
         </button>
         {open && (
-          <div className="absolute z-20 mt-2 w-full rounded-2xl border border-aether-cyan/30 bg-aether-dark p-2 shadow-[0_20px_50px_rgba(0,0,0,0.45)]">
+          <div className="absolute z-20 mt-2 w-full rounded-2xl border border-samurai-blue/30 bg-samurai-dark p-2 shadow-[0_20px_50px_rgba(0,0,0,0.45)]">
             {options.map((option) => (
               <div
                 key={option.id}
                 className={clsx(
-                  'cursor-pointer rounded-xl px-3 py-2 text-sm transition hover:bg-aether-cyan/10',
-                  activeId === option.id ? 'bg-aether-cyan/15 text-white' : 'text-aether-mint/70'
+                  'cursor-pointer rounded-xl px-3 py-2 text-sm transition hover:bg-samurai-blue/10',
+                  activeId === option.id ? 'bg-samurai-blue/15 text-white' : 'text-samurai-text/70'
                 )}
                 onClick={() => {
                   setOpen(false)
@@ -412,7 +412,7 @@ export function TodoForm({
       className="relative space-y-6 overflow-hidden rounded-[32px] border border-white/10 bg-black/25 p-6 text-white shadow-[0_30px_80px_rgba(0,0,0,0.45)]"
     >
       <div className="pointer-events-none absolute inset-0 opacity-30" aria-hidden>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(103,232,249,0.2),transparent_55%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(59,130,246,0.2),transparent_55%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_0%,rgba(250,204,21,0.15),transparent_55%)]" />
       </div>
 
@@ -431,24 +431,24 @@ export function TodoForm({
       <div className="relative space-y-4">
         {/* Title Input */}
         <div className="space-y-1">
-            <label className="text-xs font-tech text-aether-cyan/70 uppercase tracking-widest">指令名稱 (TITLE)</label>
+            <label className="text-xs font-tech text-samurai-blue/70 uppercase tracking-widest">指令名稱 (TITLE)</label>
             <input
                 type="text"
                 value={formState.title}
                 onChange={(e) => handleChange('title', e.target.value)}
-                className="w-full bg-aether-dark border border-aether-cyan/30 p-3 text-white placeholder-aether-mint/20 focus:border-aether-cyan focus:shadow-[0_0_15px_rgba(0,240,255,0.2)] outline-none transition-all font-heading tracking-wide"
+                className="w-full bg-samurai-dark border border-samurai-blue/30 p-3 text-white placeholder-samurai-text/20 focus:border-samurai-blue focus:shadow-[0_0_15px_rgba(59,130,246,0.2)] outline-none transition-all font-heading tracking-wide"
                 placeholder="輸入任務名稱..."
             />
         </div>
 
         {/* Description Input */}
         <div className="space-y-1">
-            <label className="text-xs font-tech text-aether-cyan/70 uppercase tracking-widest">詳細資訊 (DETAILS)</label>
+            <label className="text-xs font-tech text-samurai-blue/70 uppercase tracking-widest">詳細資訊 (DETAILS)</label>
             <textarea
                 rows={3}
                 value={formState.description}
                 onChange={(e) => handleChange('description', e.target.value)}
-                className="w-full bg-aether-dark border border-aether-cyan/30 p-3 text-aether-mint/80 placeholder-aether-mint/20 focus:border-aether-cyan outline-none transition-all font-mono text-sm"
+                className="w-full bg-samurai-dark border border-samurai-blue/30 p-3 text-samurai-text/80 placeholder-samurai-text/20 focus:border-samurai-blue outline-none transition-all font-mono text-sm"
                 placeholder="// 額外參數..."
             />
         </div>
@@ -456,7 +456,7 @@ export function TodoForm({
         {/* Date Pickers */}
         <div className="grid gap-6 md:grid-cols-2">
             <div className="space-y-2">
-                <label className="text-xs font-tech text-aether-cyan/70 uppercase tracking-widest">啟動序列 (START)</label>
+                <label className="text-xs font-tech text-samurai-blue/70 uppercase tracking-widest">啟動序列 (START)</label>
                 <TechCalendar 
                     value={formState.startAt} 
                     onChange={(date) => handleChange('startAt', date)} 
@@ -464,7 +464,7 @@ export function TodoForm({
                 />
             </div>
             <div className="space-y-2">
-                <label className="text-xs font-tech text-aether-cyan/70 uppercase tracking-widest">終止序列 (END)</label>
+                <label className="text-xs font-tech text-samurai-blue/70 uppercase tracking-widest">終止序列 (END)</label>
                 <TechCalendar 
                     value={formState.endAt} 
                     onChange={(date) => handleChange('endAt', date)} 
@@ -479,14 +479,14 @@ export function TodoForm({
             <PresetDropdown label="持續時間" displayValue={durationDisplay} options={DURATION_PRESETS} activeId={formState.durationPresetId} onSelect={applyDurationPreset} />
           </div>
           {awaitingCustomDuration && (
-            <div className="mt-3 flex flex-wrap items-center gap-3 rounded-2xl border border-aether-cyan/30 bg-black/30 p-3 text-sm">
-              <span className="text-xs text-aether-cyan/70 tracking-[0.3em]">自訂分鐘</span>
+            <div className="mt-3 flex flex-wrap items-center gap-3 rounded-2xl border border-samurai-blue/30 bg-black/30 p-3 text-sm">
+              <span className="text-xs text-samurai-blue/70 tracking-[0.3em]">自訂分鐘</span>
               <input
                 type="number"
                 min={MIN_DURATION_MINUTES}
                 value={customDurationInput}
                 onChange={(e) => setCustomDurationInput(e.target.value)}
-                className="w-24 rounded-lg border border-white/20 bg-black/50 px-2 py-1 text-white focus:border-aether-cyan outline-none"
+                className="w-24 rounded-lg border border-white/20 bg-black/50 px-2 py-1 text-white focus:border-samurai-blue outline-none"
                 placeholder="30"
               />
               <TechButton type="button" variant="secondary" className="!px-3 !py-1 text-xs" onClick={applyCustomDuration}>
@@ -515,7 +515,7 @@ export function TodoForm({
                   onClick={() => applyCyclePreset(preset)}
                   className={clsx(
                     'rounded-2xl border px-4 py-2 text-xs uppercase tracking-[0.3em] transition',
-                    formState.cyclePresetId === preset.id ? 'border-aether-cyan bg-aether-cyan/20 text-white' : 'border-white/15 text-white/70 hover:border-aether-cyan/40'
+                    formState.cyclePresetId === preset.id ? 'border-samurai-blue bg-samurai-blue/20 text-white' : 'border-white/15 text-white/70 hover:border-samurai-blue/40'
                   )}
                 >
                   {preset.label}
@@ -532,9 +532,9 @@ export function TodoForm({
 
         {/* Status Override */}
         <div className="space-y-1">
-            <label className="text-xs font-tech text-aether-cyan/70 uppercase tracking-widest flex justify-between">
+            <label className="text-xs font-tech text-samurai-blue/70 uppercase tracking-widest flex justify-between">
                 <span>目前狀態 (STATUS)</span>
-                {!formState.manualStatus && <span className="text-aether-gold animate-pulse text-[10px]">[自動偵測]</span>}
+                {!formState.manualStatus && <span className="text-samurai-yellow animate-pulse text-[10px]">[自動偵測]</span>}
             </label>
             <div className="flex flex-wrap gap-2">
                 {TODO_STATUS_OPTIONS.map((option) => (
@@ -545,8 +545,8 @@ export function TodoForm({
                         className={clsx(
                             'px-3 py-1 text-xs font-tech border transition-all',
                             formState.status === option.value 
-                                ? 'border-aether-cyan bg-aether-cyan/20 text-white shadow-[0_0_10px_rgba(0,240,255,0.3)]' 
-                                : 'border-aether-cyan/20 text-aether-mint/40 hover:border-aether-cyan/50 hover:text-aether-mint'
+                                ? 'border-samurai-blue bg-samurai-blue/20 text-white shadow-[0_0_10px_rgba(59,130,246,0.3)]' 
+                                : 'border-samurai-blue/20 text-samurai-text/40 hover:border-samurai-blue/50 hover:text-samurai-text'
                         )}
                     >
                         {option.label}
@@ -562,7 +562,7 @@ export function TodoForm({
         </div>
       )}
 
-      <div className="flex justify-end gap-4 pt-4 border-t border-aether-cyan/10">
+      <div className="flex justify-end gap-4 pt-4 border-t border-samurai-blue/10">
         {onCancel && (
             <TechButton type="button" variant="ghost" onClick={onCancel} disabled={submitting}>
                 中止 (ABORT)

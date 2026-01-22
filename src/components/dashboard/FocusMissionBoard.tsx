@@ -46,12 +46,12 @@ export function FocusMissionBoard({ todos, user, completedCount = 0 }: FocusMiss
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
       {/* HUD Header */}
-      <header className="flex items-center justify-between border-b border-aether-cyan/20 pb-4">
+      <header className="flex items-center justify-between border-b border-samurai-blue/20 pb-4">
         <div>
-          <h1 className="font-pixel text-2xl text-aether-cyan tracking-widest uppercase">
+          <h1 className="font-pixel text-2xl text-samurai-blue tracking-widest uppercase">
             Mission Control
           </h1>
-          <p className="font-tech text-xs text-aether-mint/50 tracking-[0.3em]">
+          <p className="font-tech text-xs text-samurai-text/50 tracking-[0.3em]">
             PILOT: {user.name || 'GHOST'} // COINS: {user.coins ?? 0}
           </p>
         </div>
@@ -72,33 +72,33 @@ export function FocusMissionBoard({ todos, user, completedCount = 0 }: FocusMiss
         {/* Column 1: Active Mission Focus */}
         <section className="lg:row-span-2">
           {activeTask && activeCountdown ? (
-            <div className="relative overflow-hidden rounded-[32px] border-2 border-aether-cyan/50 bg-gradient-to-br from-aether-cyan/10 to-aether-dim p-8 shadow-[0_0_50px_rgba(0,240,255,0.15)] group h-full">
+            <div className="relative overflow-hidden rounded-[32px] border-2 border-samurai-red/50 bg-gradient-to-br from-samurai-red/10 to-samurai-dim p-8 shadow-[0_0_50px_rgba(244,63,94,0.15)] group h-full">
                {/* Background Effects */}
-               <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(103,232,249,0.1),transparent_70%)] opacity-50" />
-               <div className="absolute top-0 right-0 p-4 opacity-20 group-hover:opacity-100 transition-opacity">
+               <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(244,63,94,0.1),transparent_70%)] opacity-50" />
+               <div className="absolute top-0 right-0 p-4 opacity-20 group-hover:opacity-100 transition-opacity text-samurai-red">
                   <span className="text-4xl">⚔</span>
                </div>
 
                <div className="relative z-10 flex flex-col items-center justify-center text-center space-y-6 h-full">
                   <div className="space-y-2">
-                    <span className="inline-block rounded-full bg-aether-cyan/20 px-3 py-1 text-xs font-bold text-aether-cyan animate-pulse">
+                    <span className="inline-block rounded-full bg-samurai-red/20 px-3 py-1 text-xs font-bold text-samurai-red animate-pulse">
                       IN PROGRESS
                     </span>
-                    <h2 className="font-heading text-2xl lg:text-4xl text-white drop-shadow-[0_0_10px_rgba(103,232,249,0.5)] leading-tight">
+                    <h2 className="font-heading text-2xl lg:text-4xl text-white drop-shadow-[0_0_10px_rgba(244,63,94,0.5)] leading-tight">
                       {activeTask.title}
                     </h2>
                     {activeTask.description && (
-                      <p className="text-aether-mint/70 max-w-md mx-auto text-sm">{activeTask.description}</p>
+                      <p className="text-samurai-text/70 max-w-md mx-auto text-sm">{activeTask.description}</p>
                     )}
                   </div>
 
                   {/* Big Countdown */}
-                  <div className="font-mono text-5xl lg:text-7xl text-white tracking-wider tabular-nums">
+                  <div className="font-mono text-5xl lg:text-7xl text-white tracking-wider tabular-nums text-shadow-red">
                     {formatDuration(activeCountdown.endsIn)}
                   </div>
                   
                   <div className="w-full h-1 bg-white/10 rounded-full overflow-hidden">
-                      <div className="h-full bg-aether-cyan shadow-[0_0_10px_rgba(94,234,212,0.7)] animate-pulse w-full" />
+                      <div className="h-full bg-samurai-red shadow-[0_0_10px_rgba(244,63,94,0.7)] animate-pulse w-full" />
                   </div>
 
                   <div className="flex gap-4 pt-4">
@@ -113,7 +113,7 @@ export function FocusMissionBoard({ todos, user, completedCount = 0 }: FocusMiss
             </div>
           ) : (
             <div className="relative flex flex-col items-center justify-center rounded-[32px] border border-dashed border-white/20 bg-white/5 p-12 text-center h-full min-h-[400px]">
-              <div className="text-6xl mb-4 opacity-50">💤</div>
+              <div className="text-6xl mb-4 opacity-50 grayscale">💤</div>
               <h2 className="font-pixel text-xl text-white/80 uppercase tracking-widest">SYSTEM STANDBY</h2>
               <p className="mt-2 text-white/50 mb-8 text-sm">No active mission protocols engaged.</p>
               {upcomingTasks.length > 0 ? (
@@ -141,10 +141,10 @@ export function FocusMissionBoard({ todos, user, completedCount = 0 }: FocusMiss
                upcomingTasks.map(task => {
                  const cd = countdownMap.get(task.id)
                  return (
-                   <div key={task.id} className="group relative rounded-xl border border-white/10 bg-black/40 p-3 transition-all hover:border-aether-cyan/50 hover:bg-aether-cyan/5">
+                   <div key={task.id} className="group relative rounded-xl border border-white/10 bg-black/40 p-3 transition-all hover:border-samurai-blue/50 hover:bg-samurai-blue/5">
                      <div className="flex justify-between items-start">
                        <div className="min-w-0 flex-1">
-                         <h4 className="font-medium text-white group-hover:text-aether-cyan transition-colors text-sm truncate">
+                         <h4 className="font-medium text-white group-hover:text-samurai-blue transition-colors text-sm truncate">
                            {task.title}
                          </h4>
                          <p className="text-xs text-white/40 font-mono mt-1">
@@ -152,7 +152,7 @@ export function FocusMissionBoard({ todos, user, completedCount = 0 }: FocusMiss
                          </p>
                        </div>
                        <button 
-                         className="opacity-0 group-hover:opacity-100 p-1 hover:text-aether-cyan transition-all flex-shrink-0"
+                         className="opacity-0 group-hover:opacity-100 p-1 hover:text-samurai-blue transition-all flex-shrink-0"
                          onClick={() => updateTodoStatus(task.id, 'IN_PROGRESS')}
                          title="Start Now"
                        >
@@ -172,13 +172,13 @@ export function FocusMissionBoard({ todos, user, completedCount = 0 }: FocusMiss
 
         {/* Column 3: PILOT STATUS Panel */}
         <section className="lg:col-start-2 lg:row-start-2">
-           <div className="relative h-full overflow-hidden rounded-[28px] border border-aether-cyan/20 bg-aether-dark/50 p-4">
+           <div className="relative h-full overflow-hidden rounded-[28px] border border-samurai-blue/20 bg-samurai-dark/50 p-4">
               {/* Decorative Header Line */}
-              <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-aether-cyan/50 to-transparent" />
+              <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-samurai-blue/50 to-transparent" />
               
               <div className="relative z-10">
                  <div className="flex items-center justify-between mb-3">
-                    <div className="font-tech text-xs uppercase tracking-widest text-aether-cyan/70">
+                    <div className="font-tech text-xs uppercase tracking-widest text-samurai-blue/70">
                        PILOT STATUS
                     </div>
                  </div>
@@ -188,9 +188,9 @@ export function FocusMissionBoard({ todos, user, completedCount = 0 }: FocusMiss
                        <div className="text-xl font-mono text-emerald-400">{completedCount}</div>
                        <div className="text-[10px] uppercase tracking-widest text-emerald-400/60">COMPLETED</div>
                     </div>
-                    <div className="rounded-lg bg-amber-500/10 p-3 text-center border border-amber-500/20">
-                       <div className="text-xl font-mono text-amber-400">{user.coins ?? 0}</div>
-                       <div className="text-[10px] uppercase tracking-widest text-amber-400/60">COINS</div>
+                    <div className="rounded-lg bg-samurai-yellow/10 p-3 text-center border border-samurai-yellow/20">
+                       <div className="text-xl font-mono text-samurai-yellow">{user.coins ?? 0}</div>
+                       <div className="text-[10px] uppercase tracking-widest text-samurai-yellow/60">COINS</div>
                     </div>
                  </div>
               </div>

@@ -72,12 +72,12 @@ export default function NotesPage() {
       text: "此動作無法復原，確定要執行刪除程序嗎？",
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#f43f5e',
-      cancelButtonColor: '#0f172a',
+      confirmButtonColor: '#F43F5E',
+      cancelButtonColor: '#09090B',
       confirmButtonText: '確認刪除',
       cancelButtonText: '取消',
-      background: '#020617',
-      color: '#5eead4'
+      background: '#09090B',
+      color: '#FACC15'
 
     })
 
@@ -91,8 +91,8 @@ export default function NotesPage() {
           icon: 'success',
           timer: 1500,
           showConfirmButton: false,
-          background: '#020617',
-          color: '#5eead4'
+          background: '#09090B',
+          color: '#3B82F6'
 
         })
       } catch (error) {
@@ -111,7 +111,7 @@ export default function NotesPage() {
     setIsPadOpen(true)
   }
 
-  if (loading) return <div className="p-8 font-tech text-aether-cyan animate-pulse">資料庫初始化中...</div>
+  if (loading) return <div className="p-8 font-tech text-samurai-blue animate-pulse">資料庫初始化中...</div>
 
   return (
     <HoloWindow
@@ -143,7 +143,7 @@ export default function NotesPage() {
               <button
                 key={note.id}
                 onClick={() => openNote(note.id)}
-                className="h-36 rounded-[24px] border border-white/10 bg-gradient-to-br from-white/5 via-transparent to-black/30 p-4 text-left text-white shadow-[0_15px_40px_rgba(0,0,0,0.35)] transition hover:-translate-y-1 hover:border-cyan-200/60"
+                className="h-36 rounded-[24px] border border-white/10 bg-gradient-to-br from-white/5 via-transparent to-black/30 p-4 text-left text-white shadow-[0_15px_40px_rgba(0,0,0,0.35)] transition hover:-translate-y-1 hover:border-samurai-blue/60"
               >
                 <p className="text-xs font-tech uppercase tracking-[0.4em] text-white/60">ID {note.id.slice(0, 6)}</p>
                 <h3 className="mt-2 line-clamp-2 text-lg font-heading">{note.title}</h3>

@@ -39,26 +39,34 @@
   --tracking-wider: 0.2em;
   --tracking-widest: 0.3em;
   
-  /* Aether Color System - Cold Steel Theme */
-  --color-aether-dark: #020617; /* Slate 950 */
-  --color-aether-dim: #0f172a;  /* Slate 900 */
-  --color-aether-teal: #2dd4bf; /* Teal 400 */
-  --color-aether-cyan: #5eead4; /* Teal 300 - Ice Blue */
-  --color-aether-gold: #fde047; /* Yellow 300 - Neon Yellow */
-  --color-aether-alert: #f43f5e; /* Rose 500 */
-  --color-aether-mint: #ccfbf1; /* Teal 100 */
+  /* Cyber Samurai Palette - Scheme A */
+  --color-samurai-red: #F43F5E;    /* Neon Rose - Primary Action */
+  --color-samurai-blue: #3B82F6;   /* Electric Blue - Secondary / Info */
+  --color-samurai-dark: #09090B;   /* Void Black - Base */
+  --color-samurai-yellow: #FACC15; /* Cyber Yellow - Highlight / Alert */
+  --color-samurai-text: #E2E8F0;   /* Slate 200 - Readable Text */
+  --color-samurai-dim: #18181B;    /* Zinc 900 - Surface */
 
-  /* Holographic Theme Colors */
-  --color-holo-cyan: #5eead4;
-  --color-holo-blue: #0f172a;
-  --color-holo-purple: #94a3b8;
-  --color-holo-glass: rgba(94, 234, 212, 0.1);
-  --color-holo-border: rgba(94, 234, 212, 0.5);
+  /* Legacy Mapping (Aether -> Samurai Transformation) */
+  --color-aether-dark: var(--color-samurai-dark);
+  --color-aether-dim: var(--color-samurai-dim);
+  --color-aether-teal: var(--color-samurai-red); /* Teal becomes Red (Aggressive) */
+  --color-aether-cyan: var(--color-samurai-blue); /* Cyan becomes Blue (Cool) */
+  --color-aether-gold: var(--color-samurai-yellow);
+  --color-aether-alert: var(--color-samurai-red);
+  --color-aether-mint: var(--color-samurai-text);
 
-  /* Shadows */
-  --shadow-pixel-card: 0 0 30px -5px rgba(45, 212, 191, 0.15), 0 0 10px -2px rgba(45, 212, 191, 0.1);
-  --shadow-hud: 0 0 30px rgba(103, 232, 249, 0.35);
-  --shadow-glow-text: 0 0 10px rgba(94, 234, 212, 0.5);
+  /* Holographic Theme Colors (Mapped to Samurai) */
+  --color-holo-cyan: var(--color-samurai-blue);
+  --color-holo-blue: var(--color-samurai-dark);
+  --color-holo-purple: #8B5CF6; /* Violet - New Accent */
+  --color-holo-glass: rgba(59, 130, 246, 0.1); /* Blue Glass */
+  --color-holo-border: rgba(244, 63, 94, 0.5); /* Red Border */
+
+  /* Shadows - Aggressive */
+  --shadow-pixel-card: 0 0 30px -5px rgba(244, 63, 94, 0.25), 0 0 10px -2px rgba(244, 63, 94, 0.2);
+  --shadow-hud: 0 0 30px rgba(59, 130, 246, 0.35);
+  --shadow-glow-text: 0 0 10px rgba(244, 63, 94, 0.6);
 }
 
 @layer base {
@@ -72,8 +80,8 @@
 
   body {
     font-family: 'Rajdhani', "Noto Sans TC", sans-serif;
-    background: radial-gradient(circle at top, #0f172a 0%, #020617 100%);
-    color: #ccfbf1;
+    background: radial-gradient(circle at top, #18181B 0%, #09090B 100%);
+    color: var(--color-samurai-text);
     min-height: 100vh;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
@@ -81,16 +89,17 @@
     text-rendering: optimizeLegibility;
   }
 
-  /* Global Ambient Background Effects */
+  /* Global Ambient Background Effects - Cyber Samurai */
   body::before {
     content: '';
     position: fixed;
     inset: 0;
     pointer-events: none;
+    /* Red and Blue ambient spots */
     background-image:
-      radial-gradient(circle at 20% 20%, rgba(94, 234, 212, 0.08), transparent 60%),
-      radial-gradient(circle at 80% 15%, rgba(45, 212, 191, 0.05), transparent 55%),
-      linear-gradient(180deg, rgba(2, 6, 23, 0), rgba(2, 6, 23, 0.8));
+      radial-gradient(circle at 10% 20%, rgba(244, 63, 94, 0.08), transparent 40%),
+      radial-gradient(circle at 90% 80%, rgba(59, 130, 246, 0.08), transparent 40%),
+      linear-gradient(180deg, rgba(9, 9, 11, 0), rgba(9, 9, 11, 0.9));
     z-index: 0;
   }
 
@@ -99,35 +108,36 @@
     position: fixed;
     inset: 0;
     pointer-events: none;
+    /* Grid - More subtle */
     background-image:
-      linear-gradient(rgba(94, 234, 212, 0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(94, 234, 212, 0.03) 1px, transparent 1px);
-    background-size: 32px 32px;
+      linear-gradient(rgba(244, 63, 94, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(59, 130, 246, 0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
     mix-blend-mode: screen;
-    opacity: 0.4;
+    opacity: 0.3;
     z-index: 0;
   }
 
   ::selection {
-    background: var(--color-aether-cyan);
-    color: var(--color-aether-dark);
+    background: var(--color-samurai-red);
+    color: #fff;
   }
 
   /* Custom Scrollbar */
   ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
   }
   ::-webkit-scrollbar-track {
-    background: var(--color-aether-dark);
+    background: var(--color-samurai-dark);
   }
   ::-webkit-scrollbar-thumb {
-    background: linear-gradient(var(--color-aether-dim), var(--color-aether-teal));
-    border-radius: 4px;
-    border: 2px solid var(--color-aether-dark);
+    background: linear-gradient(var(--color-samurai-blue), var(--color-samurai-red));
+    border-radius: 0;
+    border: none;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(var(--color-aether-teal), var(--color-aether-cyan));
+    background: var(--color-samurai-red);
   }
 }
 
@@ -163,31 +173,63 @@
 }
 
 @layer utilities {
-  /* Holographic UI Components */
-  .holo-panel {
-    background: rgba(15, 23, 42, 0.6);
+  /* Z-Depth Hierarchy System */
+  
+  /* Level 0: Base */
+  .depth-base {
+    background-color: var(--color-samurai-dark);
+    position: relative;
+    z-index: 0;
+  }
+
+  /* Level 1: HUD / Info Panels */
+  .depth-hud {
+    background: rgba(59, 130, 246, 0.05);
+    border: 1px solid rgba(59, 130, 246, 0.15);
+    backdrop-filter: blur(4px);
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.05);
+  }
+
+  /* Level 2: Control / Interactive */
+  .depth-control {
+    background: rgba(9, 9, 11, 0.7);
+    border: 1px solid rgba(244, 63, 94, 0.3); /* Red border for action */
     backdrop-filter: blur(12px);
-    border: 1px solid rgba(94, 234, 212, 0.2);
     box-shadow: 
-      0 0 40px -10px rgba(45, 212, 191, 0.1),
-      inset 0 0 20px rgba(94, 234, 212, 0.05);
-    background-image: 
-      linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, transparent 100%),
-      repeating-linear-gradient(
-        90deg,
-        rgba(94, 234, 212, 0.02) 0px,
-        rgba(94, 234, 212, 0.02) 1px,
-        transparent 1px,
-        transparent 30px
-      );
+      0 0 20px -5px rgba(244, 63, 94, 0.15),
+      inset 0 0 10px rgba(244, 63, 94, 0.05);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .depth-control:hover {
+    border-color: rgba(244, 63, 94, 0.6);
+    box-shadow: 
+      0 0 30px -5px rgba(244, 63, 94, 0.3),
+      inset 0 0 20px rgba(244, 63, 94, 0.1);
+  }
+
+  /* Level 3: Overlay / Modal */
+  .depth-overlay {
+    background: rgba(9, 9, 11, 0.9);
+    border: 1px solid rgba(250, 204, 21, 0.3); /* Yellow border for attention */
+    backdrop-filter: blur(20px);
+    box-shadow: 
+      0 20px 50px -10px rgba(0, 0, 0, 0.5),
+      0 0 30px rgba(250, 204, 21, 0.1);
   }
 
   .holo-text-glow {
-    text-shadow: 0 0 10px rgba(94, 234, 212, 0.5);
+    text-shadow: 0 0 10px rgba(244, 63, 94, 0.5); /* Red glow */
   }
 
   .holo-border-glow {
-    box-shadow: 0 0 15px rgba(94, 234, 212, 0.3);
+    box-shadow: 0 0 15px rgba(244, 63, 94, 0.3);
+  }
+  
+  /* Samurai Glitch Effect */
+  .samurai-glitch:hover {
+    animation: glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite;
+    color: var(--color-samurai-red);
   }
   
   /* Animations */
@@ -228,7 +270,16 @@
 
   @keyframes blink {
     0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
+    50% { opacity: 0.3; }
+  }
+
+  @keyframes pulse-slow {
+    0%, 100% { opacity: 0.4; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(1.1); }
+  }
+  
+  .animate-pulse-slow {
+    animation: pulse-slow 4s ease-in-out infinite;
   }
 }
 
