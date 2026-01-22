@@ -222,7 +222,7 @@ export function TodosClient({ initialTodos }: TodosClientProps): React.ReactElem
             <div
               className={clsx(
                 'mt-4 rounded-2xl border px-4 py-3 text-sm font-tech uppercase tracking-[0.35em]',
-                feedback.type === 'success' ? 'border-emerald-400/40 text-emerald-200' : 'border-red-400/50 text-red-200'
+                feedback.type === 'success' ? 'border-samurai-success/40 text-samurai-success' : 'border-samurai-red/50 text-samurai-red'
               )}
             >
               {feedback.message}
@@ -246,7 +246,7 @@ export function TodosClient({ initialTodos }: TodosClientProps): React.ReactElem
                   : null
                 const isMutating = mutatingId === todo.id
                 return (
-                  <article key={todo.id} className="rounded-2xl border border-white/10 bg-black/30 p-4 text-white transition hover:border-cyan-200/60">
+                  <article key={todo.id} className="rounded-2xl border border-white/10 bg-black/30 p-4 text-white transition hover:border-samurai-blue/60">
                     <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
                       <div>
                         <p className="text-xs font-tech uppercase tracking-[0.4em] text-white/60">ID: {todo.id.slice(0, 6)}</p>
@@ -270,7 +270,7 @@ export function TodosClient({ initialTodos }: TodosClientProps): React.ReactElem
                     {countdownText && (
                       <div className="mt-3 rounded-2xl border border-white/10 bg-black/40 p-3">
                         <p className="text-[10px] uppercase tracking-[0.4em] text-white/50">{TODO_PHASE_LABEL[countdown?.phase ?? 'UPCOMING']}</p>
-                        <p className={clsx('font-mono text-xl', countdown?.phase === 'OVERDUE' ? 'text-red-300' : 'text-aether-cyan')}>
+                        <p className={clsx('font-mono text-xl', countdown?.phase === 'OVERDUE' ? 'text-samurai-red' : 'text-samurai-blue')}>
                           {countdownText}
                         </p>
                       </div>
@@ -330,7 +330,7 @@ export function TodosClient({ initialTodos }: TodosClientProps): React.ReactElem
                       </div>
                       <TechButton
                         variant="ghost"
-                        className="!px-4 !py-2 text-red-300"
+                        className="!px-4 !py-2 text-samurai-red"
                         onClick={() => handleQuickStatus(todo, 'FAILED', `「${todo.title}」標記為未完成`)}
                         disabled={isMutating}
                       >

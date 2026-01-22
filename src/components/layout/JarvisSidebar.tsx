@@ -91,7 +91,7 @@ export function JarvisSidebar() {
         {/* Logout */}
         <div className="group relative flex items-center justify-center pb-4">
           <LogoutButton />
-          <div className="pointer-events-none absolute left-full z-50 ml-4 -translate-x-2 whitespace-nowrap border border-red-500/30 bg-samurai-dim px-3 py-1 font-tech text-xs tracking-widest text-red-400 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100">
+          <div className="pointer-events-none absolute left-full z-50 ml-4 -translate-x-2 whitespace-nowrap border border-samurai-red/30 bg-samurai-dim px-3 py-1 font-tech text-xs tracking-widest text-samurai-red opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100">
             DISCONNECT
           </div>
         </div>

@@ -15,12 +15,12 @@ export function DeleteListButton({ listId }: { listId: string }) {
       text: '此動作無法復原，確定要刪除此資料卷軸嗎？',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#F43F5E',
-      cancelButtonColor: '#09090B',
+      confirmButtonColor: 'var(--color-samurai-red)',
+      cancelButtonColor: 'var(--color-samurai-dim)',
       confirmButtonText: '確認刪除',
       cancelButtonText: '取消',
-      background: '#09090B',
-      color: '#FACC15',
+      background: 'var(--color-samurai-dark)',
+      color: 'var(--color-samurai-yellow)',
 
     })
 
@@ -36,8 +36,8 @@ export function DeleteListButton({ listId }: { listId: string }) {
           icon: 'success',
           timer: 1500,
           showConfirmButton: false,
-          background: '#09090B',
-          color: '#3B82F6',
+          background: 'var(--color-samurai-dark)',
+          color: 'var(--color-samurai-blue)',
 
         })
       } else {
@@ -45,8 +45,8 @@ export function DeleteListButton({ listId }: { listId: string }) {
           title: '刪除失敗',
           text: '無法刪除此卷軸',
           icon: 'error',
-          background: '#09090B',
-          color: '#F43F5E',
+          background: 'var(--color-samurai-dark)',
+          color: 'var(--color-samurai-red)',
 
         })
       }

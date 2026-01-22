@@ -72,12 +72,12 @@ export default function NotesPage() {
       text: "此動作無法復原，確定要執行刪除程序嗎？",
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#F43F5E',
-      cancelButtonColor: '#09090B',
+      confirmButtonColor: 'var(--color-samurai-red)',
+      cancelButtonColor: 'var(--color-samurai-dim)',
       confirmButtonText: '確認刪除',
       cancelButtonText: '取消',
-      background: '#09090B',
-      color: '#FACC15'
+      background: 'var(--color-samurai-dark)',
+      color: 'var(--color-samurai-yellow)'
 
     })
 

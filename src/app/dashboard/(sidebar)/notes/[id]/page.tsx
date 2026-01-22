@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { TiptapEditor } from '@/components/TiptapEditor'
+import { TechButton } from '@/components/ui/TechButton'
 import Swal from 'sweetalert2'
 
 export default function NoteEditorPage({ params }: { params: { id: string } }) {
@@ -63,8 +64,8 @@ export default function NoteEditorPage({ params }: { params: { id: string } }) {
         icon: 'error',
         title: '儲存失敗',
         text: '請稍後再試',
-        background: '#1f1f1f',
-        color: '#f4e4bc',
+        background: 'var(--color-samurai-dark)',
+        color: 'var(--color-samurai-yellow)',
       })
     } finally {
       setSaving(false)
@@ -91,10 +92,10 @@ export default function NoteEditorPage({ params }: { params: { id: string } }) {
       showDenyButton: true,
       confirmButtonText: '儲存',
       denyButtonText: '捨棄',
-      background: '#1f1f1f',
-      color: '#f4e4bc',
-      confirmButtonColor: '#10b981',
-      denyButtonColor: '#ef4444',
+      background: 'var(--color-samurai-dark)',
+      color: 'var(--color-samurai-yellow)',
+      confirmButtonColor: 'var(--color-samurai-success)',
+      denyButtonColor: 'var(--color-samurai-red)',
     })
 
     if (result.isConfirmed) {
@@ -127,19 +128,21 @@ export default function NoteEditorPage({ params }: { params: { id: string } }) {
             placeholder="筆記標題"
           />
           <div className="flex items-center gap-2">
-            <button
+            <TechButton
               onClick={() => handleSave()}
               disabled={saving}
-              className="rounded-lg bg-emerald-500 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-600 disabled:opacity-50"
+              variant="secondary"
+              className="!px-4 !py-2 text-sm"
             >
               {saving ? '儲存中...' : '儲存'}
-            </button>
-            <button
+            </TechButton>
+            <TechButton
               onClick={handleDelete}
-              className="rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-2 text-sm font-medium text-red-200 hover:bg-red-500/20"
+              variant="danger"
+              className="!px-4 !py-2 text-sm"
             >
               刪除
-            </button>
+            </TechButton>
           </div>
         </div>
 

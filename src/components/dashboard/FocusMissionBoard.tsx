@@ -184,9 +184,9 @@ export function FocusMissionBoard({ todos, user, completedCount = 0 }: FocusMiss
                  </div>
                  
                  <div className="grid grid-cols-2 gap-3">
-                    <div className="rounded-lg bg-emerald-500/10 p-3 text-center border border-emerald-500/20">
-                       <div className="text-xl font-mono text-emerald-400">{completedCount}</div>
-                       <div className="text-[10px] uppercase tracking-widest text-emerald-400/60">COMPLETED</div>
+                    <div className="rounded-lg bg-samurai-success/10 p-3 text-center border border-samurai-success/20">
+                       <div className="text-xl font-mono text-samurai-success">{completedCount}</div>
+                       <div className="text-[10px] uppercase tracking-widest text-samurai-success/60">COMPLETED</div>
                     </div>
                     <div className="rounded-lg bg-samurai-yellow/10 p-3 text-center border border-samurai-yellow/20">
                        <div className="text-xl font-mono text-samurai-yellow">{user.coins ?? 0}</div>

@@ -85,9 +85,9 @@ export const ForgeArchive: React.FC<ForgeArchiveProps> = ({
         icon: 'warning',
         title: '請輸入選項內容',
         confirmButtonText: '好的',
-        background: '#09090B',
-        color: '#FACC15',
-        confirmButtonColor: '#F43F5E'
+        background: 'var(--color-samurai-dark)',
+        color: 'var(--color-samurai-yellow)',
+        confirmButtonColor: 'var(--color-samurai-red)'
       });
       return;
     }
@@ -98,8 +98,8 @@ export const ForgeArchive: React.FC<ForgeArchiveProps> = ({
       title: '已加入新選項',
       timer: 1600,
       showConfirmButton: false,
-      background: '#09090B',
-      color: '#3B82F6'
+      background: 'var(--color-samurai-dark)',
+      color: 'var(--color-samurai-blue)'
     });
   };
 
@@ -125,9 +125,9 @@ export const ForgeArchive: React.FC<ForgeArchiveProps> = ({
       void Swal.fire({
         icon: 'warning',
         title: '請輸入卷軸名稱',
-        background: '#09090B',
-        color: '#FACC15',
-        confirmButtonColor: '#F43F5E'
+        background: 'var(--color-samurai-dark)',
+        color: 'var(--color-samurai-yellow)',
+        confirmButtonColor: 'var(--color-samurai-red)'
       });
       return;
     }
@@ -137,9 +137,9 @@ export const ForgeArchive: React.FC<ForgeArchiveProps> = ({
       void Swal.fire({
         icon: 'warning',
         title: '至少需要一個選項',
-        background: '#09090B',
-        color: '#FACC15',
-        confirmButtonColor: '#F43F5E'
+        background: 'var(--color-samurai-dark)',
+        color: 'var(--color-samurai-yellow)',
+        confirmButtonColor: 'var(--color-samurai-red)'
       });
       return;
     }
@@ -228,8 +228,8 @@ export const ForgeArchive: React.FC<ForgeArchiveProps> = ({
         icon: 'error',
         title: '鍛造失敗',
         text: '請稍後再試',
-        background: '#09090B',
-        color: '#F43F5E'
+        background: 'var(--color-samurai-dark)',
+        color: 'var(--color-samurai-red)'
       });
     } finally {
       setSaving(false);

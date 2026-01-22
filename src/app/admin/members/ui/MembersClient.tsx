@@ -149,7 +149,7 @@ export default function MembersClient(): React.ReactElement {
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-center gap-3 rounded-[24px] border border-white/10 bg-black/30 p-4">
-        <input className="flex-1 min-w-[220px] rounded-2xl border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-white/40 outline-none focus:border-emerald-300" placeholder="搜尋 email 或名稱" value={searchInput} onChange={(e) => setSearchInput(e.target.value)} />
+        <input className="flex-1 min-w-[220px] rounded-2xl border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-white/40 outline-none focus:border-samurai-blue" placeholder="搜尋 email 或名稱" value={searchInput} onChange={(e) => setSearchInput(e.target.value)} />
         <TechButton variant="primary" className="!px-4 !py-2 text-[11px]" onClick={openCreate}>
           新增成員
         </TechButton>
@@ -188,7 +188,7 @@ export default function MembersClient(): React.ReactElement {
                       <div className="text-xs text-white/60">{member.email}</div>
                     </td>
                     <td className="px-4 py-4">
-                      <span className={`rounded-full px-3 py-1 text-xs font-semibold ${member.status === 'ACTIVE' ? 'bg-emerald-500/20 text-emerald-200' : 'bg-rose-500/20 text-rose-200'}`}>{STATUS_LABEL[member.status]}</span>
+                      <span className={`rounded-full px-3 py-1 text-xs font-semibold ${member.status === 'ACTIVE' ? 'bg-samurai-success/20 text-samurai-success' : 'bg-samurai-red/20 text-samurai-red'}`}>{STATUS_LABEL[member.status]}</span>
                     </td>
                     <td className="px-4 py-4">{member.note ?? '—'}</td>
                     <td className="px-4 py-4 text-white/60">{new Intl.DateTimeFormat('zh-TW', { dateStyle: 'medium' }).format(new Date(member.createdAt))}</td>
@@ -208,7 +208,7 @@ export default function MembersClient(): React.ReactElement {
             </tbody>
           </table>
         </div>
-        {error && <p className="p-4 text-sm text-rose-300">{error}</p>}
+        {error && <p className="p-4 text-sm text-samurai-red">{error}</p>}
       </div>
 
       <div className="flex items-center justify-between text-sm text-white/70">
@@ -232,38 +232,38 @@ export default function MembersClient(): React.ReactElement {
             <>
               <label className="space-y-2 text-sm text-white/70">
                 Email
-                <input className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none focus:border-emerald-300" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+                <input className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none focus:border-samurai-blue" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
               </label>
               <label className="space-y-2 text-sm text-white/70">
                 顯示名稱
-                <input className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none focus:border-emerald-300" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+                <input className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none focus:border-samurai-blue" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
               </label>
               <label className="space-y-2 text-sm text-white/70">
                 狀態
-                <select className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none focus:border-emerald-300" value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value as MemberStatus })}>
+                <select className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none focus:border-samurai-blue" value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value as MemberStatus })}>
                   <option value="ACTIVE">啟用</option>
                   <option value="INACTIVE">停用</option>
                 </select>
               </label>
               <label className="space-y-2 text-sm text-white/70">
                 備註
-                <textarea className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none focus:border-emerald-300" value={form.note} onChange={(e) => setForm({ ...form, note: e.target.value })} rows={3} />
+                <textarea className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none focus:border-samurai-blue" value={form.note} onChange={(e) => setForm({ ...form, note: e.target.value })} rows={3} />
               </label>
             </>
           )}
           {modal.type === 'create' && (
             <label className="space-y-2 text-sm text-white/70">
               初始密碼
-              <input className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none focus:border-emerald-300" type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} />
+              <input className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none focus:border-samurai-blue" type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} />
             </label>
           )}
           {modal.type === 'reset' && (
             <label className="space-y-2 text-sm text-white/70">
               新密碼
-              <input className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none focus:border-emerald-300" type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} />
+              <input className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none focus:border-samurai-blue" type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} />
             </label>
           )}
-          {modalError && <p className="text-sm text-rose-300">{modalError}</p>}
+          {modalError && <p className="text-sm text-samurai-red">{modalError}</p>}
           <div className="flex justify-end gap-3 pt-2">
             <TechButton variant="ghost" onClick={closeModal} disabled={modalLoading}>
               取消

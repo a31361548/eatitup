@@ -2,6 +2,15 @@ import { ReactNode } from 'react'
 import './globals.css'
 import { Navbar } from '@/components/ui/Navbar'
 import { Providers } from '@/components/Providers'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'RONIN',
+  description: 'Gamified productivity system for the digital age.',
+  icons: {
+    icon: '/icon.svg',
+  },
+}
 
 export default function RootLayout({ children }: { children: ReactNode }): React.ReactElement {
   return (

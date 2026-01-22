@@ -53,8 +53,8 @@ export default function SettingsPage() {
           timer: 1200,
           position: 'top-end',
           showConfirmButton: false,
-          background: '#09090B',
-          color: '#3B82F6',
+          background: 'var(--color-samurai-dark)',
+          color: 'var(--color-samurai-blue)',
         })
 
       } else {
@@ -62,8 +62,8 @@ export default function SettingsPage() {
           icon: 'error',
           title: '更新失敗',
           text: '請稍後再試',
-          background: '#09090B',
-          color: '#F43F5E',
+          background: 'var(--color-samurai-dark)',
+          color: 'var(--color-samurai-red)',
         })
       }
     } catch (error) {
@@ -112,8 +112,8 @@ export default function SettingsPage() {
           icon: 'error',
           title: '上傳失敗',
           text: '請確認檔案格式',
-          background: '#09090B',
-          color: '#F43F5E',
+          background: 'var(--color-samurai-dark)',
+          color: 'var(--color-samurai-red)',
         })
 
       }
@@ -123,8 +123,8 @@ export default function SettingsPage() {
           icon: 'error',
           title: '系統錯誤',
           text: '上傳中斷',
-          background: '#09090B',
-          color: '#F43F5E',
+          background: 'var(--color-samurai-dark)',
+          color: 'var(--color-samurai-red)',
         })
 
     } finally {

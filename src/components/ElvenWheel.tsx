@@ -94,7 +94,7 @@ export const ElvenWheel: React.FC<Props> = ({ options, isSpinning, onSpinEnd }) 
                     <path
                       d={pathData}
                       fill={isAccent ? 'rgba(59, 130, 246, 0.1)' : 'rgba(244, 63, 94, 0.1)'}
-                      stroke={isAccent ? '#3B82F6' : '#F43F5E'}
+                      stroke={isAccent ? 'var(--color-samurai-blue)' : 'var(--color-samurai-red)'}
                       strokeWidth="0.01"
                       className="transition-all duration-300"
                     />
@@ -103,7 +103,7 @@ export const ElvenWheel: React.FC<Props> = ({ options, isSpinning, onSpinEnd }) 
                     <text
                       x="0.65"
                       y="0"
-                      fill={isAccent ? '#ffffff' : '#F43F5E'}
+                      fill={isAccent ? '#ffffff' : 'var(--color-samurai-red)'}
                       fontSize="0.07"
                       fontWeight="bold"
                       fontFamily="Rajdhani"

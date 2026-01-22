@@ -90,9 +90,9 @@ export function HolographicPad({
             icon: 'warning',
             title: '缺少標題',
             text: '請為這份日誌輸入標題',
-            background: '#09090B', // samurai-dark
-            color: '#FACC15', // samurai-yellow
-            confirmButtonColor: '#F43F5E', // samurai-red
+            background: 'var(--color-samurai-dark)',
+            color: 'var(--color-samurai-yellow)',
+            confirmButtonColor: 'var(--color-samurai-red)',
             confirmButtonText: '確定'
         });
         return;
@@ -111,8 +111,8 @@ export function HolographicPad({
             position: 'top-end',
             showConfirmButton: false,
             timer: 1500,
-            background: '#09090B',
-            color: '#3B82F6' // samurai-blue
+            background: 'var(--color-samurai-dark)',
+            color: 'var(--color-samurai-blue)'
         });
       }
     } catch (error) {
@@ -121,8 +121,8 @@ export function HolographicPad({
         icon: 'error',
         title: '上傳失敗',
         text: '儲存過程中發生錯誤',
-        background: '#09090B',
-        color: '#F43F5E',
+        background: 'var(--color-samurai-dark)',
+        color: 'var(--color-samurai-red)',
         confirmButtonText: '確定'
       });
     } finally {
@@ -141,11 +141,11 @@ export function HolographicPad({
         confirmButtonText: '儲存並離開',
         denyButtonText: '捨棄變更',
         cancelButtonText: '取消',
-        background: '#09090B',
-        color: '#E2E8F0', // samurai-text
-        confirmButtonColor: '#3B82F6', // samurai-blue
-        denyButtonColor: '#F43F5E', // samurai-red
-        cancelButtonColor: '#18181B' // samurai-dim
+        background: 'var(--color-samurai-dark)',
+        color: 'var(--color-samurai-text)',
+        confirmButtonColor: 'var(--color-samurai-blue)',
+        denyButtonColor: 'var(--color-samurai-red)',
+        cancelButtonColor: 'var(--color-samurai-dim)'
 
       }).then((result) => {
         if (result.isConfirmed) {

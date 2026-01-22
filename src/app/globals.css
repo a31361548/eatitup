@@ -40,11 +40,13 @@
   --tracking-widest: 0.3em;
   
   /* Cyber Samurai Palette - Scheme A */
-  --color-samurai-red: #F43F5E;    /* Neon Rose - Primary Action */
+  --color-samurai-red: #F43F5E;    /* Neon Rose - Primary Action / Error */
   --color-samurai-blue: #3B82F6;   /* Electric Blue - Secondary / Info */
   --color-samurai-dark: #09090B;   /* Void Black - Base */
-  --color-samurai-yellow: #FACC15; /* Cyber Yellow - Highlight / Alert */
+  --color-samurai-yellow: #FACC15; /* Cyber Yellow - Highlight / Warning */
+  --color-samurai-success: #10B981; /* Neon Jade - Success */
   --color-samurai-text: #E2E8F0;   /* Slate 200 - Readable Text */
+  --color-samurai-muted: #64748B;  /* Slate 500 - Disabled / Subtext */
   --color-samurai-dim: #18181B;    /* Zinc 900 - Surface */
 
   /* Legacy Mapping (Aether -> Samurai Transformation) */
@@ -54,6 +56,7 @@
   --color-aether-cyan: var(--color-samurai-blue); /* Cyan becomes Blue (Cool) */
   --color-aether-gold: var(--color-samurai-yellow);
   --color-aether-alert: var(--color-samurai-red);
+  --color-aether-success: var(--color-samurai-success); /* New mapping */
   --color-aether-mint: var(--color-samurai-text);
 
   /* Holographic Theme Colors (Mapped to Samurai) */

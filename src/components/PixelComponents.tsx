@@ -84,7 +84,7 @@ export const PixelButton: React.FC<PixelButtonProps> = ({ children, variant = 'p
       tone = 'bg-transparent border border-samurai-blue/30 text-samurai-blue hover:border-samurai-blue/60 hover:text-white hover:shadow-[0_0_15px_rgba(59,130,246,0.3)]'
       break
     case 'danger':
-      tone = 'bg-red-500/10 border border-red-500/50 text-red-400 hover:bg-red-500/20 hover:border-red-500 hover:shadow-[0_0_20px_rgba(239,68,68,0.4)]'
+      tone = 'bg-samurai-red/10 border border-samurai-red/50 text-samurai-red hover:bg-samurai-red/20 hover:border-samurai-red hover:shadow-[0_0_20px_rgba(244,63,94,0.4)]'
       break
     case 'success':
       tone = 'bg-samurai-yellow/10 border border-samurai-yellow/50 text-samurai-yellow hover:bg-samurai-yellow/20 hover:border-samurai-yellow hover:shadow-[0_0_20px_rgba(250,204,21,0.4)]'

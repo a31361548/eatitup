@@ -61,11 +61,11 @@ export default async function ListsPage(): Promise<React.ReactElement> {
             </div>
             <div className="rounded-2xl border border-white/20 bg-black/30 p-4 text-center">
               <p className="text-[10px] font-tech uppercase tracking-[0.4em] text-white/60">素材總量</p>
-              <p className="mt-2 text-3xl font-mono text-cyan-200">{totalItems}</p>
+              <p className="mt-2 text-3xl font-mono text-samurai-blue">{totalItems}</p>
             </div>
             <div className="rounded-2xl border border-white/20 bg-black/30 p-4 text-center">
               <p className="text-[10px] font-tech uppercase tracking-[0.4em] text-white/60">可啟動輪盤</p>
-              <p className="mt-2 text-3xl font-mono text-emerald-200">{lists.filter((list) => list.items.length > 0).length}</p>
+              <p className="mt-2 text-3xl font-mono text-samurai-success">{lists.filter((list) => list.items.length > 0).length}</p>
             </div>
           </div>
         </section>
@@ -83,7 +83,7 @@ export default async function ListsPage(): Promise<React.ReactElement> {
                 return (
                   <article
                     key={list.id}
-                    className="group relative overflow-hidden rounded-[30px] border border-white/10 bg-black/25 p-5 text-white shadow-[0_20px_60px_rgba(0,0,0,0.45)] transition hover:border-cyan-200/60"
+                    className="group relative overflow-hidden rounded-[30px] border border-white/10 bg-black/25 p-5 text-white shadow-[0_20px_60px_rgba(0,0,0,0.45)] transition hover:border-samurai-blue/60"
                   >
                     <div className="flex items-center justify-between">
                       <div>

@@ -495,7 +495,7 @@ export function TodoForm({
               <TechButton
                 type="button"
                 variant="ghost"
-                className="!px-3 !py-1 text-xs text-red-300"
+                className="!px-3 !py-1 text-xs text-samurai-red"
                 onClick={() => {
                   setAwaitingCustomDuration(false)
                   setCustomDurationInput('')
@@ -557,7 +557,7 @@ export function TodoForm({
       </div>
 
       {error && (
-        <div className="p-3 border border-red-500/50 bg-red-500/10 text-red-400 text-xs font-mono">
+        <div className="p-3 border border-samurai-red/50 bg-samurai-red/10 text-samurai-red text-xs font-mono">
           ⚠ 錯誤: {error}
         </div>
       )}

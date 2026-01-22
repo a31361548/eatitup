@@ -36,13 +36,13 @@ export default function ItemForm({ listId }: { listId: string }): React.ReactEle
       <p className="text-xs font-tech uppercase tracking-[0.4em] text-white/60">新增素材</p>
       <div className="mt-3 flex flex-wrap gap-3">
         <input
-          className="flex-1 rounded-2xl border border-white/15 bg-black/50 px-4 py-3 text-white placeholder-white/40 outline-none transition focus:border-cyan-300"
+          className="flex-1 rounded-2xl border border-white/15 bg-black/50 px-4 py-3 text-white placeholder-white/40 outline-none transition focus:border-samurai-blue"
           placeholder="項目名稱"
           value={label}
           onChange={(e) => setLabel(e.target.value)}
         />
         <input
-          className="w-28 rounded-2xl border border-white/15 bg-black/50 px-4 py-3 text-center text-white outline-none transition focus:border-cyan-300"
+          className="w-28 rounded-2xl border border-white/15 bg-black/50 px-4 py-3 text-center text-white outline-none transition focus:border-samurai-blue"
           type="number"
           min={1}
           value={Number.isNaN(weight) ? '' : weight}
@@ -52,7 +52,7 @@ export default function ItemForm({ listId }: { listId: string }): React.ReactEle
           {status === 'loading' ? '新增中…' : '新增'}
         </TechButton>
       </div>
-      {status === 'error' && <p className="mt-2 text-sm text-red-200">請確認名稱與權重（需 ≥ 1）</p>}
+      {status === 'error' && <p className="mt-2 text-sm text-samurai-red">請確認名稱與權重（需 ≥ 1）</p>}
     </div>
   )
 }
