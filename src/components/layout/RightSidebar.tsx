@@ -10,7 +10,7 @@ export function RightSidebar() {
   const { currentView, isMobileOpen, toggleMobileMenu, data, toggleView } = useAuxiliary()
   const { data: session } = useSession()
   const currentUser = session?.user
-  const playerName = currentUser?.name || 'USER'
+  const playerName = currentUser?.name || '使用者'
   const coins = String(currentUser?.coins ?? 0).padStart(4, '0')
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
@@ -75,7 +75,7 @@ export function RightSidebar() {
         {/* Header */}
         <div className="flex h-12 items-center justify-between border-b border-aether-cyan/20 px-4 bg-aether-cyan/5">
           <span className="font-tech text-xs tracking-[0.2em] text-aether-cyan">
-            AUX // PANEL
+            輔助面板
           </span>
           <div className="flex gap-2">
              {/* Close Button (Mobile Only) */}
@@ -102,10 +102,10 @@ export function RightSidebar() {
                 )}
               </div>
               <div className="flex flex-col leading-none">
-                <span className="text-[11px] text-aether-mint/60 tracking-[0.25em]">PLAYER</span>
+                <span className="text-[11px] text-aether-mint/60 tracking-[0.25em]">身份 / PLAYER</span>
                 <span className="text-sm text-white/90 tracking-widest">{playerName}</span>
               </div>
-              <div className="ml-auto text-sm text-aether-gold tracking-[0.3em]">COINS {coins}</div>
+              <div className="ml-auto text-sm text-aether-gold tracking-[0.3em]">代幣 / COINS {coins}</div>
             </div>
           </div>
         )}
@@ -117,26 +117,29 @@ export function RightSidebar() {
              <div className="rounded border border-aether-cyan/20 bg-black/40 p-1">
                 <SystemStatusWidget />
              </div>
-              <button
-                onClick={() => toggleView('QUICK_NOTE')}
-                className="rounded border border-aether-cyan/20 bg-aether-cyan/5 px-4 py-2 text-xs tracking-widest text-aether-cyan transition hover:bg-aether-cyan/20"
-              >
-                OPEN QUICK NOTE
-              </button>
+              <div className="space-y-2">
+                <button
+                  onClick={() => toggleView('QUICK_NOTE')}
+                  className="w-full rounded border border-aether-cyan/20 bg-aether-cyan/5 px-4 py-2 text-xs tracking-widest text-aether-cyan transition hover:bg-aether-cyan/20"
+                >
+                  快速筆記
+                </button>
+                <p className="text-[10px] font-tech tracking-[0.3em] text-white/40">寫入日誌</p>
+              </div>
 
-             <div className="rounded border border-white/5 bg-white/5 p-4 text-center">
-               <p className="font-tech text-xs text-white/40 tracking-widest">
-                 AWAITING INPUT...
-               </p>
-             </div>
+              <div className="rounded border border-white/5 bg-white/5 p-4 text-center">
+                <p className="font-tech text-xs text-white/40 tracking-widest">
+                  等待輸入中...
+                </p>
+              </div>
           </div>
         )}
 
         {currentView === 'QUICK_NOTE' && (
           <div className="animate-in fade-in slide-in-from-right-4 duration-300 space-y-4">
-            <h3 className="font-pixel text-lg text-aether-gold">Quick Note</h3>
+            <h3 className="font-pixel text-lg text-aether-gold">快速筆記 / QUICK NOTE</h3>
             <div className="space-y-3">
-              <label className="text-xs font-tech tracking-widest text-aether-mint/70">TITLE</label>
+              <label className="text-xs font-tech tracking-widest text-aether-mint/70">標題 / TITLE</label>
               <input
                 value={title}
                 onChange={(event) => setTitle(event.target.value)}
@@ -145,7 +148,7 @@ export function RightSidebar() {
               />
             </div>
             <div className="space-y-3">
-              <label className="text-xs font-tech tracking-widest text-aether-mint/70">CONTENT</label>
+              <label className="text-xs font-tech tracking-widest text-aether-mint/70">內容 / CONTENT</label>
               <textarea
                 value={content}
                 onChange={(event) => setContent(event.target.value)}
@@ -155,22 +158,22 @@ export function RightSidebar() {
               />
             </div>
             {error && <p className="text-xs text-aether-alert">{error}</p>}
-            {saved && <p className="text-xs text-aether-mint">已儲存到 Notes</p>}
+            {saved && <p className="text-xs text-aether-mint">已儲存到日誌</p>}
             <button
               onClick={handleSave}
               disabled={saving}
               className="w-full rounded-lg border border-aether-cyan/40 bg-aether-cyan/20 px-3 py-2 text-xs tracking-widest text-aether-cyan transition hover:bg-aether-cyan hover:text-aether-dark disabled:opacity-50"
             >
-              {saving ? '儲存中...' : 'SAVE NOTE'}
+              {saving ? '儲存中...' : '儲存筆記'}
             </button>
           </div>
         )}
 
         {currentView === 'WHEEL_PREVIEW' && (
            <div className="animate-in fade-in slide-in-from-right-4 duration-300">
-             <h3 className="font-pixel text-lg text-aether-cyan mb-4">Wheel Link</h3>
+             <h3 className="font-pixel text-lg text-aether-cyan mb-4">輪盤連結 / WHEEL LINK</h3>
              <div className="h-40 rounded border border-aether-cyan/30 bg-aether-cyan/5 flex items-center justify-center">
-               <span className="text-xs text-aether-cyan/50">WHEEL MODULE</span>
+               <span className="text-xs text-aether-cyan/50">輪盤模組 / WHEEL MODULE</span>
              </div>
            </div>
         )}
@@ -179,7 +182,7 @@ export function RightSidebar() {
       {/* Decorative Footer */}
       <div className="h-8 border-t border-aether-cyan/20 bg-black/60 flex items-center justify-center">
         <span className="font-tech text-[10px] tracking-[0.5em] text-white/20">
-          SECURE CONNECTION
+          安全連線 / SECURE CONNECTION
         </span>
       </div>
     </aside>

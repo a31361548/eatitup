@@ -21,11 +21,11 @@ export function TacticalHeader() {
   const [tickerIndex, setTickerIndex] = useState(0)
 
   const tickers = [
-    'SYSTEM: OPTIMAL',
-    'SECURITY: ACTIVE',
-    'NETWORK: SECURE',
-    'ENCRYPTION: AES-256',
-    'PROTOCOL: SAMURAI'
+    '系統狀態：最佳',
+    '安全等級：啟用',
+    '網路狀態：安全',
+    '加密協議：AES-256',
+    '核心協議：SAMURAI'
   ]
 
   useEffect(() => {
@@ -56,8 +56,23 @@ export function TacticalHeader() {
   const breadcrumbs = pathname
     .split('/')
     .filter(Boolean)
-    .map(segment => segment.toUpperCase())
+    .map((segment) => segment.toUpperCase())
+
+  const breadcrumbLabels: Record<string, string> = {
+    DASHBOARD: '儀表板',
+    TODOS: '任務',
+    NOTES: '日誌',
+    ORACLE: '神諭',
+    LISTS: '卷軸',
+    SETTINGS: '設定',
+    ADMIN: '管理',
+    MEMBERS: '成員'
+  }
+
+  const localizedBreadcrumbs = breadcrumbs
+    .map((segment) => breadcrumbLabels[segment] ?? segment)
     .join(' / ')
+
 
   return (
     <header className="fixed top-0 left-0 z-50 w-full font-tech text-white select-none">
@@ -89,11 +104,11 @@ export function TacticalHeader() {
 
                 {/* Breadcrumbs */}
                 <div className="hidden md:flex items-center gap-2 text-xs tracking-widest text-samurai-text/50">
-                    <span className="text-samurai-blue/80">COMMAND CENTER</span>
-                    {breadcrumbs && (
+                    <span className="text-samurai-blue/80">指揮中樞</span>
+                    {localizedBreadcrumbs && (
                         <>
                             <span className="text-samurai-blue/30">{'//'}</span>
-                            <span className="text-samurai-text/80">{breadcrumbs}</span>
+                            <span className="text-samurai-text/80">{localizedBreadcrumbs}</span>
                         </>
                     )}
                 </div>
@@ -115,7 +130,7 @@ export function TacticalHeader() {
             <div className="flex items-center gap-4 sm:gap-8">
                 {/* Ping */}
                 <div className="hidden sm:flex flex-col items-end">
-                    <span className="text-[10px] text-samurai-text/40 tracking-wider">LATENCY</span>
+                    <span className="text-[10px] text-samurai-text/40 tracking-wider">延遲</span>
                     <span className={clsx(
                         "text-xs tracking-widest font-mono",
                         ping < 50 ? "text-samurai-text" : "text-samurai-red"
@@ -126,7 +141,7 @@ export function TacticalHeader() {
 
                 {/* Time */}
                 <div className="flex flex-col items-end min-w-[80px]">
-                    <span className="text-[10px] text-samurai-text/40 tracking-wider">LOCAL TIME</span>
+                    <span className="text-[10px] text-samurai-text/40 tracking-wider">本地時間</span>
                     <span className="text-lg font-mono text-white leading-none tracking-widest shadow-[0_0_10px_rgba(255,255,255,0.2)]">
                         {mounted ? time : '00:00:00'}
                     </span>
@@ -140,7 +155,7 @@ export function TacticalHeader() {
                         href="/admin/members"
                         className="inline-flex min-w-[80px] items-center justify-center border border-samurai-red px-3 py-1 text-[10px] tracking-[0.3em] text-samurai-red transition hover:bg-samurai-red hover:text-white"
                       >
-                        ADMIN
+                        管理後台
                       </Link>
                     )}
                     <LogoutButton />
@@ -150,8 +165,8 @@ export function TacticalHeader() {
                 {/* Status Indicator / Mobile Aux Toggle */}
                 <div className="flex items-center gap-2 pl-4 border-l border-white/10">
                     <div className="flex flex-col items-end">
-                        <span className="text-[10px] text-samurai-text/40 tracking-wider hidden sm:block">STATUS</span>
-                        <span className="text-xs text-samurai-red tracking-widest font-bold">ONLINE</span>
+                        <span className="text-[10px] text-samurai-text/40 tracking-wider hidden sm:block">連線狀態</span>
+                        <span className="text-xs text-samurai-red tracking-widest font-bold">線上</span>
                     </div>
                     {/* Mobile Toggle Button */}
                     <button 

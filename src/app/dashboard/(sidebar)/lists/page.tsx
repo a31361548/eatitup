@@ -23,7 +23,7 @@ export default async function ListsPage(): Promise<React.ReactElement> {
 
   return (
     <HoloWindow
-      title="ORACLE ARCHIVE"
+      title="卷軸檔案庫 / ORACLE ARCHIVE"
       className="h-full"
       controls={
         <div className="flex gap-2">
@@ -44,7 +44,7 @@ export default async function ListsPage(): Promise<React.ReactElement> {
         <section className="rounded-[40px] border border-white/10 bg-gradient-to-br from-white/10 via-transparent to-black/20 p-6 text-white shadow-[0_25px_90px_rgba(0,0,0,0.45)]">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
-              <p className="text-xs font-tech uppercase tracking-[0.45em] text-white/60">Oracle Protocols</p>
+              <p className="text-xs font-tech uppercase tracking-[0.45em] text-white/60">卷軸協議 / ORACLE PROTOCOLS</p>
               <h1 className="font-pixel text-pixel-2xl uppercase tracking-[0.35em]">命運卷軸庫</h1>
               <p className="mt-2 text-sm text-white/70">
                 收納所有用於輪盤的資料卷軸，管理與啟動都在這裡完成。

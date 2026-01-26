@@ -186,22 +186,24 @@ export function TodosClient({ initialTodos }: TodosClientProps): React.ReactElem
   return (
     <div className="grid gap-8 xl:grid-cols-[1.05fr_0.95fr]">
       <section>
-        <TodoForm
-          mode={editing ? 'edit' : 'create'}
-          initialTodo={editing ?? undefined}
-          submitting={submitting}
-          onSubmit={handleSubmit}
-          onCancel={editing ? () => setEditing(null) : undefined}
-          command={formCommand}
-          onCommandHandled={() => setFormCommand(null)}
-        />
+        <div id="task-form">
+          <TodoForm
+            mode={editing ? 'edit' : 'create'}
+            initialTodo={editing ?? undefined}
+            submitting={submitting}
+            onSubmit={handleSubmit}
+            onCancel={editing ? () => setEditing(null) : undefined}
+            command={formCommand}
+            onCommandHandled={() => setFormCommand(null)}
+          />
+        </div>
       </section>
 
       <section className="space-y-6">
         <div className="rounded-[32px] border border-white/10 bg-black/30 p-6 text-white shadow-[0_25px_70px_rgba(0,0,0,0.45)]">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
-              <p className="text-xs font-tech uppercase tracking-[0.45em] text-white/60">Task Overview</p>
+              <p className="text-xs font-tech uppercase tracking-[0.45em] text-white/60">任務總覽 / TASK OVERVIEW</p>
               <p className="text-lg font-pixel uppercase tracking-[0.3em]">總計 {todos.length} 筆 | 未完成 {activeTodoCount}</p>
             </div>
             <div className="flex flex-wrap gap-3">

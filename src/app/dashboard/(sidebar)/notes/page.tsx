@@ -115,7 +115,7 @@ export default function NotesPage() {
 
   return (
     <HoloWindow
-      title="DATA ARCHIVE"
+      title="資料檔案庫 / DATA ARCHIVE"
       className="h-full"
       controls={
         <TechButton variant="primary" className="!px-4 !py-2 text-[11px]" onClick={openNewNote}>

@@ -5,7 +5,7 @@ interface IdentityWidgetProps {
 }
 
 export function IdentityWidget({ user }: IdentityWidgetProps) {
-  const displayName = user.name || user.email || 'UNKNOWN AGENT'
+  const displayName = user.name || user.email || '未知身份'
   
   return (
     <div className="relative h-full w-full overflow-hidden bg-aether-dark/80 p-6 clip-path-angle-sm border-l-4 border-aether-cyan group">
@@ -29,21 +29,21 @@ export function IdentityWidget({ user }: IdentityWidgetProps) {
 
         <div className="flex-1 space-y-2">
             <div className="flex items-center justify-between">
-                <span className="text-xs font-tech text-aether-cyan/60 tracking-widest">IDENTITY_VERIFIED</span>
-                <span className="text-xs font-tech text-aether-gold tracking-widest animate-pulse">● ONLINE</span>
+                <span className="text-xs font-tech text-aether-cyan/60 tracking-widest">身份已驗證</span>
+                <span className="text-xs font-tech text-aether-gold tracking-widest animate-pulse">● 線上</span>
             </div>
             <h2 className="text-2xl font-heading text-white tracking-wide uppercase">{displayName}</h2>
             
             <div className="flex items-center gap-4 mt-2">
                 <div className="flex flex-col">
-                    <span className="text-[10px] font-tech text-aether-mint/50 uppercase">CREDITS</span>
+                    <span className="text-[10px] font-tech text-aether-mint/50 uppercase">代幣</span>
                     <span className="text-xl font-mono text-aether-gold drop-shadow-[0_0_5px_rgba(251,191,36,0.5)]">
                         {String(user.coins ?? 0).padStart(5, '0')}
                     </span>
                 </div>
                 <div className="h-8 w-[1px] bg-aether-cyan/20" />
                 <div className="flex flex-col">
-                    <span className="text-[10px] font-tech text-aether-mint/50 uppercase">CLEARANCE</span>
+                    <span className="text-[10px] font-tech text-aether-mint/50 uppercase">權限等級</span>
                     <span className="text-xl font-mono text-aether-cyan">LV.05</span>
                 </div>
             </div>

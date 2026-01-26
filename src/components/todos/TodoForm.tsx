@@ -418,7 +418,7 @@ export function TodoForm({
 
       <div className="relative flex items-center justify-between border-b border-white/10 pb-4">
         <div>
-          <p className="text-xs font-tech uppercase tracking-[0.45em] text-white/60">Ritual Console</p>
+          <p className="text-xs font-tech uppercase tracking-[0.45em] text-white/60">指令控制台 / RITUAL CONSOLE</p>
           <h2 className="text-2xl font-heading">{mode === 'edit' ? '調整任務參數' : '新增任務指令'}</h2>
         </div>
         {onCancel && mode === 'edit' && (
@@ -431,7 +431,7 @@ export function TodoForm({
       <div className="relative space-y-4">
         {/* Title Input */}
         <div className="space-y-1">
-            <label className="text-xs font-tech text-samurai-blue/70 uppercase tracking-widest">指令名稱 (TITLE)</label>
+            <label className="text-xs font-tech text-samurai-blue/70 uppercase tracking-widest">指令名稱 / TITLE</label>
             <input
                 type="text"
                 value={formState.title}
@@ -443,7 +443,7 @@ export function TodoForm({
 
         {/* Description Input */}
         <div className="space-y-1">
-            <label className="text-xs font-tech text-samurai-blue/70 uppercase tracking-widest">詳細資訊 (DETAILS)</label>
+            <label className="text-xs font-tech text-samurai-blue/70 uppercase tracking-widest">詳細資訊 / DETAILS</label>
             <textarea
                 rows={3}
                 value={formState.description}
@@ -456,7 +456,7 @@ export function TodoForm({
         {/* Date Pickers */}
         <div className="grid gap-6 md:grid-cols-2">
             <div className="space-y-2">
-                <label className="text-xs font-tech text-samurai-blue/70 uppercase tracking-widest">啟動序列 (START)</label>
+                <label className="text-xs font-tech text-samurai-blue/70 uppercase tracking-widest">啟動序列 / START</label>
                 <TechCalendar 
                     value={formState.startAt} 
                     onChange={(date) => handleChange('startAt', date)} 
@@ -464,7 +464,7 @@ export function TodoForm({
                 />
             </div>
             <div className="space-y-2">
-                <label className="text-xs font-tech text-samurai-blue/70 uppercase tracking-widest">終止序列 (END)</label>
+                <label className="text-xs font-tech text-samurai-blue/70 uppercase tracking-widest">終止序列 / END</label>
                 <TechCalendar 
                     value={formState.endAt} 
                     onChange={(date) => handleChange('endAt', date)} 

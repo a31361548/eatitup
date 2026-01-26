@@ -49,19 +49,19 @@ export function FocusMissionBoard({ todos, user, completedCount = 0 }: FocusMiss
       <header className="flex items-center justify-between border-b border-samurai-blue/20 pb-4">
         <div>
           <h1 className="font-pixel text-2xl text-samurai-blue tracking-widest uppercase">
-            Mission Control
+            任務中樞
           </h1>
           <p className="font-tech text-xs text-samurai-text/50 tracking-[0.3em]">
-            PILOT: {user.name || 'GHOST'} // COINS: {user.coins ?? 0}
+            操作者：{user.name || '未知'} // 代幣：{user.coins ?? 0}
           </p>
         </div>
         <div className="flex gap-2">
            <TechButton variant="ghost" className="!px-3 !py-1 text-xs" onClick={() => toggleView('SYSTEM_STATUS')}>
-             SYSTEM
+             系統面板
            </TechButton>
            <Link href="/dashboard/todos">
              <TechButton variant="secondary" className="!px-3 !py-1 text-xs">
-               ALL MISSIONS
+               全部任務
              </TechButton>
            </Link>
         </div>
@@ -81,9 +81,9 @@ export function FocusMissionBoard({ todos, user, completedCount = 0 }: FocusMiss
 
                <div className="relative z-10 flex flex-col items-center justify-center text-center space-y-6 h-full">
                   <div className="space-y-2">
-                    <span className="inline-block rounded-full bg-samurai-red/20 px-3 py-1 text-xs font-bold text-samurai-red animate-pulse">
-                      IN PROGRESS
-                    </span>
+                      <span className="inline-block rounded-full bg-samurai-red/20 px-3 py-1 text-xs font-bold text-samurai-red animate-pulse">
+                        進行中
+                      </span>
                     <h2 className="font-heading text-2xl lg:text-4xl text-white drop-shadow-[0_0_10px_rgba(244,63,94,0.5)] leading-tight">
                       {activeTask.title}
                     </h2>
@@ -103,10 +103,10 @@ export function FocusMissionBoard({ todos, user, completedCount = 0 }: FocusMiss
 
                   <div className="flex gap-4 pt-4">
                      <TechButton variant="secondary" onClick={() => updateTodoStatus(activeTask.id, 'COMPLETED')}>
-                       COMPLETE
+                       完成任務
                      </TechButton>
                      <TechButton variant="danger" onClick={() => toggleView('QUICK_NOTE', activeTask)}>
-                       LOG NOTE
+                       記錄備註
                      </TechButton>
                   </div>
                </div>
@@ -114,15 +114,15 @@ export function FocusMissionBoard({ todos, user, completedCount = 0 }: FocusMiss
           ) : (
             <div className="relative flex flex-col items-center justify-center rounded-[32px] border border-dashed border-white/20 bg-white/5 p-12 text-center h-full min-h-[400px]">
               <div className="text-6xl mb-4 opacity-50 grayscale">💤</div>
-              <h2 className="font-pixel text-xl text-white/80 uppercase tracking-widest">SYSTEM STANDBY</h2>
-              <p className="mt-2 text-white/50 mb-8 text-sm">No active mission protocols engaged.</p>
+              <h2 className="font-pixel text-xl text-white/80 uppercase tracking-widest">待命狀態</h2>
+              <p className="mt-2 text-white/50 mb-8 text-sm">目前沒有進行中的任務。</p>
               {upcomingTasks.length > 0 ? (
                 <TechButton variant="primary" onClick={() => updateTodoStatus(upcomingTasks[0].id, 'IN_PROGRESS')}>
-                  ENGAGE NEXT MISSION
+                  啟動下一個任務
                 </TechButton>
               ) : (
                 <Link href="/dashboard/todos">
-                  <TechButton variant="ghost">CREATE NEW PROTOCOL</TechButton>
+                  <TechButton variant="ghost">建立新任務</TechButton>
                 </Link>
               )}
             </div>
@@ -131,9 +131,9 @@ export function FocusMissionBoard({ todos, user, completedCount = 0 }: FocusMiss
 
         {/* Column 2: Upcoming Queue */}
         <section className="space-y-4 lg:col-span-2 lg:col-start-2 lg:row-start-1">
-           <div className="flex items-center justify-between">
-              <h3 className="font-pixel text-sm text-white/80 uppercase tracking-widest">UPCOMING QUEUE</h3>
-              <span className="text-xs font-tech text-white/40 tracking-[0.2em]">{upcomingTasks.length} PENDING</span>
+            <div className="flex items-center justify-between">
+              <h3 className="font-pixel text-sm text-white/80 uppercase tracking-widest">即將開始</h3>
+              <span className="text-xs font-tech text-white/40 tracking-[0.2em]">{upcomingTasks.length} 筆待命</span>
            </div>
 
            <div className="grid gap-2 lg:grid-cols-2">
@@ -154,18 +154,18 @@ export function FocusMissionBoard({ todos, user, completedCount = 0 }: FocusMiss
                        <button 
                          className="opacity-0 group-hover:opacity-100 p-1 hover:text-samurai-blue transition-all flex-shrink-0"
                          onClick={() => updateTodoStatus(task.id, 'IN_PROGRESS')}
-                         title="Start Now"
-                       >
-                         ▶
+                          title="立即開始"
+                        >
+                          ▶
                        </button>
                      </div>
                    </div>
                  )
                })
              ) : (
-               <div className="text-center py-6 text-white/30 text-sm font-tech tracking-widest lg:col-span-2">
-                 QUEUE EMPTY
-               </div>
+                <div className="text-center py-6 text-white/30 text-sm font-tech tracking-widest lg:col-span-2">
+                  目前沒有待命任務
+                </div>
              )}
            </div>
         </section>
@@ -178,20 +178,20 @@ export function FocusMissionBoard({ todos, user, completedCount = 0 }: FocusMiss
               
               <div className="relative z-10">
                  <div className="flex items-center justify-between mb-3">
-                    <div className="font-tech text-xs uppercase tracking-widest text-samurai-blue/70">
-                       PILOT STATUS
-                    </div>
+                     <div className="font-tech text-xs uppercase tracking-widest text-samurai-blue/70">
+                        操作狀態
+                     </div>
                  </div>
                  
                  <div className="grid grid-cols-2 gap-3">
                     <div className="rounded-lg bg-samurai-success/10 p-3 text-center border border-samurai-success/20">
                        <div className="text-xl font-mono text-samurai-success">{completedCount}</div>
-                       <div className="text-[10px] uppercase tracking-widest text-samurai-success/60">COMPLETED</div>
-                    </div>
-                    <div className="rounded-lg bg-samurai-yellow/10 p-3 text-center border border-samurai-yellow/20">
-                       <div className="text-xl font-mono text-samurai-yellow">{user.coins ?? 0}</div>
-                       <div className="text-[10px] uppercase tracking-widest text-samurai-yellow/60">COINS</div>
-                    </div>
+                       <div className="text-[10px] uppercase tracking-widest text-samurai-success/60">已完成</div>
+                     </div>
+                     <div className="rounded-lg bg-samurai-yellow/10 p-3 text-center border border-samurai-yellow/20">
+                        <div className="text-xl font-mono text-samurai-yellow">{user.coins ?? 0}</div>
+                        <div className="text-[10px] uppercase tracking-widest text-samurai-yellow/60">代幣</div>
+                     </div>
                  </div>
               </div>
            </div>

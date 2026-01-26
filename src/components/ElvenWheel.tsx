@@ -50,7 +50,7 @@ export const ElvenWheel: React.FC<Props> = ({ options, isSpinning, onSpinEnd }) 
                 <path id="rune-curve" d="M 50, 50 m -45, 0 a 45,45 0 1,1 90,0 a 45,45 0 1,1 -90,0" fill="transparent" />
                 <text width="500">
                   <textPath xlinkHref="#rune-curve" className="text-[4px] fill-samurai-blue font-tech tracking-[2px]">
-                    SYSTEM INITIALIZING // SCANNING SECTORS // CALCULATING PROBABILITY // SAMURAI CORE ONLINE //
+                    系統初始化中 // 掃描區域 // 計算機率 // SAMURAI 核心上線 //
                   </textPath>
                 </text>
               </svg>
