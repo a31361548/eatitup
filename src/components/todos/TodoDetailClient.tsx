@@ -105,7 +105,7 @@ export function TodoDetailClient({ initialTodo }: TodoDetailClientProps): React.
       <div className="rounded-[32px] border border-white/10 bg-black/30 p-6 text-white shadow-[0_25px_70px_rgba(0,0,0,0.45)]">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <p className="text-xs font-tech uppercase tracking-[0.4em] text-white/60">Current Status</p>
+            <p className="text-xs font-tech uppercase tracking-[0.4em] text-white/60">目前狀態 / CURRENT STATUS</p>
             <h2 className="text-2xl font-heading">{todo.title}</h2>
           </div>
           <span className={clsx('rounded-full border px-4 py-1 text-xs font-tech uppercase tracking-[0.35em]', TODO_STATUS_TONE[todo.status])}>

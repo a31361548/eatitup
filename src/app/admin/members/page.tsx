@@ -11,7 +11,7 @@ export default async function AdminMembersPage(): Promise<React.ReactElement> {
   if (!session?.user || session.user.role !== 'ADMIN') redirect('/dashboard')
   return (
     <HoloWindow
-      title="COMMAND CREW REGISTRY"
+      title="指揮成員名冊"
       className="h-full"
       controls={
         <Link href="/dashboard">

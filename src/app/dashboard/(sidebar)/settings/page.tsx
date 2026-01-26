@@ -153,14 +153,15 @@ export default function SettingsPage() {
   }
 
   return (
-    <HoloWindow title="PIXEL IDENTITY LAB" className="h-full">
+    <HoloWindow title="像素身份實驗室 / PIXEL IDENTITY LAB" className="h-full">
       <div className="space-y-10">
         <section className="rounded-[36px] border border-white/10 bg-gradient-to-br from-white/10 via-transparent to-black/20 p-6 text-white shadow-[0_25px_80px_rgba(0,0,0,0.45)]">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
-              <p className="text-xs font-tech uppercase tracking-[0.4em] text-white/60">Avatar Matrix</p>
+              <p className="text-xs font-tech uppercase tracking-[0.4em] text-white/60">身份矩陣</p>
               <h2 className="font-pixel text-pixel-xl uppercase tracking-[0.35em]">選擇像素身份</h2>
               <p className="text-sm text-white/70">點擊下方頭像即可切換，也可以上傳自訂圖像。</p>
+              <p className="text-xs text-white/50 mt-2">支援 PNG / JPG / SVG / WEBP，建議 512x512 以上。</p>
             </div>
             <label className="cursor-pointer">
               <TechButton as="div" variant="primary" className="!px-5 !py-3">

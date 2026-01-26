@@ -96,7 +96,7 @@ export function CheckInCalendar() {
       <div className="relative z-10 flex flex-col h-full">
         <div className="flex items-center justify-between mb-2">
             <div className="font-tech text-xs uppercase tracking-widest text-aether-cyan/70">
-            TEMPORAL LOG
+            時序紀錄
             </div>
             <div className="font-tech text-xs text-aether-mint/50">
                 {currentYear}.{String(currentMonth + 1).padStart(2, '0')}
@@ -133,8 +133,8 @@ export function CheckInCalendar() {
 
         <div className="mt-3 space-y-2">
             <div className="flex items-center justify-between text-[10px] font-tech uppercase tracking-wider text-aether-mint/60">
-                <span>STATUS: {hasCheckedInToday ? 'SYNCED' : 'PENDING'}</span>
-                <span>REWARD: +{CHECK_IN_REWARD} COINS</span>
+                <span>狀態：{hasCheckedInToday ? '已同步' : '待同步'}</span>
+                <span>獎勵：+{CHECK_IN_REWARD} 代幣</span>
             </div>
             
             <TechButton
@@ -143,7 +143,7 @@ export function CheckInCalendar() {
                 onClick={handleCheckIn}
                 disabled={hasCheckedInToday || submitting}
             >
-                {hasCheckedInToday ? '今日已簽到 (SYNCED)' : submitting ? '同步中...' : '手動簽到 (CHECK-IN)'}
+                {hasCheckedInToday ? '今日已簽到（已同步）' : submitting ? '同步中...' : '手動簽到'}
             </TechButton>
             
             {feedback && (

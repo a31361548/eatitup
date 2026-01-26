@@ -7,32 +7,32 @@ import clsx from 'clsx'
 
 const SIDEBAR_ITEMS = [
   { 
-    title: 'HOME', 
+    title: '首頁', 
     href: '/dashboard',
     icon: '⌂'
   },
   { 
-    title: 'MISSIONS', 
+    title: '任務', 
     href: '/dashboard/todos',
     icon: '⚔'
   },
   { 
-    title: 'ARCHIVES', 
+    title: '日誌', 
     href: '/dashboard/notes',
     icon: '▥'
   },
   { 
-    title: 'ORACLE', 
+    title: '神諭', 
     href: '/dashboard/oracle',
     icon: '◎'
   },
   { 
-    title: 'SCROLLS', 
+    title: '卷軸', 
     href: '/dashboard/lists',
     icon: '📜'
   },
   { 
-    title: 'SQUAD', 
+    title: '成員', 
     href: '/admin/members',
     icon: '👥'
   },
@@ -84,7 +84,7 @@ export function JarvisSidebar() {
             ⚙
           </div>
           <div className="pointer-events-none absolute left-full z-50 ml-4 -translate-x-2 whitespace-nowrap border border-samurai-text/30 bg-samurai-dim px-3 py-1 font-tech text-xs tracking-widest text-samurai-text opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100">
-            SETTINGS
+            設定
           </div>
         </Link>
         
@@ -92,7 +92,7 @@ export function JarvisSidebar() {
         <div className="group relative flex items-center justify-center pb-4">
           <LogoutButton />
           <div className="pointer-events-none absolute left-full z-50 ml-4 -translate-x-2 whitespace-nowrap border border-samurai-red/30 bg-samurai-dim px-3 py-1 font-tech text-xs tracking-widest text-samurai-red opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100">
-            DISCONNECT
+            斷開連結
           </div>
         </div>
       </div>
